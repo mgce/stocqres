@@ -5,13 +5,15 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.Core", "Stocqres.Core\Stocqres.Core.csproj", "{0D048AB8-C5AD-4E43-B5A3-0BF7D1F866A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Core", "Stocqres.Core\Stocqres.Core.csproj", "{0D048AB8-C5AD-4E43-B5A3-0BF7D1F866A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.Infrastructure", "Stocqres.Infrastructure\Stocqres.Infrastructure.csproj", "{39A4F1F6-1AEF-4750-A624-5CBED2BFF8C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Infrastructure", "Stocqres.Infrastructure\Stocqres.Infrastructure.csproj", "{39A4F1F6-1AEF-4750-A624-5CBED2BFF8C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.Application", "Stocqres.Application\Stocqres.Application.csproj", "{31779D6E-F01B-44BD-8421-D27E98A9D12C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Application", "Stocqres.Application\Stocqres.Application.csproj", "{31779D6E-F01B-44BD-8421-D27E98A9D12C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.Api", "Stocqres.Api\Stocqres.Api.csproj", "{FF038102-BB72-4B92-A63D-B6E5A8891360}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Api", "Stocqres.Api\Stocqres.Api.csproj", "{FF038102-BB72-4B92-A63D-B6E5A8891360}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.Domain", "Stocqres.Domain\Stocqres.Domain.csproj", "{D4A1AECE-BD94-4635-8444-D9A1032F1374}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{FF038102-BB72-4B92-A63D-B6E5A8891360}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF038102-BB72-4B92-A63D-B6E5A8891360}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF038102-BB72-4B92-A63D-B6E5A8891360}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4A1AECE-BD94-4635-8444-D9A1032F1374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4A1AECE-BD94-4635-8444-D9A1032F1374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4A1AECE-BD94-4635-8444-D9A1032F1374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4A1AECE-BD94-4635-8444-D9A1032F1374}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 		{39A4F1F6-1AEF-4750-A624-5CBED2BFF8C5} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
 		{31779D6E-F01B-44BD-8421-D27E98A9D12C} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
 		{FF038102-BB72-4B92-A63D-B6E5A8891360} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
+		{D4A1AECE-BD94-4635-8444-D9A1032F1374} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6709BAD5-9D57-4D0D-9F3E-BE8AC0856C09}

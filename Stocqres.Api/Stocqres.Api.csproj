@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Stocqres.Application\Stocqres.Application.csproj" />
+  </ItemGroup>
+
 </Project>
