@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Stocqres.Domain
+namespace Stocqres.Core.EventStore
 {
-    public enum Role
+    public interface ICustomEventStore
     {
-        Customer
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Stocqres.Core;
+using Stocqres.Domain.Enums;
 
 namespace Stocqres.Domain
 {
