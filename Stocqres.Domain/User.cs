@@ -1,4 +1,6 @@
-﻿using Stocqres.Core;
+﻿using Microsoft.AspNetCore.Identity;
+using Stocqres.Core;
+using Stocqres.Core.Exceptions;
 using Stocqres.Domain.Enums;
 
 namespace Stocqres.Domain
@@ -8,21 +10,31 @@ namespace Stocqres.Domain
         public string Username { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Seed { get; set; }
         public Role Role { get; set; }
 
         protected User()
         {}
 
-        public User(string email, Role role)
+        public User(string username, string email, Role role)
         {
+            Username = username;
             Email = email.ToLowerInvariant();
             Role = role;
         }
 
-        public void SetPassword(string password)
+        public void SetPassword(string password, IPasswordHasher<User> passwordHasher)
         {
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new StocqresException("Password cannot be empty");
+            }
 
+            Password = passwordHasher.HashPassword(this, password);
+        }
+
+        public bool ValidatePassword(string password, IPasswordHasher<User> passwordHasher)
+        {
+            return passwordHasher.VerifyHashedPassword(this, Password, password) != PasswordVerificationResult.Failed;
         }
     }
 }

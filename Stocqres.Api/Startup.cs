@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -14,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Stocqres.Core.Authentication;
 using Stocqres.Core.Events;
 
 namespace Stocqres.Api
@@ -31,6 +34,7 @@ namespace Stocqres.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
             return AddAutofac(services);
@@ -56,9 +60,12 @@ namespace Stocqres.Api
         {
             var builder = new ContainerBuilder();
             builder.Populate(services);
-            this.ApplicationContainer = builder.Build();
+            ApplicationContainer = builder.Build();
+
             RegisterMarten(builder);
-            return new AutofacServiceProvider(this.ApplicationContainer);
+            RegisterJwt(services, builder);
+
+            return new AutofacServiceProvider(ApplicationContainer);
         }
 
         private void RegisterMarten(ContainerBuilder builder)
@@ -91,6 +98,36 @@ namespace Stocqres.Api
             {
                 options.Events.AddEventType(type);
             }
+        }
+
+        private void RegisterJwt(IServiceCollection services, ContainerBuilder builder)
+        {
+            var jwtSection = Configuration.GetSection("Jwt");
+            var options = new JwtOptions
+            {
+                SecretKey = jwtSection.GetValue<string>("SecretKey"),
+                ValidAudience = jwtSection.GetValue<string>("ValidAudience"),
+                Issuer = jwtSection.GetValue<string>("ValidIssuer"),
+                ValidateAudience = jwtSection.GetValue<bool>("ValidateAudience"),
+                ValidateLifetime = jwtSection.GetValue<bool>("ValidateLifetime"),
+                ExpiryMinutes = jwtSection.GetValue<int>("ExpiryMinutes"),
+            };
+
+            builder.Register(r => options).SingleInstance();
+            builder.RegisterType<IJwtHandler>().As<JwtHandler>().SingleInstance();
+
+            services.AddAuthentication().AddJwtBearer(cfg =>
+            {
+                cfg.TokenValidationParameters = new TokenValidationParameters
+                {
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.SecretKey)),
+                    ValidAudience = options.ValidAudience,
+                    ValidIssuer = options.Issuer,
+                    ValidateAudience = options.ValidateAudience,
+                    ValidateLifetime = options.ValidateLifetime
+                };
+            });
         }
     }
 }
