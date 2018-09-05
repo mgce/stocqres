@@ -7,3 +7,10 @@ services:
             - postgres/variables.env
         ports:
             - "5432:5432"
+    mongo:
+        image: mongo:latest
+        container_name: "mongodb"
+        volumes:
+          - mongodata:/data/db
+        ports:
+          - '27017:27017'

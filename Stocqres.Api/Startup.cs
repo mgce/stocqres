@@ -16,16 +16,24 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 using Stocqres.Core.Authentication;
 using Stocqres.Core.Events;
+using Stocqres.Core.EventStore;
+using Stocqres.Core.Mongo;
 
 namespace Stocqres.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
         }
 
         public IContainer ApplicationContainer { get; private set; }
@@ -53,6 +61,7 @@ namespace Stocqres.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseMvc();
         }
 
@@ -64,6 +73,10 @@ namespace Stocqres.Api
 
             RegisterMarten(builder);
             RegisterJwt(services, builder);
+            RegisterMongo(builder);
+            RegisterRepositories(builder);
+
+            builder.RegisterType<CustomEventStore>().As<ICustomEventStore>();
 
             return new AutofacServiceProvider(ApplicationContainer);
         }
@@ -128,6 +141,39 @@ namespace Stocqres.Api
                     ValidateLifetime = options.ValidateLifetime
                 };
             });
+        }
+
+        private void RegisterMongo(ContainerBuilder builder)
+        {
+            builder.Register(context =>
+            {
+                var configuration = context.Resolve<IConfiguration>();
+                var mongoOptions = new MongoOptions();
+                configuration.GetSection("mongo").Bind(mongoOptions);
+
+                return mongoOptions;
+            }).SingleInstance();
+
+            builder.Register(context =>
+            {
+                var mongoOptions = context.Resolve<MongoOptions>();
+                return new MongoClient(mongoOptions.ConnectionString);
+            }).SingleInstance();
+
+            builder.Register(context =>
+            {
+                var mongoOptions = context.Resolve<MongoOptions>();
+                var mongoClient = context.Resolve<MongoClient>();
+                return mongoClient.GetDatabase(mongoOptions.Database);
+            }).InstancePerLifetimeScope();
+        }
+
+        public void RegisterRepositories(ContainerBuilder builder)
+        {
+            builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
+                .Where(t => t.Name.EndsWith("Repository"))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
         }
     }
 }

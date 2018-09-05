@@ -6,6 +6,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Stocqres.Domain\Stocqres.Domain.csproj" />
+    <ProjectReference Include="..\Stocqres.Infrastructure\Stocqres.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Identity.Core">
+      <HintPath>C:\Users\Mateusz\.nuget\packages\microsoft.extensions.identity.core\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Identity.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

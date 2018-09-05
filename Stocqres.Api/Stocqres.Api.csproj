@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Stocqres.Application\Stocqres.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>C:\Users\Mateusz\.nuget\packages\mongodb.driver\2.3.0\lib\netstandard1.5\MongoDB.Driver.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
