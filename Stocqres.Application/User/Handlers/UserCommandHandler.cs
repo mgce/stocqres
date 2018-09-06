@@ -29,7 +29,7 @@ namespace Stocqres.Application.User.Handlers
             var user = new Domain.User(command.Username, command.Email, Domain.Enums.Role.Customer);
             user.SetPassword(command.Password, _passwordHasher);
             var existUser =
-                await _userRepository.FindAsync(u => u.Username == command.Username || u.Email == command.Email);
+                await _userRepository.GetAsync(u => u.Username == command.Username || u.Email == command.Email);
             if (existUser != null)
                 throw new StocqresException("User with this username or email is currently exist");
 

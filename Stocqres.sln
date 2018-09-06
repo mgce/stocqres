@@ -16,14 +16,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Domain", "Stocqres.Domain\Stocqres.Domain.csproj", "{D4A1AECE-BD94-4635-8444-D9A1032F1374}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{994B4175-950A-4E3A-B1A3-F349990ADBF9}"
-	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postgres", "postgres", "{E8FCD2E4-4A21-43BE-B8A9-30E6E159D522}"
 	ProjectSection(SolutionItems) = preProject
 		variables.env = variables.env
 	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{95274F3A-D8B0-49E3-AABD-33C7B2A69BC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +50,10 @@ Global
 		{D4A1AECE-BD94-4635-8444-D9A1032F1374}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4A1AECE-BD94-4635-8444-D9A1032F1374}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4A1AECE-BD94-4635-8444-D9A1032F1374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95274F3A-D8B0-49E3-AABD-33C7B2A69BC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95274F3A-D8B0-49E3-AABD-33C7B2A69BC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95274F3A-D8B0-49E3-AABD-33C7B2A69BC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95274F3A-D8B0-49E3-AABD-33C7B2A69BC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

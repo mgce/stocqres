@@ -29,6 +29,7 @@ using Stocqres.Core.EventStore;
 using Stocqres.Core.Mongo;
 using Stocqres.Domain;
 using Stocqres.Domain.Commands.User;
+using Stocqres.Domain.Events.Users;
 using Stocqres.Infrastructure;
 using StoreOptions = Marten.StoreOptions;
 
@@ -118,9 +119,11 @@ namespace Stocqres.Api
         private void RegisterEvents(StoreOptions options)
         {
             var eventType = typeof(IEvent);
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(p => eventType.IsAssignableFrom(p));
+            var assembly = typeof(UserCreatedEvent).Assembly;
+            var types = assembly.GetTypes().Where(p => eventType.IsAssignableFrom(p));
+            //var types = AppDomain.CurrentDomain.GetAssemblies()
+            //    .SelectMany(s => s.GetTypes())
+            //    .Where(p => eventType.IsAssignableFrom(p));
             foreach (var type in types)
             {
                 options.Events.AddEventType(type);
