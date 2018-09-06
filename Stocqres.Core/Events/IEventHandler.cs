@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MediatR;
+using System.Threading.Tasks;
 
 namespace Stocqres.Core.Events
 {
-    public interface IEventHandler<in TEvent> : INotificationHandler<TEvent> 
-        where TEvent : IEvent
+    public interface IEventHandler<in TEvent> where TEvent : IEvent
     {
+        Task HandleAsync(TEvent @event);
     }
 }

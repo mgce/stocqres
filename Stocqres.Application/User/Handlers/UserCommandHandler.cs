@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Events;
@@ -25,12 +24,12 @@ namespace Stocqres.Application.User.Handlers
             _eventBus = eventBus;
         }
 
-        public async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task HandleAsync(CreateUserCommand command)
         {
-            var user = new Domain.User(request.Username, request.Email, Domain.Enums.Role.Customer);
-            user.SetPassword(request.Password, _passwordHasher);
+            var user = new Domain.User(command.Username, command.Email, Domain.Enums.Role.Customer);
+            user.SetPassword(command.Password, _passwordHasher);
             var existUser =
-                await _userRepository.FindAsync(u => u.Username == request.Username || u.Email == request.Email);
+                await _userRepository.FindAsync(u => u.Username == command.Username || u.Email == command.Email);
             if (existUser != null)
                 throw new StocqresException("User with this username or email is currently exist");
 
@@ -44,7 +43,6 @@ namespace Stocqres.Application.User.Handlers
             });
             //Save to mongoDb
             //Raise an event to event store
-            return Unit.Value;
         }
     }
 }

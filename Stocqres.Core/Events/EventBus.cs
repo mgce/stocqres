@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using MediatR;
+using Autofac;
 
 namespace Stocqres.Core.Events
 {
     public class EventBus : IEventBus
     {
-        private readonly Mediator _mediator;
+        private readonly IComponentContext _context;
 
-        public EventBus(Mediator mediator)
+        public EventBus(IComponentContext context)
         {
-            _mediator = mediator;
+            _context = context;
         }
 
-        public Task Publish<TEvent>(TEvent @event) where TEvent : IEvent
+        public async Task Publish<TEvent>(TEvent @event) where TEvent : IEvent
         {
-            return _mediator.Publish(@event);
+            await _context.Resolve<IEventHandler<TEvent>>().HandleAsync(@event);
         }
     }
 }

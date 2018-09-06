@@ -2,22 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using MediatR;
+using Autofac;
 
 namespace Stocqres.Core.Queries
 {
     public class QueryBus : IQueryBus
     {
-        private readonly Mediator _mediator;
+        private readonly IComponentContext _context;
 
-        public QueryBus(Mediator mediator)
+        public QueryBus(IComponentContext context)
         {
-            _mediator = mediator;
+            _context = context;
         }
 
-        public Task<TResponse> Send<TQuery, TResponse>(TQuery query) where TQuery : IQuery<TResponse>
-        {
-            return _mediator.Send(query);
-        }
+        public async Task<TResult> Send<TQuery, TResult>(TQuery query) where TQuery : IQuery<TResult> 
+            => await _context.Resolve<IQueryHandler<TQuery, TResult>>().HandleAsync(query);
     }
 }

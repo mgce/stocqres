@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using MediatR;
+﻿using System.Threading.Tasks;
+using Autofac;
 
 namespace Stocqres.Core.Commands
 {
     public class CommandBus : ICommandBus
     {
-        private readonly Mediator _mediator;
+        private readonly IComponentContext _context;
 
-        public CommandBus(Mediator mediator)
+        public CommandBus(IComponentContext context)
         {
-            _mediator = mediator;
+            _context = context;
         }
 
-        public Task Send<TCommand>(TCommand command) where TCommand : ICommand
-        {
-            return _mediator.Send(command);
-        }
+        public async Task SendAsync<TCommand>(TCommand command) where TCommand : ICommand 
+            => await _context.Resolve<ICommandHandler<TCommand>>().HandleAsync(command);
     }
 }

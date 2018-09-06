@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MediatR;
+using System.Threading.Tasks;
 
 namespace Stocqres.Core.Queries
 {
-    public interface IQueryHandler<in TQuery, TResponse> : IRequestHandler<TQuery, TResponse> 
-        where TQuery : IQuery<TResponse>
+    public interface IQueryHandler<in TQuery, TResult> where TQuery : IQuery<TResult>
     {
+        Task<TResult> HandleAsync(TQuery query);
     }
 }

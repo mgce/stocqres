@@ -19,10 +19,10 @@ namespace Stocqres.Api.Controllers
             _bus = bus;
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(CreateUserCommand command)
         {
-            await _bus.Send(command);
+            await _bus.SendAsync(command);
 
             return NoContent();
         }

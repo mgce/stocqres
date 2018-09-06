@@ -18,9 +18,9 @@ namespace Stocqres.Application.User.Handlers
             _eventStore = eventStore;
         }
 
-        public async Task Handle(UserCreatedEvent @event, CancellationToken cancellationToken)
+        public async Task HandleAsync(UserCreatedEvent @event)
         {
-            await _eventStore.AppendToStream(@event.Id, @event, cancellationToken);
+            await _eventStore.AppendToStream(@event.Id, @event);
         }
     }
 }

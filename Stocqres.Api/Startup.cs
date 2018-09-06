@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Marten;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,10 +18,19 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using Stocqres.Application;
+using Stocqres.Application.User.Handlers;
+using Stocqres.Core;
 using Stocqres.Core.Authentication;
+using Stocqres.Core.Commands;
+using Stocqres.Core.Dispatcher;
 using Stocqres.Core.Events;
 using Stocqres.Core.EventStore;
 using Stocqres.Core.Mongo;
+using Stocqres.Domain;
+using Stocqres.Domain.Commands.User;
+using Stocqres.Infrastructure;
+using StoreOptions = Marten.StoreOptions;
 
 namespace Stocqres.Api
 {
@@ -44,7 +54,6 @@ namespace Stocqres.Api
         {
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
             return AddAutofac(services);
         }
 
@@ -68,16 +77,21 @@ namespace Stocqres.Api
         private IServiceProvider AddAutofac(IServiceCollection services)
         {
             var builder = new ContainerBuilder();
+
+            builder.RegisterType<PasswordHasher<User>>().As<IPasswordHasher<User>>();
+
+            ApplicationDependencyContainer.Load(builder);
+            InfrastructureDependencyContainer.Load(builder);
+            CoreDependencyContainer.Load(builder);
+
             builder.Populate(services);
-            ApplicationContainer = builder.Build();
 
             RegisterMarten(builder);
             RegisterJwt(services, builder);
             RegisterMongo(builder);
             RegisterRepositories(builder);
 
-            builder.RegisterType<CustomEventStore>().As<ICustomEventStore>();
-
+            ApplicationContainer = builder.Build();
             return new AutofacServiceProvider(ApplicationContainer);
         }
 
@@ -127,7 +141,7 @@ namespace Stocqres.Api
             };
 
             builder.Register(r => options).SingleInstance();
-            builder.RegisterType<IJwtHandler>().As<JwtHandler>().SingleInstance();
+            builder.RegisterType<JwtHandler>().As<IJwtHandler>().SingleInstance();
 
             services.AddAuthentication().AddJwtBearer(cfg =>
             {
