@@ -15,13 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Api", "Stocqres.Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Domain", "Stocqres.Domain\Stocqres.Domain.csproj", "{D4A1AECE-BD94-4635-8444-D9A1032F1374}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{994B4175-950A-4E3A-B1A3-F349990ADBF9}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postgres", "postgres", "{E8FCD2E4-4A21-43BE-B8A9-30E6E159D522}"
-	ProjectSection(SolutionItems) = preProject
-		variables.env = variables.env
-	EndProjectSection
-EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{95274F3A-D8B0-49E3-AABD-33C7B2A69BC4}"
 EndProject
 Global
@@ -64,7 +57,6 @@ Global
 		{31779D6E-F01B-44BD-8421-D27E98A9D12C} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
 		{FF038102-BB72-4B92-A63D-B6E5A8891360} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
 		{D4A1AECE-BD94-4635-8444-D9A1032F1374} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
-		{E8FCD2E4-4A21-43BE-B8A9-30E6E159D522} = {994B4175-950A-4E3A-B1A3-F349990ADBF9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6709BAD5-9D57-4D0D-9F3E-BE8AC0856C09}

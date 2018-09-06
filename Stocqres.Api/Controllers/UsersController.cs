@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Stocqres.Core.Commands;
+using Stocqres.Core.Dispatcher;
 using Stocqres.Domain.Commands.User;
 
 namespace Stocqres.Api.Controllers
@@ -12,17 +13,17 @@ namespace Stocqres.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly ICommandBus _bus;
+        private readonly IDispatcher _dispatcher;
 
-        public UsersController(ICommandBus bus)
+        public UsersController(IDispatcher dispatcher)
         {
-            _bus = bus;
+            _dispatcher = dispatcher;
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<IActionResult> Create(CreateUserCommand command)
         {
-            await _bus.SendAsync(command);
+            await _dispatcher.SendAsync(command);
 
             return NoContent();
         }

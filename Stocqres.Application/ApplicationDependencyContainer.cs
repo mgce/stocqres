@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Autofac;
+using Stocqres.Application.Token.Services;
 using Stocqres.Application.User.Handlers;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Events;
@@ -24,6 +25,8 @@ namespace Stocqres.Application
                 .RegisterAssemblyTypes(assembly)
                 .AsClosedTypesOf(typeof(IEventHandler<>))
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<TokenService>().As<ITokenService>();
         }
     }
 }
