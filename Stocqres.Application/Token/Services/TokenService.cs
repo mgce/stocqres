@@ -20,7 +20,7 @@ namespace Stocqres.Application.Token.Services
             _jwtHandler = jwtHandler;
         }
 
-        public async Task<JsonWebToken> SignIn(string username, string password, Role role = Role.Customer)
+        public async Task<JsonWebToken> SignInAsync(string username, string password, Role role = Role.Customer)
         {
             var user = await _userRepository.GetAsync(x => x.Username == username);
             if(user == null)

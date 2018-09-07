@@ -15,16 +15,27 @@ namespace Stocqres.Api.Controllers
     public class TokenController : ControllerBase
     {
         private readonly ITokenService _tokenService;
+        private readonly IRefreshTokenService _refreshTokenService;
 
-        public TokenController(ITokenService tokenService)
+        public TokenController(ITokenService tokenService, 
+            IRefreshTokenService refreshTokenService)
         {
             _tokenService = tokenService;
+            _refreshTokenService = refreshTokenService;
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(SignIn command)
         {
-            return Ok(await _tokenService.SignIn(command.Username, command.Password));
+            return Ok(await _tokenService.SignInAsync(command.Username, command.Password));
         }
+
+        [HttpPost("sign-in")]
+        public async Task<IActionResult> SignIn(SignIn command)
+            => Ok(await _tokenService.SignInAsync(command.Username, command.Password));
+
+        [HttpPost("refresh-tokens/{refreshToken}/refresh")]
+        public async Task<IActionResult> RefreshToken(string refreshToken)
+            => Ok(await _refreshTokenService.CreateAccessTokenAsync(refreshToken));
     }
 }
