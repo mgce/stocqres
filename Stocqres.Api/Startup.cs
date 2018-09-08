@@ -26,6 +26,7 @@ using Stocqres.Core.Commands;
 using Stocqres.Core.Dispatcher;
 using Stocqres.Core.Events;
 using Stocqres.Core.EventStore;
+using Stocqres.Core.Middlewares;
 using Stocqres.Core.Mongo;
 using Stocqres.Domain;
 using Stocqres.Domain.Commands.User;
@@ -72,6 +73,7 @@ namespace Stocqres.Api
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseErrorHandler();
             app.UseMvc();
         }
 
