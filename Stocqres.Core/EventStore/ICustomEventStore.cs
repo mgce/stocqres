@@ -9,5 +9,7 @@ namespace Stocqres.Core.EventStore
     {
         Task AppendToStream(Guid streamId, IEvent @event,
             CancellationToken cancellationToken = default(CancellationToken));
+
+        Task AppendToStream(IEvent @event, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Stocqres.Core.Events;
+using Stocqres.Domain.Enums;
+
+namespace Stocqres.Domain.Events.StockGroup
+{
+    public class StockGroupCreatedEvent : IEvent
+    {
+        public Guid Id { get; set; }
+        public Guid OwnerId { get; protected set; }
+        public StockOwner StockOwner { get; protected set; }
+        public int Quantity { get; protected set; }
+        public Guid StockId { get; protected set; }
+
+        public StockGroupCreatedEvent(Guid id, Guid ownerId, StockOwner stockOwner, int quantity, Guid stockId)
+        {
+            Id = id;
+            OwnerId = ownerId;
+            StockOwner = stockOwner;
+            Quantity = quantity;
+            StockId = stockId;
+        }
+
+        
+    }
+}

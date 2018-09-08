@@ -24,5 +24,11 @@ namespace Stocqres.Core.EventStore
             _eventStore.Append(streamId, @event);
             return _session.SaveChangesAsync(cancellationToken);
         }
+
+        public Task AppendToStream(IEvent @event, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            _eventStore.Append(@event.Id, @event);
+            return _session.SaveChangesAsync(cancellationToken);
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace Stocqres.Infrastructure
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
         Task CreateAsync(T entity);
         Task UpdateAsync(T entity);
+        Task UpdateAsync(params T[] entities);
         Task DeleteAsync(Guid id);
         Task<bool> IsExist(Guid id);
     }

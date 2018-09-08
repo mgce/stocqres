@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
+using Stocqres.Domain;
 using Stocqres.Domain.Commands.Wallet;
 using Stocqres.Domain.Events;
+using Stocqres.Domain.Events.Wallet;
 using Stocqres.Infrastructure;
 
 namespace Stocqres.Application.Wallet

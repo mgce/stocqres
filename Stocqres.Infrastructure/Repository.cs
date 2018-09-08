@@ -39,6 +39,14 @@ namespace Stocqres.Infrastructure
         public async Task UpdateAsync(T entity)
             => await Collection.ReplaceOneAsync(e => e.Id == entity.Id, entity);
 
+        public async Task UpdateAsync(params T[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                await Collection.ReplaceOneAsync(e => e.Id == entity.Id, entity);
+            }
+        }
+
         public async Task DeleteAsync(Guid id)
             => await Collection.DeleteOneAsync(e => e.Id == id);
 

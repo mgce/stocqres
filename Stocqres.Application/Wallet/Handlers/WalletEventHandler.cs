@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 using Stocqres.Core.Events;
 using Stocqres.Core.EventStore;
 using Stocqres.Domain.Events;
+using Stocqres.Domain.Events.Wallet;
 
 namespace Stocqres.Application.Wallet.Handlers
 {
-    public class WalletEventListener : IEventHandler<WalletCreatedEvent>
+    public class WalletEventHandler : IEventHandler<WalletCreatedEvent>
     {
         private readonly ICustomEventStore _eventStore;
 
-        public WalletEventListener(ICustomEventStore eventStore)
+        public WalletEventHandler(ICustomEventStore eventStore)
         {
             _eventStore = eventStore;
         }
