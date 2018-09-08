@@ -27,6 +27,7 @@ namespace Stocqres.Application
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<TokenService>().As<ITokenService>();
+            builder.RegisterType<RefreshTokenService>().As<IRefreshTokenService>();
         }
     }
 }

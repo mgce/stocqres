@@ -7,7 +7,6 @@ namespace Stocqres.Domain
 {
     public class RefreshToken : BaseEntity
     {
-        public Guid Id { get; protected set; }
         public Guid UserId { get; protected set; }
         public string Token { get; protected set; }
         public DateTime? RevokedAt { get; protected set; }
