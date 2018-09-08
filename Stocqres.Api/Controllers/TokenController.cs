@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stocqres.Application.Token.Services;
 using Stocqres.Core.Authentication;
@@ -24,16 +25,19 @@ namespace Stocqres.Api.Controllers
             _refreshTokenService = refreshTokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost("create")]
         public async Task<IActionResult> Create(SignIn command)
         {
             return Ok(await _tokenService.SignInAsync(command.Username, command.Password));
         }
 
+        [AllowAnonymous]
         [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn(SignIn command)
             => Ok(await _tokenService.SignInAsync(command.Username, command.Password));
 
+        [AllowAnonymous]
         [HttpPost("refresh-tokens/{refreshToken}/refresh")]
         public async Task<IActionResult> RefreshToken(string refreshToken)
             => Ok(await _refreshTokenService.CreateAccessTokenAsync(refreshToken));

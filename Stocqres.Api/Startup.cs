@@ -56,6 +56,7 @@ namespace Stocqres.Api
         {
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAuthentication();
             return AddAutofac(services);
         }
 
