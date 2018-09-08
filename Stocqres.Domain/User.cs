@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Stocqres.Core;
 using Stocqres.Core.Exceptions;
 using Stocqres.Domain.Enums;
@@ -11,6 +12,8 @@ namespace Stocqres.Domain
         public string Email { get; set; }
         public string Password { get; set; }
         public Role Role { get; set; }
+
+        public Guid WalletId { get; set; }
 
         protected User()
         {}

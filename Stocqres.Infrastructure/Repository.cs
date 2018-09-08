@@ -23,6 +23,11 @@ namespace Stocqres.Infrastructure
             return await Collection.Find(predicate).SingleOrDefaultAsync();
         }
 
+        public async Task<T> GetAsync(Guid id)
+        {
+            return await GetAsync(x => x.Id == id);
+        }
+
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
             return await Collection.Find(predicate).ToListAsync();
@@ -36,5 +41,10 @@ namespace Stocqres.Infrastructure
 
         public async Task DeleteAsync(Guid id)
             => await Collection.DeleteOneAsync(e => e.Id == id);
+
+        public async Task<bool> IsExist(Guid id)
+        {
+            return await Collection.FindAsync(x => x.Id == id) != null;
+        }
     }
 }

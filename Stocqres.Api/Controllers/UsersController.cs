@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Dispatcher;
 using Stocqres.Domain.Commands.User;
+using Stocqres.Domain.Commands.Wallet;
 
 namespace Stocqres.Api.Controllers
 {
@@ -20,8 +21,16 @@ namespace Stocqres.Api.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpPost]
+        [HttpPost("")]
         public async Task<IActionResult> Create(CreateUserCommand command)
+        {
+            await _dispatcher.SendAsync(command);
+
+            return NoContent();
+        }
+
+        [HttpPost("/wallet")]
+        public async Task<IActionResult> CreateWallet(CreateWalletCommand command)
         {
             await _dispatcher.SendAsync(command);
 

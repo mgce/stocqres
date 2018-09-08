@@ -12,8 +12,8 @@ namespace Stocqres.Domain
         public Guid UserId { get; set; }
         public decimal Amount { get; set; }
         public Currency Currency { get; set; }
-        public List<StockGroup> StockGroup { get; set; }
 
+        public virtual List<StockGroup> StockGroup { get; set; }
         public virtual User User { get; set; }
 
         protected Wallet()

@@ -6,8 +6,7 @@ using Stocqres.Domain;
 
 namespace Stocqres.Infrastructure
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IWalletRepository : IRepository<Wallet>
     {
-        Task<User> GetUserAsync(Guid userId);
     }
 }
