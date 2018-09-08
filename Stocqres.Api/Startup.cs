@@ -76,6 +76,7 @@ namespace Stocqres.Api
             app.UseStaticFiles();
             app.UseErrorHandler();
             app.UseMvc();
+            SeedData.Initialize(ApplicationContainer);
         }
 
         private IServiceProvider AddAutofac(IServiceCollection services)

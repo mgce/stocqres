@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Core;
 
-namespace Stocqres.Infrastructure
+namespace Stocqres.Infrastructure.Repositories.Api
 {
     public interface IRepository<T> where T : BaseEntity
     {

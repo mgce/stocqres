@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Stocqres.Core.Dispatcher;
 using Stocqres.Domain.Commands;
+using Stocqres.Infrastructure;
 
 namespace Stocqres.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StockController : ControllerBase
+    public class StocksController : BaseController
     {
         private readonly IDispatcher _dispatcher;
 
-        public StockController(IDispatcher dispatcher)
+        public StocksController(IDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }

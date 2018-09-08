@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Stocqres.Domain;
+using Stocqres.Infrastructure.Repositories.Api;
 
-namespace Stocqres.Infrastructure
+namespace Stocqres.Infrastructure.Repositories.Implementation
 {
     public class RefreshTokenRepository : Repository<RefreshToken>, IRefreshTokenRepository
     {

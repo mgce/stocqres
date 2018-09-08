@@ -10,9 +10,7 @@ using Stocqres.Domain.Commands.Wallet;
 
 namespace Stocqres.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
         private readonly IDispatcher _dispatcher;
 

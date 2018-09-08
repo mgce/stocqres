@@ -11,14 +11,12 @@ using Stocqres.Domain.Commands.User;
 
 namespace Stocqres.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TokenController : ControllerBase
+    public class TokensController : BaseController
     {
         private readonly ITokenService _tokenService;
         private readonly IRefreshTokenService _refreshTokenService;
 
-        public TokenController(ITokenService tokenService, 
+        public TokensController(ITokenService tokenService, 
             IRefreshTokenService refreshTokenService)
         {
             _tokenService = tokenService;

@@ -8,6 +8,7 @@ using Stocqres.Core.Exceptions;
 using Stocqres.Domain.Commands.User;
 using Stocqres.Domain.Events.Users;
 using Stocqres.Infrastructure;
+using Stocqres.Infrastructure.Repositories.Api;
 
 namespace Stocqres.Application.User.Handlers
 {

@@ -9,6 +9,13 @@ namespace Stocqres.Domain
         public string Name { get; set; }
         public string Code { get; set; }
         public int Unit { get; set; }
-        public decimal Price { get; set; }
+
+        public Stock(Guid stockExchangeId, string name, string code, int unit)
+        {
+            StockExchangeId = stockExchangeId;
+            Name = name;
+            Code = code;
+            Unit = unit;
+        }
     }
 }

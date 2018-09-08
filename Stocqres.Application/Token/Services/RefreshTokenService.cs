@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Stocqres.Core.Authentication;
 using Stocqres.Core.Exceptions;
 using Stocqres.Infrastructure;
+using Stocqres.Infrastructure.Repositories.Api;
 
 namespace Stocqres.Application.Token.Services
 {

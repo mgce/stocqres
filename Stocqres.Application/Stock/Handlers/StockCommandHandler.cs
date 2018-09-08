@@ -12,6 +12,7 @@ using Stocqres.Domain.Exceptions.Stock;
 using Stocqres.Domain.Exceptions.StockExchange;
 using Stocqres.Domain.Exceptions.User;
 using Stocqres.Infrastructure;
+using Stocqres.Infrastructure.Repositories.Api;
 
 namespace Stocqres.Application.Stock.Handlers
 {

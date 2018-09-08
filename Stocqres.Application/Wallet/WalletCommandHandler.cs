@@ -10,6 +10,7 @@ using Stocqres.Domain.Commands.Wallet;
 using Stocqres.Domain.Events;
 using Stocqres.Domain.Events.Wallet;
 using Stocqres.Infrastructure;
+using Stocqres.Infrastructure.Repositories.Api;
 
 namespace Stocqres.Application.Wallet
 {

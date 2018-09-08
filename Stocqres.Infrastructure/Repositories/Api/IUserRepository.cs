@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Domain;
 
-namespace Stocqres.Infrastructure
+namespace Stocqres.Infrastructure.Repositories.Api
 {
     public interface IUserRepository : IRepository<User>
     {

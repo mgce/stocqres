@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using Stocqres.Core;
+using Stocqres.Infrastructure.Repositories.Api;
 
-namespace Stocqres.Infrastructure
+namespace Stocqres.Infrastructure.Repositories.Implementation
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {

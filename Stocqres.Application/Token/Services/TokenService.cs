@@ -5,6 +5,7 @@ using Stocqres.Core.Exceptions;
 using Stocqres.Domain.Enums;
 using Stocqres.Domain;
 using Stocqres.Infrastructure;
+using Stocqres.Infrastructure.Repositories.Api;
 
 namespace Stocqres.Application.Token.Services
 {

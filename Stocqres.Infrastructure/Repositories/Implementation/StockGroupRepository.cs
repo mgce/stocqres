@@ -1,12 +1,8 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Stocqres.Domain;
+using Stocqres.Infrastructure.Repositories.Api;
 
-namespace Stocqres.Infrastructure
+namespace Stocqres.Infrastructure.Repositories.Implementation
 {
     public class StockGroupRepository : Repository<StockGroup>, IStockGroupRepository
     {
