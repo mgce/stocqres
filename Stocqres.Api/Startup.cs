@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -7,11 +8,14 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Marten;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,6 +23,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using Stocqres.Application;
+using Stocqres.Application.StockExchange.Services;
 using Stocqres.Application.User.Handlers;
 using Stocqres.Core;
 using Stocqres.Core.Authentication;
@@ -54,10 +59,18 @@ namespace Stocqres.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+
+            services.AddMvc(options=>{options.Filters.Add(new AuthorizeFilter(policy));}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddHttpClient<StockExchangeService>(client =>
+            {
+                var config = Configuration.GetSection("StockExchange");
+                client.BaseAddress = new Uri(config.GetValue<string>("BaseAddress"));
+            });
+            var container = AddAutofac(ref services);
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddAuthentication();
-            return AddAutofac(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,11 +88,12 @@ namespace Stocqres.Api
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseErrorHandler();
+            app.UseAuthentication();
             app.UseMvc();
             SeedData.Initialize(ApplicationContainer);
         }
 
-        private IServiceProvider AddAutofac(IServiceCollection services)
+        private IServiceProvider AddAutofac(ref IServiceCollection services)
         {
             var builder = new ContainerBuilder();
 
@@ -92,7 +106,7 @@ namespace Stocqres.Api
             builder.Populate(services);
 
             RegisterMarten(builder);
-            RegisterJwt(services, builder);
+            RegisterJwt(ref services, builder);
             RegisterMongo(builder);
             RegisterRepositories(builder);
 
@@ -125,16 +139,13 @@ namespace Stocqres.Api
             var eventType = typeof(IEvent);
             var assembly = typeof(UserCreatedEvent).Assembly;
             var types = assembly.GetTypes().Where(p => eventType.IsAssignableFrom(p));
-            //var types = AppDomain.CurrentDomain.GetAssemblies()
-            //    .SelectMany(s => s.GetTypes())
-            //    .Where(p => eventType.IsAssignableFrom(p));
             foreach (var type in types)
             {
                 options.Events.AddEventType(type);
             }
         }
 
-        private void RegisterJwt(IServiceCollection services, ContainerBuilder builder)
+        private void RegisterJwt(ref IServiceCollection services, ContainerBuilder builder)
         {
             var jwtSection = Configuration.GetSection("Jwt");
             var options = new JwtOptions
@@ -147,10 +158,15 @@ namespace Stocqres.Api
                 ExpiryMinutes = jwtSection.GetValue<int>("ExpiryMinutes"),
             };
 
-            builder.Register(r => options).SingleInstance();
+            builder.RegisterInstance(options);
             builder.RegisterType<JwtHandler>().As<IJwtHandler>().SingleInstance();
 
-            services.AddAuthentication().AddJwtBearer(cfg =>
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(cfg =>
             {
                 cfg.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -159,7 +175,8 @@ namespace Stocqres.Api
                     ValidAudience = options.ValidAudience,
                     ValidIssuer = options.Issuer,
                     ValidateAudience = options.ValidateAudience,
-                    ValidateLifetime = options.ValidateLifetime
+                    ValidateLifetime = options.ValidateLifetime,
+                    NameClaimType = JwtRegisteredClaimNames.Sub,
                 };
             });
         }

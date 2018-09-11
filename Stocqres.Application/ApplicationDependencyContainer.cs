@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Autofac;
+using Stocqres.Application.StockExchange.Services;
 using Stocqres.Application.Token.Services;
 using Stocqres.Application.User.Handlers;
 using Stocqres.Core.Commands;
@@ -28,6 +29,7 @@ namespace Stocqres.Application
 
             builder.RegisterType<TokenService>().As<ITokenService>();
             builder.RegisterType<RefreshTokenService>().As<IRefreshTokenService>();
+            builder.RegisterType<StockExchangeService>().As<IStockExchangeService>();
         }
     }
 }

@@ -10,16 +10,18 @@ namespace Stocqres.Domain
         public Guid OwnerId { get; protected set; }
         public StockOwner StockOwner { get; protected set; }
         public int Quantity { get; protected set; }
+        public decimal Price { get; set; }
         public Guid StockId { get; protected set; }
 
         protected StockGroup()
         {}
 
-        public StockGroup(Guid ownerId, StockOwner stockOwner, int quantity, Guid stockId)
+        public StockGroup(Guid ownerId, StockOwner stockOwner, int quantity, decimal price, Guid stockId)
         {
             OwnerId = ownerId;
             StockOwner = stockOwner;
             Quantity = quantity;
+            Price = price;
             StockId = stockId;
         }
 
@@ -31,11 +33,16 @@ namespace Stocqres.Domain
                 Quantity = quantity;
         }
 
-        public void DecreaseQuantity(int numberToDecrease)
+        public void DecreaseQuantity(int value)
         {
-            if(Quantity - numberToDecrease < 0)
+            if(Quantity - value < 0)
                 throw new Exception("Quantity cannot be lower than zero");
-            Quantity = Quantity - numberToDecrease;
+            Quantity = Quantity - value;
+        }
+
+        public void IncreaseQuantity(int value)
+        {
+            Quantity += value;
         }
     }
 }

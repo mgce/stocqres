@@ -5,7 +5,7 @@ using Stocqres.Core.Commands;
 
 namespace Stocqres.Domain.Commands
 {
-    public class BuyStockCommand : ICommand
+    public class BuyStocksCommand : ICommand
     {
         public Guid UserId { get; set; }
         public Guid StockId { get; set; }

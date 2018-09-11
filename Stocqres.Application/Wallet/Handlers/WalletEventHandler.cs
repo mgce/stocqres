@@ -9,7 +9,7 @@ using Stocqres.Domain.Events.Wallet;
 
 namespace Stocqres.Application.Wallet.Handlers
 {
-    public class WalletEventHandler : IEventHandler<WalletCreatedEvent>
+    public class WalletEventHandler : IEventHandler<WalletCreatedEvent>, IEventHandler<WalletAmountDecreasedEvent>, IEventHandler<WalletAmountIncreasedEvent>
     {
         private readonly ICustomEventStore _eventStore;
 
@@ -18,6 +18,16 @@ namespace Stocqres.Application.Wallet.Handlers
             _eventStore = eventStore;
         }
         public async Task HandleAsync(WalletCreatedEvent @event)
+        {
+            await _eventStore.AppendToStream(@event.Id, @event);
+        }
+
+        public async Task HandleAsync(WalletAmountDecreasedEvent @event)
+        {
+            await _eventStore.AppendToStream(@event.Id, @event);
+        }
+
+        public async Task HandleAsync(WalletAmountIncreasedEvent @event)
         {
             await _eventStore.AppendToStream(@event.Id, @event);
         }

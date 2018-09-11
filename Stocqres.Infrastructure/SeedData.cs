@@ -24,7 +24,7 @@ namespace Stocqres.Infrastructure
         public static void SeedStockExchange(IContainer container)
         {
             var stockExchangeRepository = container.Resolve<IStockExchangeRepository>();
-            if (stockExchangeRepository.FindAsync(x => true).Result != null)
+            if (stockExchangeRepository.FindAsync(x => true).Result == null)
             {
                 stockExchangeRepository.CreateAsync(new StockExchange());
             }
@@ -90,7 +90,7 @@ namespace Stocqres.Infrastructure
                 foreach (var stock in stocks)
                 {
                     stockGroupRepository.CreateAsync(new StockGroup(stockExchange.Id, StockOwner.StockExchange,
-                        _random.Next(100, 10000), stock.Id));
+                        _random.Next(100, 10000),1, stock.Id));
                 }
             }
         }

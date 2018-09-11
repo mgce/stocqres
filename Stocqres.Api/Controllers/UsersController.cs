@@ -27,9 +27,10 @@ namespace Stocqres.Api.Controllers
             return NoContent();
         }
 
-        [HttpPost("/wallet")]
+        [HttpPost("wallet")]
         public async Task<IActionResult> CreateWallet(CreateWalletCommand command)
         {
+            command.UserId = UserId;
             await _dispatcher.SendAsync(command);
 
             return NoContent();

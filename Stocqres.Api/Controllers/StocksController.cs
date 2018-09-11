@@ -19,7 +19,7 @@ namespace Stocqres.Api.Controllers
         }
 
         [HttpPost("/buy")]
-        public async Task<IActionResult> Buy(BuyStockCommand command)
+        public async Task<IActionResult> Buy([FromBody]BuyStocksCommand command)
         {
             await _dispatcher.SendAsync(command);
             return NoContent();

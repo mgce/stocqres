@@ -35,5 +35,22 @@ namespace Stocqres.Domain
             }
             User = user;
         }
+
+        public bool HaveEnoughtMoney(decimal price, int unit, int quantity)
+        {
+            return price * unit * quantity> Amount;
+        }
+
+        public void DecreaseAmount(decimal value)
+        {
+            if (Amount < value)
+                throw new Exception("Your wallet amount is too low");
+            Amount -= value;
+        }
+
+        public void IncreaseAmount(decimal value)
+        {
+            Amount += value;
+        }
     }
 }
