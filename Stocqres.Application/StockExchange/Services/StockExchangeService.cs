@@ -22,9 +22,9 @@ namespace Stocqres.Application.StockExchange.Services
         {
             var response = await _httpClient.GetAsync("");
             var responseContent = await response.Content.ReadAsStringAsync();
-            var stocks = JsonConvert.DeserializeObject<List<StockDto>>(responseContent);
+            var stocks = JsonConvert.DeserializeObject<StocksDto>(responseContent);
 
-            return stocks.Single(s => s.Code == stockCode).Price;
+            return stocks.Items.Single(x => x.Code == stockCode).Price;
         }
     }
 }

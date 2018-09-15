@@ -75,15 +75,17 @@ namespace Stocqres.Application.Stock.Handlers
             var userStockGroup = await _stockGroupRepository.GetUserStockGroup(command.UserId, command.StockId);
             if (userStockGroup == null)
             {
-                userStockGroup = await CreateStockGroup(user.Id, stock.Id, stockPrice, command.Quantity);
+                 await CreateStockGroup(user.Id, stock.Id, stockPrice, command.Quantity);
+                await _stockGroupRepository.UpdateAsync(stockExchangeStockGroup);
             }
             else
             {
                 userStockGroup.IncreaseQuantity(command.Quantity);
                 await _eventBus.Publish(new StockGroupQuantityChangedEvent(userStockGroup.Id,
                     userStockGroup.Quantity));
+                await _stockGroupRepository.UpdateAsync(stockExchangeStockGroup, userStockGroup);
             }
-            await _stockGroupRepository.UpdateAsync(stockExchangeStockGroup, userStockGroup);
+            
         }
 
         public async Task BurdenUserWallet(Guid walletId, decimal stockPrice, int unit, int quantity)
@@ -110,12 +112,12 @@ namespace Stocqres.Application.Stock.Handlers
             await _eventBus.Publish(new WalletAmountIncreasedEvent(userWallet.Id, userWallet.Amount));
         }
 
-        public async Task<Domain.StockGroup> CreateStockGroup(Guid userId, Guid stockId, decimal stockPrice, int quantity)
+        public async Task CreateStockGroup(Guid userId, Guid stockId, decimal stockPrice, int quantity)
         {
             var userStockGroup = new Domain.StockGroup(userId, StockOwner.User, quantity, stockPrice, stockId);
             await _eventBus.Publish(new StockGroupCreatedEvent(userStockGroup.Id, userStockGroup.OwnerId, userStockGroup.StockOwner,
                 userStockGroup.Quantity, userStockGroup.StockId));
-            return userStockGroup;
+            await _stockGroupRepository.CreateAsync(userStockGroup);
         }
 
         public async Task HandleAsync(SellStocksCommand command)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Dispatcher;
@@ -20,6 +21,7 @@ namespace Stocqres.Api.Controllers
         }
 
         [HttpPost("")]
+        [AllowAnonymous]
         public async Task<IActionResult> Create(CreateUserCommand command)
         {
             await _dispatcher.SendAsync(command);

@@ -52,7 +52,7 @@ namespace Stocqres.Infrastructure.Repositories.Implementation
 
         public async Task<bool> IsExist(Guid id)
         {
-            return await Collection.FindAsync(x => x.Id == id) != null;
+            return await GetAsync(x => x.Id == id) != null;
         }
     }
 }

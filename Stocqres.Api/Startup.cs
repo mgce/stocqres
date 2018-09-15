@@ -61,7 +61,7 @@ namespace Stocqres.Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddJwt();
-            services.AddHttpClient<StockExchangeService>(client =>
+            services.AddHttpClient<IStockExchangeService, StockExchangeService>(client =>
             {
                 var config = Configuration.GetSection("StockExchange");
                 client.BaseAddress = new Uri(config.GetValue<string>("BaseAddress"));
