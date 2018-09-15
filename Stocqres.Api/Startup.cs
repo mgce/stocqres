@@ -59,17 +59,14 @@ namespace Stocqres.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var policy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .Build();
-
-            services.AddMvc(options=>{options.Filters.Add(new AuthorizeFilter(policy));}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddJwt();
             services.AddHttpClient<StockExchangeService>(client =>
             {
                 var config = Configuration.GetSection("StockExchange");
                 client.BaseAddress = new Uri(config.GetValue<string>("BaseAddress"));
             });
-            var container = AddAutofac(ref services);
+            return AddAutofac(services);
             
         }
 
@@ -87,13 +84,13 @@ namespace Stocqres.Api
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseErrorHandler();
             app.UseAuthentication();
+            app.UseErrorHandler();
             app.UseMvc();
             SeedData.Initialize(ApplicationContainer);
         }
 
-        private IServiceProvider AddAutofac(ref IServiceCollection services)
+        private IServiceProvider AddAutofac(IServiceCollection services)
         {
             var builder = new ContainerBuilder();
 
@@ -106,10 +103,9 @@ namespace Stocqres.Api
             builder.Populate(services);
 
             RegisterMarten(builder);
-            RegisterJwt(ref services, builder);
+            //RegisterJwt(ref services, builder);
             RegisterMongo(builder);
             RegisterRepositories(builder);
-
             ApplicationContainer = builder.Build();
             return new AutofacServiceProvider(ApplicationContainer);
         }
@@ -161,13 +157,11 @@ namespace Stocqres.Api
             builder.RegisterInstance(options);
             builder.RegisterType<JwtHandler>().As<IJwtHandler>().SingleInstance();
 
-            services.AddAuthentication(opt =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(cfg =>
             {
-                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(cfg =>
-            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
                 cfg.TokenValidationParameters = new TokenValidationParameters
                 {
                     IssuerSigningKey =
