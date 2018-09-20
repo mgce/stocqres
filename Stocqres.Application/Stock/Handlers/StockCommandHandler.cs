@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Application.StockExchange.Services;
+using Stocqres.Application.StockGroup.Services;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Events;
+using Stocqres.Core.EventStore;
 using Stocqres.Domain;
 using Stocqres.Domain.Commands;
 using Stocqres.Domain.Enums;
@@ -20,46 +22,35 @@ namespace Stocqres.Application.Stock.Handlers
 {
     public class StockCommandHandler : ICommandHandler<BuyStocksCommand>, ICommandHandler<SellStocksCommand>
     {
-        private readonly IStockRepository _stockRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IStockExchangeRepository _stockExchangeRepository;
         private readonly IStockGroupRepository _stockGroupRepository;
         private readonly IEventBus _eventBus;
         private readonly IStockExchangeService _stockExchangeService;
         private readonly IWalletRepository _walletRepository;
+        private readonly ICustomEventStore _eventStore;
+        private readonly IStockGroupService _stockGroupService;
 
-        public StockCommandHandler(IStockRepository stockRepository, 
-            IUserRepository userRepository, 
-            IStockExchangeRepository stockExchangeRepository, 
+        public StockCommandHandler(
             IStockGroupRepository stockGroupRepository, 
             IEventBus eventBus, 
             IStockExchangeService stockExchangeService, 
-            IWalletRepository walletRepository)
+            IWalletRepository walletRepository, 
+            ICustomEventStore eventStore,
+            IStockGroupService stockGroupService)
         {
-            _stockRepository = stockRepository;
-            _userRepository = userRepository;
-            _stockExchangeRepository = stockExchangeRepository;
             _stockGroupRepository = stockGroupRepository;
             _eventBus = eventBus;
             _stockExchangeService = stockExchangeService;
             _walletRepository = walletRepository;
+            _eventStore = eventStore;
+            _stockGroupService = stockGroupService;
         }
         public async Task HandleAsync(BuyStocksCommand command)
         {
-            var user = await _userRepository.GetUserAsync(command.UserId);
-            if(user == null)
-                throw new UserDoesNotExistException();
+            var user = await _eventStore.Load<Domain.User>(command.UserId);
+            var stock = await _eventStore.Load<Domain.Stock>(command.StockId);
+            var stockExchange = await _eventStore.Load<Domain.StockExchange>(stock.StockExchangeId);
 
-            var stock = await _stockRepository.GetAsync(command.StockId);
-            if(stock == null)
-                throw new StockExchangeDoesNotExistException();
-
-            var stockExchange = await _stockExchangeRepository.GetAsync(stock.StockExchangeId);
-            if(stockExchange == null)
-                throw new StockExchangeDoesNotExistException();
-
-            var stockExchangeStockGroup =
-                await _stockGroupRepository.GetStockGroupFromStockExchange(stockExchange.Id, stock.Id);
+            var stockExchangeStockGroup = await _stockGroupService.GetStockGroupFromStockExchange(stockExchange.Id, stock.Id);
 
             if (stockExchangeStockGroup.Quantity < command.Quantity)
                 throw new StockExchangeDoesNotHaveEnoughtStocksException();
@@ -72,7 +63,7 @@ namespace Stocqres.Application.Stock.Handlers
 
             await BurdenUserWallet(user.WalletId, stockPrice, stock.Unit, command.Quantity);
 
-            var userStockGroup = await _stockGroupRepository.GetUserStockGroup(command.UserId, command.StockId);
+            var userStockGroup = await _stockGroupService.GetUserStockGroup(command.UserId, command.StockId);
             if (userStockGroup == null)
             {
                  await CreateStockGroup(user.Id, stock.Id, stockPrice, command.Quantity);
@@ -80,6 +71,9 @@ namespace Stocqres.Application.Stock.Handlers
             }
             else
             {
+                //Usunac _stockGroupRepository poniewaz z event handlera zmieniana jest wartosc w read modelu
+                //przemyslec w jaki sposob roznica kwot powinna byc zapisana w evencie
+                //tj. czy powinnismy zapisywać jedynie wartość ktora odejmujemy, czy wartosc koncowa
                 userStockGroup.IncreaseQuantity(command.Quantity);
                 await _eventBus.Publish(new StockGroupQuantityChangedEvent(userStockGroup.Id,
                     userStockGroup.Quantity));
@@ -122,17 +116,9 @@ namespace Stocqres.Application.Stock.Handlers
 
         public async Task HandleAsync(SellStocksCommand command)
         {
-            var user = await _userRepository.GetUserAsync(command.UserId);
-            if (user == null)
-                throw new UserDoesNotExistException();
-
-            var stock = await _stockRepository.GetAsync(command.StockId);
-            if (stock == null)
-                throw new StockExchangeDoesNotExistException();
-
-            var stockExchange = await _stockExchangeRepository.GetAsync(stock.StockExchangeId);
-            if (stockExchange == null)
-                throw new StockExchangeDoesNotExistException();
+            var user = await _eventStore.Load<Domain.User>(command.UserId);
+            var stock = await _eventStore.Load<Domain.Stock>(command.StockId);
+            var stockExchange = await _eventStore.Load<Domain.StockExchange>(stock.StockExchangeId);
 
             var stockPrice = await _stockExchangeService.GetStockPrice(stock.Code);
 

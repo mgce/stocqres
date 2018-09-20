@@ -13,7 +13,7 @@ namespace Stocqres.Domain
         public decimal Price { get; set; }
         public Guid StockId { get; protected set; }
 
-        protected StockGroup()
+        public StockGroup()
         {}
 
         public StockGroup(Guid ownerId, StockOwner stockOwner, int quantity, decimal price, Guid stockId)

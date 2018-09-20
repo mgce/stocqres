@@ -15,7 +15,7 @@ namespace Stocqres.Domain
 
         public Guid WalletId { get; set; }
 
-        protected User()
+        public User()
         {}
 
         public User(string username, string email, Role role)

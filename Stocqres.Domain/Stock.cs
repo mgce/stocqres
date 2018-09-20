@@ -10,6 +10,11 @@ namespace Stocqres.Domain
         public string Code { get; set; }
         public int Unit { get; set; }
 
+        public Stock()
+        {
+            
+        }
+
         public Stock(Guid stockExchangeId, string name, string code, int unit)
         {
             StockExchangeId = stockExchangeId;

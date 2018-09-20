@@ -42,8 +42,6 @@ namespace Stocqres.Application.User.Handlers
                 Password = user.Password,
                 Role = user.Role
             });
-            //Save to mongoDb
-            //Raise an event to event store
         }
     }
 }
