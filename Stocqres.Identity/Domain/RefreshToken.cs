@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Stocqres.Core;
 using Stocqres.Core.Exceptions;
 
-namespace Stocqres.Domain
+namespace Stocqres.Identity.Domain
 {
     public class RefreshToken : BaseEntity
     {

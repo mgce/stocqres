@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Stocqres.Application.StockExchange.Services;
 using Stocqres.Application.StockGroup.Services;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Events;
@@ -16,6 +15,8 @@ using Stocqres.Domain.Exceptions.Stock;
 using Stocqres.Domain.Exceptions.StockExchange;
 using Stocqres.Domain.Exceptions.User;
 using Stocqres.Infrastructure;
+using Stocqres.Infrastructure.ExternalServices;
+using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
 using Stocqres.Infrastructure.Repositories.Api;
 
 namespace Stocqres.Application.Stock.Handlers

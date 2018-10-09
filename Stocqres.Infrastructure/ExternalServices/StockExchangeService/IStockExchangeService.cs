@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Stocqres.Application.Stock.Dto;
 
-namespace Stocqres.Application.StockExchange.Services
+namespace Stocqres.Infrastructure.ExternalServices.StockExchangeService
 {
     public interface IStockExchangeService
     {

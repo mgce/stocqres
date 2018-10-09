@@ -1,42 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Marten;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
-using Stocqres.Application;
-using Stocqres.Application.StockExchange.Services;
-using Stocqres.Application.User.Handlers;
 using Stocqres.Core;
 using Stocqres.Core.Authentication;
-using Stocqres.Core.Commands;
-using Stocqres.Core.Dispatcher;
 using Stocqres.Core.Events;
-using Stocqres.Core.EventStore;
 using Stocqres.Core.Middlewares;
 using Stocqres.Core.Mongo;
-using Stocqres.Domain;
-using Stocqres.Domain.Commands.User;
+using Stocqres.Customers;
 using Stocqres.Domain.Events.Users;
+using Stocqres.Identity;
+using Stocqres.Identity.Domain;
 using Stocqres.Infrastructure;
+using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
+using Stocqres.Transactions;
 using StoreOptions = Marten.StoreOptions;
 
 namespace Stocqres.Api
@@ -96,7 +85,10 @@ namespace Stocqres.Api
 
             builder.RegisterType<PasswordHasher<User>>().As<IPasswordHasher<User>>();
 
-            ApplicationDependencyContainer.Load(builder);
+            //ApplicationDependencyContainer.Load(builder);
+            CustomerDependencyContainer.Load(builder);
+            IdentityDependencyContainer.Load(builder);
+            TransactionsDependencyResolver.Load(builder);
             InfrastructureDependencyContainer.Load(builder);
             CoreDependencyContainer.Load(builder);
 

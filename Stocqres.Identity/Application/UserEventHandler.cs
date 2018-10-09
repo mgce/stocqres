@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Stocqres.Core.Events;
-using Stocqres.Core.EventStore;
 using Stocqres.Domain.Events.Users;
 using Stocqres.Domain.Events.Wallet;
 using Stocqres.Domain.Views;
 using Stocqres.Infrastructure.ProjectionWriter;
 
-namespace Stocqres.Application.User.Handlers
+namespace Stocqres.Identity.Application
 {
     public class UserEventHandler : IEventHandler<UserCreatedEvent>, IEventHandler<UserPasswordSettedEvent>, IEventHandler<WalletCreatedEvent>
     {

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Stocqres.Application.Stock.Dto;
 
-namespace Stocqres.Application.StockExchange.Services
+namespace Stocqres.Infrastructure.ExternalServices.StockExchangeService
 {
     public class StockExchangeService : IStockExchangeService
     {

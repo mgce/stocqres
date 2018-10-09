@@ -1,26 +1,24 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
-using Stocqres.Core;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Exceptions;
+using Stocqres.Domain;
 using Stocqres.Domain.Enums;
 using Stocqres.Domain.Events.Users;
 using Stocqres.Domain.Events.Wallet;
 
-namespace Stocqres.Domain
+namespace Stocqres.Identity.Domain
 {
     public class User : AggregateRoot
     {
         public string Username { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public Role Role { get; set; }
-        public Wallet Wallet { get; set; }
 
         public User()
         {}
 
-        public User(string username, string email, Role role)
+        public User(string username, string email)
         {
             if(string.IsNullOrEmpty(username))
                 throw new StocqresException("Username cannot be empty");
@@ -28,7 +26,7 @@ namespace Stocqres.Domain
             if (string.IsNullOrEmpty(email))
                 throw new StocqresException("Email cannot be empty");
 
-            Publish(new UserCreatedEvent(Guid.NewGuid(), username, email.ToLowerInvariant(), role));
+            Publish(new UserCreatedEvent(Guid.NewGuid(), username, email.ToLowerInvariant()));
         }
 
         public void SetPassword(string password, IPasswordHasher<User> passwordHasher)
@@ -58,17 +56,11 @@ namespace Stocqres.Domain
             Id = @event.AggregateId;
             Username = @event.Username;
             Email = @event.Email;
-            Role = @event.Role;
         }
 
         private void ApplyEvent(UserPasswordSettedEvent @event)
         {
             Password = @event.Password;
-        }
-
-        private void ApplyEvent(WalletCreatedEvent @event)
-        {
-            Wallet = @event.Wallet;
         }
     }
 }

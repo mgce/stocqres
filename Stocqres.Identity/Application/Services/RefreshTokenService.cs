@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Stocqres.Core.Authentication;
 using Stocqres.Core.Exceptions;
-using Stocqres.Infrastructure;
-using Stocqres.Infrastructure.Repositories.Api;
+using Stocqres.Identity.Repositories;
 
-namespace Stocqres.Application.Token.Services
+namespace Stocqres.Identity.Application.Services
 {
     public class RefreshTokenService : IRefreshTokenService
     {
@@ -56,7 +53,7 @@ namespace Stocqres.Application.Token.Services
                 throw new StocqresException("UserCodes does not exist.");
             }
 
-            var jwt = _jwtHandler.CreateToken(user.Id.ToString(), user.Role.ToString());
+            var jwt = _jwtHandler.CreateToken(user.Id.ToString());
 
             jwt.RefreshToken = refreshToken.Token;
 

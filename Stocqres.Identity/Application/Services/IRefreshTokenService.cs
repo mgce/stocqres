@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Stocqres.Core.Authentication;
 
-namespace Stocqres.Application.Token.Services
+namespace Stocqres.Identity.Application.Services
 {
     public interface IRefreshTokenService
     {

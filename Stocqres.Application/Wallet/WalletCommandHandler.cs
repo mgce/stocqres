@@ -17,19 +17,19 @@ namespace Stocqres.Application.Wallet
 {
     public class WalletCommandHandler /*: ICommandHandler<CreateWalletCommand>*/
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IWalletRepository _walletRepository;
-        private readonly IEventBus _eventBus;
-        private readonly IEventRepository _eventRepository;
+        //private readonly IUserRepository _userRepository;
+        //private readonly IWalletRepository _walletRepository;
+        //private readonly IEventBus _eventBus;
+        //private readonly IEventRepository _eventRepository;
 
-        public WalletCommandHandler(IUserRepository userRepository, 
-            IWalletRepository walletRepository, IEventBus eventBus, IEventRepository eventRepository)
-        {
-            _userRepository = userRepository;
-            _walletRepository = walletRepository;
-            _eventBus = eventBus;
-            _eventRepository = eventRepository;
-        }
+        //public WalletCommandHandler(IUserRepository userRepository, 
+        //    IWalletRepository walletRepository, IEventBus eventBus, IEventRepository eventRepository)
+        //{
+        //    _userRepository = userRepository;
+        //    _walletRepository = walletRepository;
+        //    _eventBus = eventBus;
+        //    _eventRepository = eventRepository;
+        //}
 
         //public async Task HandleAsync(CreateWalletCommand command)
         //{

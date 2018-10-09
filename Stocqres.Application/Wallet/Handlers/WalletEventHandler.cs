@@ -19,7 +19,7 @@ namespace Stocqres.Application.Wallet.Handlers
         }
         public async Task HandleAsync(WalletCreatedEvent @event)
         {
-            await _eventStore.AppendToStream(@event.Id, @event);
+            await _eventStore.AppendToStream(@event.AggregateId, @event);
         }
 
         public async Task HandleAsync(WalletAmountDecreasedEvent @event)

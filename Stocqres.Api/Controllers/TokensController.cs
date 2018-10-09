@@ -4,10 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Stocqres.Application.Token.Services;
 using Stocqres.Core.Authentication;
 using Stocqres.Core.Dispatcher;
-using Stocqres.Domain.Commands.User;
+using Stocqres.Identity.Application.Services;
 
 namespace Stocqres.Api.Controllers
 {

@@ -5,14 +5,13 @@ using Stocqres.Core.Commands;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Exceptions;
 using Stocqres.Domain;
-using Stocqres.Domain.Commands.User;
 using Stocqres.Domain.Commands.Wallet;
-using Stocqres.Domain.Events.Wallet;
+using Stocqres.Identity.Domain.Commands;
 using Stocqres.Infrastructure.EventRepository;
 
-namespace Stocqres.Application.User.Handlers
+namespace Stocqres.Identity.Application
 {
-    public class UserCommandHandler : ICommandHandler<CreateUserCommand>, ICommandHandler<CreateWalletCommand>
+    public class UserCommandHandler : ICommandHandler<CreateUserCommand>
     {
         private readonly IPasswordHasher<Domain.User> _passwordHasher;
         private readonly IEventRepository _eventRepository;
@@ -25,23 +24,8 @@ namespace Stocqres.Application.User.Handlers
 
         public async Task HandleAsync(CreateUserCommand command)
         {
-            var user = new Domain.User(command.Username, command.Email, Domain.Enums.Role.Customer);
+            var user = new Domain.User(command.Username, command.Email);
             user.SetPassword(command.Password, _passwordHasher);
-            await _eventRepository.SaveAsync(user);
-        }
-
-        public async Task HandleAsync(CreateWalletCommand command)
-        {
-            var user = await _eventRepository.GetByIdAsync<Domain.User>(command.UserId);
-
-            if (user == null)
-                throw new StocqresException(Codes.UserCodes.UserDoesNotExist, "UserCodes does not exist");
-
-            if (user.Wallet != null)
-                throw new StocqresException(Codes.WalletCodes.WalletExist, $"WalletCodes for user {user.Username} currently exist");
-
-            user.AssignWallet(new Domain.Wallet(command.Amount));
-
             await _eventRepository.SaveAsync(user);
         }
 

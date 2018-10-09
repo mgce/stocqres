@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Autofac;
-using Stocqres.Application.StockGroup.Services;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Events;
-using Stocqres.Infrastructure.ExternalServices;
-using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
+using Stocqres.Identity.Application.Services;
 
-namespace Stocqres.Application
+namespace Stocqres.Identity
 {
-    public static class ApplicationDependencyContainer
+    public static class IdentityDependencyContainer
     {
         public static void Load(ContainerBuilder builder)
         {
@@ -27,9 +25,8 @@ namespace Stocqres.Application
                 .AsClosedTypesOf(typeof(IEventHandler<>))
                 .InstancePerLifetimeScope();
 
-            
-            builder.RegisterType<StockExchangeService>().As<IStockExchangeService>();
-            builder.RegisterType<StockGroupService>().As<IStockGroupService>();
+            builder.RegisterType<TokenService>().As<ITokenService>();
+            builder.RegisterType<RefreshTokenService>().As<IRefreshTokenService>();
         }
     }
 }

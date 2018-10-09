@@ -39,7 +39,7 @@ namespace Stocqres.Core.Authentication
             };
         }
 
-        public JsonWebToken CreateToken(string userId, string role = null, IDictionary<string, string> claims = null)
+        public JsonWebToken CreateToken(string userId, IDictionary<string, string> claims = null)
         {
             if (string.IsNullOrEmpty(userId))
             {
@@ -54,10 +54,6 @@ namespace Stocqres.Core.Authentication
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, ToTimeStamp(now).ToString()),
             };
-            if (!string.IsNullOrEmpty(role))
-            {
-                jwtClaims.Add(new Claim(ClaimTypes.Role, role));    
-            }
             jwtClaims.AddRange(claims?.Select(claim => new Claim(claim.Key, claim.Value))
                                ?? Enumerable.Empty<Claim>());
             var expires = now.AddMinutes(_options.ExpiryMinutes);

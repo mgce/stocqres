@@ -11,12 +11,11 @@ namespace Stocqres.Domain.Events.Users
         public string Email { get; set; }
         public Role Role { get; set; }
 
-        public UserCreatedEvent(Guid id, string username, string email, Role role)
+        public UserCreatedEvent(Guid id, string username, string email)
         {
             AggregateId = id;
             Username = username;
             Email = email;
-            Role = role;
         }
     }
 }

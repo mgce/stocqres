@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Stocqres.Core.Authentication;
 using Stocqres.Core.Exceptions;
 using Stocqres.Domain.Enums;
-using Stocqres.Domain;
-using Stocqres.Infrastructure;
-using Stocqres.Infrastructure.Repositories.Api;
+using Stocqres.Identity.Domain;
+using Stocqres.Identity.Repositories;
 
-namespace Stocqres.Application.Token.Services
+namespace Stocqres.Identity.Application.Services
 {
     public class TokenService : ITokenService
     {
@@ -27,7 +26,7 @@ namespace Stocqres.Application.Token.Services
             _refreshTokenRepository = refreshTokenRepository;
         }
 
-        public async Task<JsonWebToken> SignInAsync(string username, string password, Role role = Role.Customer)
+        public async Task<JsonWebToken> SignInAsync(string username, string password)
         {
             var user = await _userRepository.GetAsync(x => x.Username == username);
             if(user == null)
@@ -37,7 +36,7 @@ namespace Stocqres.Application.Token.Services
             if (result == PasswordVerificationResult.Failed)
                 throw new StocqresException("Username or password is incorrect.");
 
-            var jwt = _jwtHandler.CreateToken(user.Id.ToString(), user.Role.ToString());
+            var jwt = _jwtHandler.CreateToken(user.Id.ToString());
 
             var refreshToken = new RefreshToken(user, _passwordHasher);
             await _refreshTokenRepository.CreateAsync(refreshToken);

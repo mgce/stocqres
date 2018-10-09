@@ -13,7 +13,6 @@ namespace Stocqres.Domain
         public Currency Currency { get; set; }
 
         public virtual List<StockGroup> StockGroup { get; set; }
-        public virtual User User { get; set; }
 
         protected Wallet()
         {}

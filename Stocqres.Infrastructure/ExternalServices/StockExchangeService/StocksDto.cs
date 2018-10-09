@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 
-namespace Stocqres.Application.Stock.Dto
+namespace Stocqres.Infrastructure.ExternalServices.StockExchangeService
 {
     public class StocksDto
     {

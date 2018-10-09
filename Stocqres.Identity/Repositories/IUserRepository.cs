@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Stocqres.Domain;
+using Stocqres.Identity.Domain;
+using Stocqres.Infrastructure.Repositories.Api;
 
-namespace Stocqres.Infrastructure.Repositories.Api
+namespace Stocqres.Identity.Repositories
 {
     public interface IUserRepository : IRepository<User>
     {

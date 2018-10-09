@@ -18,7 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Stocqres.Application\Stocqres.Application.csproj" />
+    <ProjectReference Include="..\..\Users\MateuszGajda\source\repos\Stocqres.Transactions\Stocqres.Transactions.csproj" />
+    <ProjectReference Include="..\Stocqres.Customers\Stocqres.Customers.csproj" />
+    <ProjectReference Include="..\Stocqres.Identity\Stocqres.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>

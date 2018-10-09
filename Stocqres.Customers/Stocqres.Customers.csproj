@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Stocqres.Core\Stocqres.Core.csproj" />
+    <ProjectReference Include="..\Stocqres.Infrastructure\Stocqres.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Companies\Application\" />
+    <Folder Include="Investors\Application\" />
+  </ItemGroup>
+
+</Project>

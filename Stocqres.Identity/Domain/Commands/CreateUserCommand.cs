@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Stocqres.Core.Commands;
+﻿using Stocqres.Core.Commands;
 
-namespace Stocqres.Domain.Commands.User
+namespace Stocqres.Identity.Domain.Commands
 {
     public class CreateUserCommand : ICommand
     {

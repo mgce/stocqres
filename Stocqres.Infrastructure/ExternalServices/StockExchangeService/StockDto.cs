@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Stocqres.Infrastructure.ExternalServices
+namespace Stocqres.Infrastructure.ExternalServices.StockExchangeService
 {
     public class StockDto
     {
