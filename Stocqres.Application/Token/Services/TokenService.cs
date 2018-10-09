@@ -31,7 +31,7 @@ namespace Stocqres.Application.Token.Services
         {
             var user = await _userRepository.GetAsync(x => x.Username == username);
             if(user == null)
-                throw new StocqresException("User does not exist.");
+                throw new StocqresException("UserCodes does not exist.");
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.Password, password);
             if (result == PasswordVerificationResult.Failed)

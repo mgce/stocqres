@@ -9,7 +9,6 @@ namespace Stocqres.Domain
 {
     public class Wallet : BaseEntity
     {
-        public Guid UserId { get; set; }
         public decimal Amount { get; set; }
         public Currency Currency { get; set; }
 
@@ -19,21 +18,11 @@ namespace Stocqres.Domain
         protected Wallet()
         {}
 
-        public Wallet(User user, decimal amount, Currency currency = Currency.PLN)
+        public Wallet( decimal amount, Currency currency = Currency.PLN)
         {
             StockGroup = new List<StockGroup>();
             Amount = amount;
             Currency = currency;
-            AssignUser(user);
-        }
-
-        public void AssignUser(User user)
-        {
-            if (user.Role != Role.Customer)
-            {
-                throw new StocqresException("User is not a customer");
-            }
-            User = user;
         }
 
         public bool HaveEnoughtMoney(decimal price, int unit, int quantity)
@@ -52,5 +41,7 @@ namespace Stocqres.Domain
         {
             Amount += value;
         }
+
+        
     }
 }

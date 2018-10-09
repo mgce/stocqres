@@ -18,6 +18,12 @@ services:
     ports:
       - "5432:5432"
 
+  sqlServer:
+    image: microsoft/mssql-server-linux
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+
   mongoDb:
     image: mongo:latest
     container_name: "mongodb"

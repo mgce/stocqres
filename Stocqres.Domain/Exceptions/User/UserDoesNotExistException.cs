@@ -7,8 +7,8 @@ namespace Stocqres.Domain.Exceptions.User
 {
     public class UserDoesNotExistException : StocqresException
     {
-        private static string code = Codes.User.UserDoesNotExist;
-        private static string message = "User does not exist";
+        private static string code = Codes.UserCodes.UserDoesNotExist;
+        private static string message = "UserCodes does not exist";
 
         public UserDoesNotExistException() : base(code, message)
         {

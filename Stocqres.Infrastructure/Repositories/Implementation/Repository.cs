@@ -23,7 +23,7 @@ namespace Stocqres.Infrastructure.Repositories.Implementation
             return await Collection.Find(predicate).SingleOrDefaultAsync();
         }
 
-        public async Task<T> GetAsync(Guid id)
+        public async Task<T> GetByIdAsync(Guid id)
         {
             return await GetAsync(x => x.Id == id);
         }

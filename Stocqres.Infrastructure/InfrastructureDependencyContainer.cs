@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using Autofac;
 using Stocqres.Core.Commands;
+using Stocqres.Infrastructure.ProjectionWriter;
 using Stocqres.Infrastructure.Repositories.Api;
 
 namespace Stocqres.Infrastructure
@@ -18,6 +19,8 @@ namespace Stocqres.Infrastructure
                 .RegisterAssemblyTypes(assembly)
                 .AsClosedTypesOf(typeof(IRepository<>))
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<ProjectionWriter.ProjectionWriter>().As<IProjectionWriter>();
         }
     }
 }

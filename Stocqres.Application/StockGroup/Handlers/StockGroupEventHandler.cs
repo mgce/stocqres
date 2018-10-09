@@ -22,15 +22,15 @@ namespace Stocqres.Application.StockGroup.Handlers
         }
         public async Task HandleAsync(StockGroupCreatedEvent @event)
         {
-            await _eventStore.AppendToStream(@event.Id, @event);
+            await _eventStore.AppendToStream(@event.AggregateId, @event);
             await _stockGroupRepository.CreateAsync(new Domain.StockGroup(@event.OwnerId, @event.StockOwner, @event.Quantity,
                 @event.Price, @event.StockId));
         }
 
         public async Task HandleAsync(StockGroupQuantityChangedEvent @event)
         {
-            await _eventStore.AppendToStream(@event.Id, @event);
-            var entity = await _stockGroupRepository.GetAsync(@event.Id);
+            await _eventStore.AppendToStream(@event.AggregateId, @event);
+            var entity = await _stockGroupRepository.GetByIdAsync(@event.AggregateId);
             entity.UpdateQuantity(@event.Quantity);
             await _stockGroupRepository.UpdateAsync(entity);
         }

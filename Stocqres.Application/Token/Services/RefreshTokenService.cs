@@ -31,7 +31,7 @@ namespace Stocqres.Application.Token.Services
             var user = await _userRepository.GetAsync(u => u.Id == userId);
             if (user == null)
             {
-                throw new StocqresException("User does not exist.");
+                throw new StocqresException("UserCodes does not exist.");
             }
 
             await _refreshTokenRepository.CreateAsync(new Domain.RefreshToken(user, _passwordHasher));
@@ -53,7 +53,7 @@ namespace Stocqres.Application.Token.Services
             var user = await _userRepository.GetAsync(x => x.Id == refreshToken.UserId);
             if (user == null)
             {
-                throw new StocqresException("User does not exist.");
+                throw new StocqresException("UserCodes does not exist.");
             }
 
             var jwt = _jwtHandler.CreateToken(user.Id.ToString(), user.Role.ToString());

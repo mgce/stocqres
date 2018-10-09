@@ -9,7 +9,7 @@ namespace Stocqres.Infrastructure.Repositories.Api
     public interface IRepository<T> where T : BaseEntity
     {
         Task<T> GetAsync(Expression<Func<T, bool>> predicate);
-        Task<T> GetAsync(Guid id);
+        Task<T> GetByIdAsync(Guid id);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
         Task CreateAsync(T entity);
         Task UpdateAsync(T entity);

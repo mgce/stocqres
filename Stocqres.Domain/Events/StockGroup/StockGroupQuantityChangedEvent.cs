@@ -7,12 +7,12 @@ namespace Stocqres.Domain.Events.StockGroup
 {
     public class StockGroupQuantityChangedEvent : IEvent
     {
-        public Guid Id { get; set; }
+        public Guid AggregateId { get; set; }
         public int Quantity { get; set; }
 
         public StockGroupQuantityChangedEvent(Guid id, int quantity)
         {
-            Id = id;
+            AggregateId = id;
             Quantity = quantity;
         }
     }

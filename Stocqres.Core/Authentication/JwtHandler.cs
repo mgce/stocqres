@@ -43,7 +43,7 @@ namespace Stocqres.Core.Authentication
         {
             if (string.IsNullOrEmpty(userId))
             {
-                throw new ArgumentException("User Id claim cannot be empty", nameof(userId));
+                throw new ArgumentException("User AggregateId claim cannot be empty", nameof(userId));
             }
 
             var now = DateTime.Now;

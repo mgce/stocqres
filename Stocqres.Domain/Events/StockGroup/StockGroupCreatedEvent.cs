@@ -8,7 +8,7 @@ namespace Stocqres.Domain.Events.StockGroup
 {
     public class StockGroupCreatedEvent : IEvent
     {
-        public Guid Id { get; set; }
+        public Guid AggregateId { get; set; }
         public Guid OwnerId { get; protected set; }
         public StockOwner StockOwner { get; protected set; }
         public int Quantity { get; protected set; }
@@ -17,7 +17,7 @@ namespace Stocqres.Domain.Events.StockGroup
 
         public StockGroupCreatedEvent(Guid id, Guid ownerId, StockOwner stockOwner, int quantity, Guid stockId, decimal price)
         {
-            Id = id;
+            AggregateId = id;
             OwnerId = ownerId;
             StockOwner = stockOwner;
             Quantity = quantity;

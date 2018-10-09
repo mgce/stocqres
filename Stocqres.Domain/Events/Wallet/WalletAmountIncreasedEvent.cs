@@ -7,12 +7,12 @@ namespace Stocqres.Domain.Events.Wallet
 {
     public class WalletAmountIncreasedEvent : IEvent
     {
-        public Guid Id { get; set; }
+        public Guid AggregateId { get; set; }
         public decimal Amount { get; set; }
 
         public WalletAmountIncreasedEvent(Guid id, decimal amount)
         {
-            Id = id;
+            AggregateId = id;
             Amount = amount;
         }
     }

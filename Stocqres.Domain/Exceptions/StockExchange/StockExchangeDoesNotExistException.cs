@@ -4,8 +4,8 @@ namespace Stocqres.Domain.Exceptions.StockExchange
 {
     public class StockExchangeDoesNotExistException : StocqresException
     {
-        private static string code = Codes.StockExchange.StockExchangeDoesNotExist;
-        private static string message = "Stock exchange does not exist";
+        private static string code = Codes.StockExchangeCodes.StockExchangeDoesNotExist;
+        private static string message = "StockCodes exchange does not exist";
 
         public StockExchangeDoesNotExistException() : base(code, message)
         {

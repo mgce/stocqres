@@ -63,7 +63,7 @@ namespace Stocqres.Api
             services.AddJwt();
             services.AddHttpClient<IStockExchangeService, StockExchangeService>(client =>
             {
-                var config = Configuration.GetSection("StockExchange");
+                var config = Configuration.GetSection("StockExchangeCodes");
                 client.BaseAddress = new Uri(config.GetValue<string>("BaseAddress"));
             });
             return AddAutofac(services);

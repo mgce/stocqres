@@ -84,9 +84,9 @@ namespace Stocqres.Application.Stock.Handlers
 
         public async Task BurdenUserWallet(Guid walletId, decimal stockPrice, int unit, int quantity)
         {
-            var userWallet = await _walletRepository.GetAsync(walletId);
+            var userWallet = await _walletRepository.GetByIdAsync(walletId);
             if (userWallet.HaveEnoughtMoney(stockPrice, unit, quantity))
-                throw new Exception("User doesn't have enough money to buy this stocks");
+                throw new Exception("UserCodes doesn't have enough money to buy this stocks");
 
             var moneyToSpend = stockPrice * unit * quantity;
             userWallet.DecreaseAmount(moneyToSpend);
@@ -96,9 +96,9 @@ namespace Stocqres.Application.Stock.Handlers
 
         public async Task UnloadUserWallet(Guid walletId, decimal stockPrice, int unit, int quantity)
         {
-            var userWallet = await _walletRepository.GetAsync(walletId);
+            var userWallet = await _walletRepository.GetByIdAsync(walletId);
             if (userWallet.HaveEnoughtMoney(stockPrice, unit, quantity))
-                throw new Exception("User doesn't have enough money to buy this stocks");
+                throw new Exception("UserCodes doesn't have enough money to buy this stocks");
 
             var moneyToSpend = stockPrice * unit * quantity;
             userWallet.IncreaseAmount(moneyToSpend);
@@ -110,7 +110,7 @@ namespace Stocqres.Application.Stock.Handlers
         {
             var userStockGroup = new Domain.StockGroup(userId, StockOwner.User, quantity, stockPrice, stockId);
             await _eventBus.Publish(new StockGroupCreatedEvent(userStockGroup.Id, userStockGroup.OwnerId, userStockGroup.StockOwner,
-                userStockGroup.Quantity, userStockGroup.StockId));
+                userStockGroup.Quantity, userStockGroup.StockId, stockPrice));
             await _stockGroupRepository.CreateAsync(userStockGroup);
         }
 
