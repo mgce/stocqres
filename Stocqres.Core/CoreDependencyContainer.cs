@@ -14,7 +14,6 @@ namespace Stocqres.Core
     {
         public static void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<CustomEventStore>().As<ICustomEventStore>();
             builder.RegisterType<CommandBus>().As<ICommandBus>();
             builder.RegisterType<EventBus>().As<IEventBus>();
             builder.RegisterType<AggregateRootFactory>().As<IAggregateRootFactory>();

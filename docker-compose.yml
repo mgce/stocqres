@@ -7,24 +7,7 @@ services:
       context: .
       dockerfile: Stocqres.Api/Dockerfile
     links:
-      - postgres
       - mongoDb
-      - sqlServer
-
-  postgres: 
-    image: clkao/postgres-plv8
-    container_name: event-sourcing-net-postgres
-    environment:
-      POSTGRES_PASSWORD: Password12!
-    ports:
-      - "5432:5432"
-
-  sqlServer:
-    image: microsoft/mssql-server-linux
-    container_name: "sqlServer"
-    environment:
-      SA_PASSWORD: Your_password123
-      ACCEPT_EULA: Y
 
   mongoDb:
     image: mongo:latest
