@@ -6,7 +6,6 @@ using Stocqres.Core.Commands;
 using Stocqres.Core.Dispatcher;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
-using Stocqres.Core.EventStore;
 
 namespace Stocqres.Core
 {

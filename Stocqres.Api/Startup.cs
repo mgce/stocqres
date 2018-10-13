@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Marten;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +28,6 @@ using Stocqres.Identity.Repositories;
 using Stocqres.Infrastructure;
 using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
 using Stocqres.Transactions;
-using StoreOptions = Marten.StoreOptions;
 
 namespace Stocqres.Api
 {
@@ -99,7 +97,6 @@ namespace Stocqres.Api
 
             builder.Populate(services);
 
-            RegisterMarten(builder);
             //RegisterJwt(ref services, builder);
             RegisterMongo(builder);
             RegisterRepositories(builder);
@@ -107,36 +104,36 @@ namespace Stocqres.Api
             return new AutofacServiceProvider(ApplicationContainer);
         }
 
-        private void RegisterMarten(ContainerBuilder builder)
-        {
-            builder.Register(add =>
-            {
-                var documentStore = DocumentStore.For(options =>
-                {
-                    var config = Configuration.GetSection("EventStore");
-                    var connectionString = config.GetValue<string>("ConnectionString");
-                    var schemaName = config.GetValue<string>("Schema");
+        //private void RegisterMarten(ContainerBuilder builder)
+        //{
+        //    builder.Register(add =>
+        //    {
+        //        var documentStore = DocumentStore.For(options =>
+        //        {
+        //            var config = Configuration.GetSection("EventStore");
+        //            var connectionString = config.GetValue<string>("ConnectionString");
+        //            var schemaName = config.GetValue<string>("Schema");
 
-                    options.Connection(connectionString);
-                    options.AutoCreateSchemaObjects = AutoCreate.All;
-                    options.Events.DatabaseSchemaName = schemaName;
-                    options.DatabaseSchemaName = schemaName;
-                    RegisterEvents(options);
-                });
-                return documentStore.OpenSession();
-            }).InstancePerLifetimeScope();
-        }
+        //            options.Connection(connectionString);
+        //            options.AutoCreateSchemaObjects = AutoCreate.All;
+        //            options.Events.DatabaseSchemaName = schemaName;
+        //            options.DatabaseSchemaName = schemaName;
+        //            RegisterEvents(options);
+        //        });
+        //        return documentStore.OpenSession();
+        //    }).InstancePerLifetimeScope();
+        //}
 
-        private void RegisterEvents(StoreOptions options)
-        {
-            var eventType = typeof(IEvent);
-            var assembly = typeof(UserCreatedEvent).Assembly;
-            var types = assembly.GetTypes().Where(p => eventType.IsAssignableFrom(p));
-            foreach (var type in types)
-            {
-                options.Events.AddEventType(type);
-            }
-        }
+        //private void RegisterEvents(StoreOptions options)
+        //{
+        //    var eventType = typeof(IEvent);
+        //    var assembly = typeof(UserCreatedEvent).Assembly;
+        //    var types = assembly.GetTypes().Where(p => eventType.IsAssignableFrom(p));
+        //    foreach (var type in types)
+        //    {
+        //        options.Events.AddEventType(type);
+        //    }
+        //}
 
         private void RegisterJwt(ref IServiceCollection services, ContainerBuilder builder)
         {
