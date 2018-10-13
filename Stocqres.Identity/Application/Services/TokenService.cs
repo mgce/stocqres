@@ -28,7 +28,7 @@ namespace Stocqres.Identity.Application.Services
 
         public async Task<JsonWebToken> SignInAsync(string username, string password)
         {
-            var user = await _userRepository.GetAsync(x => x.Username == username);
+            var user = await _userRepository.FindAsync(x => x.Username == username);
             if(user == null)
                 throw new StocqresException("UserCodes does not exist.");
 

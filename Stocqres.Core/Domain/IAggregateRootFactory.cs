@@ -8,6 +8,6 @@ namespace Stocqres.Core.Domain
 {
     public interface IAggregateRootFactory
     {
-        Task<T> CreateAsync<T>(IEnumerable<IEvent> events);
+        object CreateAsync<T>(IEnumerable<IEvent> events);
     }
 }

@@ -17,11 +17,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Domain", "Stocqres
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{95274F3A-D8B0-49E3-AABD-33C7B2A69BC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.Transactions", "..\Users\MateuszGajda\source\repos\Stocqres.Transactions\Stocqres.Transactions.csproj", "{AF2A8DCA-16CA-45B7-BFFD-D23AB51C6852}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Transactions", "..\Users\MateuszGajda\source\repos\Stocqres.Transactions\Stocqres.Transactions.csproj", "{AF2A8DCA-16CA-45B7-BFFD-D23AB51C6852}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.Customers", "Stocqres.Customers\Stocqres.Customers.csproj", "{BE5DC542-DF74-43B2-9DB7-39F81E61AA35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Customers", "Stocqres.Customers\Stocqres.Customers.csproj", "{BE5DC542-DF74-43B2-9DB7-39F81E61AA35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.Identity", "Stocqres.Identity\Stocqres.Identity.csproj", "{8C7E3372-091D-4FC2-8A32-178D49154E7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Identity", "Stocqres.Identity\Stocqres.Identity.csproj", "{8C7E3372-091D-4FC2-8A32-178D49154E7E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{87C6D0F9-420A-4B0F-BA4C-A933DB972C21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.SharedKernel", "..\Users\MateuszGajda\source\repos\Stocqres.SharedKernel\Stocqres.SharedKernel.csproj", "{F4784495-CEF6-43C7-87A8-4A356E38370C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer", "SqlServer", "{D840FD19-B8FD-49AC-BE7D-876CBCBA3AB0}"
+	ProjectSection(SolutionItems) = preProject
+		entrypoint.sh = entrypoint.sh
+		IdentityScript.sql = IdentityScript.sql
+		setup-database.sh = setup-database.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +76,10 @@ Global
 		{8C7E3372-091D-4FC2-8A32-178D49154E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C7E3372-091D-4FC2-8A32-178D49154E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C7E3372-091D-4FC2-8A32-178D49154E7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4784495-CEF6-43C7-87A8-4A356E38370C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4784495-CEF6-43C7-87A8-4A356E38370C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4784495-CEF6-43C7-87A8-4A356E38370C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4784495-CEF6-43C7-87A8-4A356E38370C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +93,8 @@ Global
 		{AF2A8DCA-16CA-45B7-BFFD-D23AB51C6852} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
 		{BE5DC542-DF74-43B2-9DB7-39F81E61AA35} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
 		{8C7E3372-091D-4FC2-8A32-178D49154E7E} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
+		{F4784495-CEF6-43C7-87A8-4A356E38370C} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
+		{D840FD19-B8FD-49AC-BE7D-876CBCBA3AB0} = {87C6D0F9-420A-4B0F-BA4C-A933DB972C21}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6709BAD5-9D57-4D0D-9F3E-BE8AC0856C09}

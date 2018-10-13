@@ -33,7 +33,7 @@ namespace Stocqres.Infrastructure.EventRepository
                 var sql = $"Select * From Events Where AggregateId={id}";
                 var listOfEventData = await conn.QueryAsync<EventData>(sql, new {id});
                 var events = listOfEventData.Select(x => x.DeserializeEvent());
-                return await _factory.CreateAsync<T>(events);
+                return (T)_factory.CreateAsync<T>(events);
             }
         }
 
@@ -50,6 +50,7 @@ namespace Stocqres.Infrastructure.EventRepository
                 await conn.OpenAsync();
                 using (var tx = conn.BeginTransaction())
                 {
+                    await CreateTableForAggregateIfNotExist(conn, aggregateType);
                     var foundVersionQuery = $"Select MAX(Version) FROM Events WHERE AggregateId={aggregate.Id}";
                     var foundVersionCommand = new SqlCommand(foundVersionQuery, conn);
                     var foundVersionResult = (int?) foundVersionCommand.ExecuteScalar();
@@ -58,8 +59,8 @@ namespace Stocqres.Infrastructure.EventRepository
                         throw new Exception("Concurrency Exception");
 
                     const string sql =
-                        @"INSERT INTO Events(AggregateId, Created,  AggregateId, AggregateType, Version, Data, Metadata) " +
-                        @"VALUES(@AggregateId, @Created,  @AggregateId, @AggregateType, @Version, @Data, @Metadata)";
+                        @"INSERT INTO Events(Id, AggregateId, AggregateType, Version, Data, Metadata, Created) " +
+                        @"VALUES(@Id, @AggregateId, @AggregateType, @Version, @Data, @Metadata,@Created)";
 
                     await conn.ExecuteAsync(sql, eventsToSave, tx);
                     tx.Commit();
@@ -75,6 +76,29 @@ namespace Stocqres.Infrastructure.EventRepository
             {
                 await _eventBus.Publish(@event);
             }
+        }
+
+        private async Task CreateTableForAggregateIfNotExist(SqlConnection con, string aggregateTableName)
+        {
+            var sql = $"IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Customers].[{aggregateTableName}Events]' AND type in (N'U'))" +
+                      "BEGIN" +
+                      $"CREATE TABLE [Customers].[{aggregateTableName}Events](" +
+                      "[Id] UNIQUEIDENTIFIER default NEWID() NOT NULL" +
+                      "[AggregateId] UNIQUEIDENTIFIER default NEWID() NOT NULL" +
+                      "[AggregateType] NVARCHAR(255) NOT NULL" +
+                      "[Version] INT NOT NULL" +
+                      "[Data] NVARCHAR(MAX) NOT NULL" +
+                      "[MetaData] NVARCHAR(MAX) NOT NULL" +
+                      "[CreatedAt] DATETIME NOT NULL," +
+                      $"CONSTRAINT PK{aggregateTableName}Events PRIMARY KEY(ID)" +
+                      ")" +
+                      "GO" +
+                      $"CREATE INDEX Idx_{aggregateTableName}Events_AggregateId" +
+                      $"ON {aggregateTableName}Events(AggregateId)" +
+                      "GO" +
+                      "END";
+
+            await con.ExecuteScalarAsync<bool>(sql);
         }
     }
 }

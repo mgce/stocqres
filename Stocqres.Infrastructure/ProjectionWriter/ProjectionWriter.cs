@@ -14,11 +14,11 @@ namespace Stocqres.Infrastructure.ProjectionWriter
             _database = database;
         }
 
-        public async Task AddAsync<T>(T view)
+        public async Task AddAsync<T>(T projection)
         {
             var collection = GetCollection<T>();
 
-            await collection.InsertOneAsync(view);
+            await collection.InsertOneAsync(projection);
         }
 
         public async Task UpdateAsync<T>(Guid id, Action<T> action) where T: IProjection

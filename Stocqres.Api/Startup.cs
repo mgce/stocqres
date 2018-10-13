@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -23,6 +24,8 @@ using Stocqres.Customers;
 using Stocqres.Domain.Events.Users;
 using Stocqres.Identity;
 using Stocqres.Identity.Domain;
+using Stocqres.Identity.Infrastructure;
+using Stocqres.Identity.Repositories;
 using Stocqres.Infrastructure;
 using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
 using Stocqres.Transactions;
@@ -50,6 +53,8 @@ namespace Stocqres.Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddJwt();
+            services.AddDbContext<IdentityDbContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
             services.AddHttpClient<IStockExchangeService, StockExchangeService>(client =>
             {
                 var config = Configuration.GetSection("StockExchangeCodes");
