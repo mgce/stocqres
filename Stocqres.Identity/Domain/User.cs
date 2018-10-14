@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Exceptions;
@@ -9,6 +10,7 @@ using Stocqres.Domain.Events.Wallet;
 
 namespace Stocqres.Identity.Domain
 {
+    [Table("User", Schema = "Identity")]
     public class User : AggregateRoot
     {
         public string Username { get; set; }

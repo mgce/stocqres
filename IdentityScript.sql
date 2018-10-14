@@ -11,7 +11,7 @@ CREATE TABLE [Identity].[User](
 	[Password] NVARCHAR(255),
 	[CreatedAt] DATETIME,
 	[ModifiedAt] DATETIME,
-	[State] INT(255)
+	[State] INT
 )
 
 CREATE TABLE [Identity].[RefreshToken](
@@ -23,5 +23,5 @@ CREATE TABLE [Identity].[RefreshToken](
 	[RevokedAt] DATETIME,
 	[CreatedAt] DATETIME,
 	[ModifiedAt] DATETIME,
-	[State] INT(255)
+	[State] INT
 )

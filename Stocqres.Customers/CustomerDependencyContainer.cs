@@ -16,13 +16,11 @@ namespace Stocqres.Customers
 
             builder
                 .RegisterAssemblyTypes(assembly)
-                .AsClosedTypesOf(typeof(ICommandHandler<>))
-                .InstancePerLifetimeScope();
+                .AsClosedTypesOf(typeof(ICommandHandler<>));
 
             builder
                 .RegisterAssemblyTypes(assembly)
-                .AsClosedTypesOf(typeof(IEventHandler<>))
-                .InstancePerLifetimeScope();
+                .AsClosedTypesOf(typeof(IEventHandler<>));
         }
     }
 }

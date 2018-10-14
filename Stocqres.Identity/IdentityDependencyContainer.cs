@@ -25,6 +25,11 @@ namespace Stocqres.Identity
                 .AsClosedTypesOf(typeof(IEventHandler<>))
                 .InstancePerLifetimeScope();
 
+            builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
+                .Where(t => t.Name.EndsWith("Repository"))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<TokenService>().As<ITokenService>();
             builder.RegisterType<RefreshTokenService>().As<IRefreshTokenService>();
         }

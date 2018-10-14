@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Stocqres.Core;
 using Stocqres.Core.Exceptions;
 
 namespace Stocqres.Identity.Domain
 {
+    [Table("RefreshToken", Schema = "Identity")]
     public class RefreshToken : BaseEntity
     {
         public Guid UserId { get; protected set; }

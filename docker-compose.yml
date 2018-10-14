@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Stocqres.Api/Dockerfile
+    expose:
+      - "1433"
     links:
       - mongoDb
 
@@ -19,3 +21,4 @@ services:
 
 volumes:
   mongodata:
+

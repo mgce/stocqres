@@ -25,21 +25,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Stocqres.Api.dll"]
-
-FROM microsoft/mssql-server-linux:2017-latest
-
-ENV ACCEPT_EULA=Y
-ENV SA_PASSWORD=Your_password123
-ENV MSSQL_PID=Developer
-
-WORKDIR /src
-
-COPY IdentityScript.sql ./scripts/SqlServer
-COPY setup-database.sh ./scripts/SqlServer
-COPY entrypoint.sh ./scripts/SqlServer
-
-# Grant permissions for the setup-database and entrypoint shell scripts to be executable
-RUN chmod +x ./setup-database.sh
-RUN chmod +x ./entrypoint.sh
-
-CMD bash ./entrypoint.sh

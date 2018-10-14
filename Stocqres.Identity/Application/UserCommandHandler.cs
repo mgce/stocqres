@@ -37,7 +37,10 @@ namespace Stocqres.Identity.Application
 
         public async Task HandleAsync(CreateUserCommand command)
         {
-            var user = new Domain.User(command.Username, command.Email);
+            var user = await _userRepository.GetUserByEmailAsync(command.Email);
+            if (user != null)
+                throw new StocqresException($"User with mail {command.Email} currently exist");
+            user = new Domain.User(command.Username, command.Email);
             user.SetPassword(command.Password, _passwordHasher);
             await _userRepository.CreateAsync(user);
             await _userRepository.SaveAsync();

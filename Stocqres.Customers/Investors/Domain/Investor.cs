@@ -15,7 +15,7 @@ namespace Stocqres.Customers.Investors.Domain
 
         public Investor(Guid userId,  string firstName, string lastName)
         {
-            Publish(new InvestorCreatedEvent(Guid.NewGuid(), UserId, FirstName, LastName));
+            Publish(new InvestorCreatedEvent(Guid.NewGuid(), userId, firstName, lastName));
         }
 
         private void ApplyEvent(InvestorCreatedEvent @event)

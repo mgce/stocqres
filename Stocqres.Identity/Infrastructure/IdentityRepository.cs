@@ -10,7 +10,7 @@ namespace Stocqres.Identity.Infrastructure
 {
     public class IdentityRepository<T> : IIdentityRepository<T> where T : BaseEntity
     {
-        protected readonly IdentityDbContext _dbContext;
+        protected IdentityDbContext _dbContext;
 
         public IdentityRepository(IdentityDbContext dbContext)
         {
