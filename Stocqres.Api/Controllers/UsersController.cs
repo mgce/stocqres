@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Dispatcher;
-using Stocqres.Domain.Commands.Wallet;
+using Stocqres.Customers.Wallet.Commands;
 using Stocqres.Identity.Domain.Commands;
 
 namespace Stocqres.Api.Controllers

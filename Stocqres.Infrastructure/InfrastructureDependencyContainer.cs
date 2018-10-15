@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using Autofac;
 using Stocqres.Core.Commands;
+using Stocqres.Infrastructure.ProjectionReader;
 using Stocqres.Infrastructure.ProjectionWriter;
 using Stocqres.Infrastructure.Repositories.Api;
 
@@ -21,6 +22,7 @@ namespace Stocqres.Infrastructure
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<ProjectionWriter.ProjectionWriter>().As<IProjectionWriter>();
+            builder.RegisterType<ProjectionReader.ProjectionReader>().As<IProjectionReader>();
         }
     }
 }

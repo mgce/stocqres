@@ -7,7 +7,9 @@ using Stocqres.Core.Events;
 using Stocqres.Customers.Investors.Domain;
 using Stocqres.Customers.Investors.Domain.Commands;
 using Stocqres.Customers.Investors.Domain.Events;
+using Stocqres.Customers.Investors.Presentation.Projections;
 using Stocqres.Infrastructure.EventRepository;
+using Stocqres.Infrastructure.ProjectionReader;
 
 namespace Stocqres.Customers.Investors.Application
 {
@@ -15,11 +17,13 @@ namespace Stocqres.Customers.Investors.Application
     {
         private readonly IEventRepository _eventRepository;
         private readonly IEventBus _eventBus;
+        private readonly IProjectionReader _projectionReader;
 
-        public InvestorsCommandHandler(IEventRepository eventRepository, IEventBus eventBus)
+        public InvestorsCommandHandler(IEventRepository eventRepository, IEventBus eventBus, IProjectionReader projectionReader)
         {
             _eventRepository = eventRepository;
             _eventBus = eventBus;
+            _projectionReader = projectionReader;
         }
         public async Task HandleAsync(CreateInvestorCommand command)
         {
@@ -28,5 +32,7 @@ namespace Stocqres.Customers.Investors.Application
             await _eventBus.Publish(new InvestorCreatedEvent(investor.Id, investor.UserId, investor.FirstName,
                 investor.LastName));
         }
+
+ 
     }
 }

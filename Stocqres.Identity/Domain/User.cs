@@ -6,7 +6,6 @@ using Stocqres.Core.Exceptions;
 using Stocqres.Domain;
 using Stocqres.Domain.Enums;
 using Stocqres.Domain.Events.Users;
-using Stocqres.Domain.Events.Wallet;
 
 namespace Stocqres.Identity.Domain
 {

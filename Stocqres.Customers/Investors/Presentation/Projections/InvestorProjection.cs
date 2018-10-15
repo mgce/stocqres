@@ -1,8 +1,9 @@
 ﻿using System;
+using Stocqres.Core.Domain;
 
 namespace Stocqres.Customers.Investors.Presentation.Projections
 {
-    public class InvestorProjection
+    public class InvestorProjection : IProjection
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }

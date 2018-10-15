@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Stocqres.Core.Events;
 using Stocqres.Domain.Events.Users;
-using Stocqres.Domain.Events.Wallet;
 using Stocqres.Domain.Views;
 using Stocqres.Infrastructure.ProjectionWriter;
 

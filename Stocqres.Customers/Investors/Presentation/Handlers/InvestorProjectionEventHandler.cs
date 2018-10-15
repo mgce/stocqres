@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using Stocqres.Core.Events;
 using Stocqres.Customers.Investors.Domain.Events;
 using Stocqres.Customers.Investors.Presentation.Projections;
+using Stocqres.Customers.Wallet.Events;
 using Stocqres.Infrastructure.ProjectionWriter;
 
 namespace Stocqres.Customers.Investors.Presentation.Handlers
 {
-    public class InvestorViewEventHandler : IEventHandler<InvestorCreatedEvent>
+    public class InvestorProjectionEventHandler : IEventHandler<InvestorCreatedEvent>, IEventHandler<WalletCreatedEvent>
     {
         private readonly IProjectionWriter _projectionWriter;
 
-        public InvestorViewEventHandler(IProjectionWriter projectionWriter)
+        public InvestorProjectionEventHandler(IProjectionWriter projectionWriter)
         {
             _projectionWriter = projectionWriter;
         }
@@ -21,6 +22,12 @@ namespace Stocqres.Customers.Investors.Presentation.Handlers
         {
             await _projectionWriter.AddAsync(new InvestorProjection(@event.AggregateId, @event.UserId, @event.FirstName,
                 @event.LastName));
+        }
+
+        public async Task HandleAsync(WalletCreatedEvent @event)
+        {
+            await _projectionWriter.UpdateAsync<InvestorProjection>(@event.InvestorId,
+                e => e.WalletId = @event.AggregateId);
         }
     }
 }

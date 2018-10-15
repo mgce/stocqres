@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Stocqres.Core.Events;
 
-namespace Stocqres.Domain.Events.Wallet
+namespace Stocqres.Customers.Wallet.Events
 {
-    public class WalletAmountDecreasedEvent : IEvent
+    public class WalletAmountIncreasedEvent : IEvent
     {
         public Guid AggregateId { get; set; }
         public decimal Amount { get; set; }
 
-        public WalletAmountDecreasedEvent(Guid id, decimal amount)
+        public WalletAmountIncreasedEvent(Guid id, decimal amount)
         {
             AggregateId = id;
             Amount = amount;

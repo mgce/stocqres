@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Stocqres.Core.Commands;
 
-namespace Stocqres.Domain.Commands.Wallet
+namespace Stocqres.Customers.Wallet.Commands
 {
     public class CreateWalletCommand : ICommand
     {
-        public Guid UserId { get; set; }
+        public Guid InvestorId { get; set; }
         public decimal Amount { get; set; }
     }
 }
