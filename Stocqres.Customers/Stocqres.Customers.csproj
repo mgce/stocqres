@@ -13,8 +13,4 @@
     <ProjectReference Include="..\Stocqres.Infrastructure\Stocqres.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Companies\Application\" />
-  </ItemGroup>
-
 </Project>
