@@ -28,7 +28,8 @@ namespace Stocqres.Core.Events
 
             foreach (var handler in (IEnumerable) eventHandlers)
             {
-                var handlerMethod = handler.GetType().GetRuntimeMethods().First(x => x.Name.Equals("HandleAsync"));
+                //var handlerMethod = handler.GetType().GetRuntimeMethods().Where(x => x.Name.Equals("HandleAsync"));
+                var handlerMethod = handler.GetType().GetMethod("HandleAsync", new[] {@event.GetType()});
                 await (Task) ((dynamic) handlerMethod.Invoke(handler, new object[] {@event}));
             }
         }
