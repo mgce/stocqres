@@ -14,13 +14,13 @@ namespace Stocqres.Customers
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            builder
-                .RegisterAssemblyTypes(assembly)
-                .AsClosedTypesOf(typeof(ICommandHandler<>));
+            //builder
+            //    .RegisterAssemblyTypes(assembly)
+            //    .AsClosedTypesOf(typeof(ICommandHandler<>));
 
-            builder
-                .RegisterAssemblyTypes(assembly)
-                .AsClosedTypesOf(typeof(IEventHandler<>));
+            //builder
+            //    .RegisterAssemblyTypes(assembly)
+            //    .AsClosedTypesOf(typeof(IEventHandler<>));
         }
     }
 }

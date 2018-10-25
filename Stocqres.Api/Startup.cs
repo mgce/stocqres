@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
@@ -16,18 +17,22 @@ using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using Stocqres.Core;
 using Stocqres.Core.Authentication;
+using Stocqres.Core.Commands;
+using Stocqres.Core.Dispatcher;
 using Stocqres.Core.Events;
 using Stocqres.Core.Middlewares;
 using Stocqres.Core.Mongo;
 using Stocqres.Customers;
-using Stocqres.Domain.Events.Users;
 using Stocqres.Identity;
 using Stocqres.Identity.Domain;
 using Stocqres.Identity.Infrastructure;
 using Stocqres.Identity.Repositories;
 using Stocqres.Infrastructure;
 using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
+using Stocqres.SharedKernel;
 using Stocqres.Transactions;
+using Stocqres.Transactions.Infrastructure.ProcessManager;
+using Stocqres.Transactions.Orders.Domain;
 
 namespace Stocqres.Api
 {
@@ -51,13 +56,18 @@ namespace Stocqres.Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddJwt();
+
             services.AddDbContext<IdentityDbContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
+            services.AddDbContext<ProcessManagerDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
+
             services.AddHttpClient<IStockExchangeService, StockExchangeService>(client =>
             {
-                var config = Configuration.GetSection("StockExchangeCodes");
+                var config = Configuration.GetSection("StockExchange");
                 client.BaseAddress = new Uri(config.GetValue<string>("BaseAddress"));
             });
+
             return AddAutofac(services);
             
         }
@@ -79,7 +89,10 @@ namespace Stocqres.Api
             app.UseAuthentication();
             app.UseErrorHandler();
             app.UseMvc();
-            SeedData.Initialize(ApplicationContainer);
+
+            var dispatcher = ApplicationContainer.Resolve<IDispatcher>();
+            var seeder = new CustomerSeed(dispatcher);
+            //seeder.Seed();
         }
 
         private IServiceProvider AddAutofac(IServiceCollection services)
@@ -89,11 +102,38 @@ namespace Stocqres.Api
             builder.RegisterType<PasswordHasher<User>>().As<IPasswordHasher<User>>();
 
             //ApplicationDependencyContainer.Load(builder);
+
+            CoreDependencyContainer.Load(builder);
+            InfrastructureDependencyContainer.Load(builder);
+            SharedKernelDependencyResolver.Load(builder);
             CustomerDependencyContainer.Load(builder);
             IdentityDependencyContainer.Load(builder);
             TransactionsDependencyResolver.Load(builder);
-            InfrastructureDependencyContainer.Load(builder);
-            CoreDependencyContainer.Load(builder);
+
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.Contains("Stocqres")).ToArray();
+
+            builder
+                .RegisterAssemblyTypes(assemblies)
+                .AsClosedTypesOf(typeof(IEventHandler<>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterAssemblyTypes(assemblies)
+                .AsClosedTypesOf(typeof(ICommandHandler<>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            builder.Register<Func<Type, IEnumerable<IEventHandler<IEvent>>>>(c =>
+            {
+                var ctx = c.Resolve<IComponentContext>();
+                return t =>
+                {
+                    var handlerType = typeof(IEventHandler<>).MakeGenericType(t);
+                    var handlersCollectionType = typeof(IEnumerable<>).MakeGenericType(handlerType);
+                    return (IEnumerable<IEventHandler<IEvent>>) ctx.Resolve(handlersCollectionType);
+                };
+            });
 
             builder.Populate(services);
 
@@ -101,6 +141,7 @@ namespace Stocqres.Api
             RegisterMongo(builder);
             RegisterRepositories(builder);
             ApplicationContainer = builder.Build();
+
             return new AutofacServiceProvider(ApplicationContainer);
         }
 

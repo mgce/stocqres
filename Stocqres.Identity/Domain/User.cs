@@ -3,9 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Exceptions;
-using Stocqres.Domain;
-using Stocqres.Domain.Enums;
-using Stocqres.Domain.Events.Users;
+using Stocqres.Identity.Domain.Events.Users;
 
 namespace Stocqres.Identity.Domain
 {
@@ -47,19 +45,14 @@ namespace Stocqres.Identity.Domain
             return passwordHasher.VerifyHashedPassword(this, Password, password) != PasswordVerificationResult.Failed;
         }
 
-        public void AssignWallet(Wallet wallet)
-        {
-            Publish(new WalletCreatedEvent(wallet));
-        }
-
-        private void ApplyEvent(UserCreatedEvent @event)
+        private void Apply(UserCreatedEvent @event)
         {
             Id = @event.AggregateId;
             Username = @event.Username;
             Email = @event.Email;
         }
 
-        private void ApplyEvent(UserPasswordSettedEvent @event)
+        private void Apply(UserPasswordSettedEvent @event)
         {
             Password = @event.Password;
         }

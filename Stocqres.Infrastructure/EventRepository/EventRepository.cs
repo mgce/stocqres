@@ -32,7 +32,7 @@ namespace Stocqres.Infrastructure.EventRepository
         {
             using (var conn = new SqlConnection(_connectionString))
             {
-                var sql = $"Select * From Events Where AggregateId={id}";
+                var sql = $"Select * From [Customers].{typeof(T).Name}Events Where AggregateId='{id}'";
                 var listOfEventData = await conn.QueryAsync<EventData>(sql, new {id});
                 var events = listOfEventData.Select(x => x.DeserializeEvent());
                 return (T)_factory.CreateAsync<T>(events);
@@ -46,7 +46,7 @@ namespace Stocqres.Infrastructure.EventRepository
                 return;
             var aggregateType = aggregate.GetType().Name;
             var originalVersion = aggregate.Version - events.Count + 1;
-            var eventsToSave = events.Select(e => e.ToEventData(aggregate.Id, aggregateType, originalVersion++));
+            var eventsToSave = events.Select(e => e.ToEventData(aggregate.Id, aggregateType, originalVersion++, DateTime.Now));
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var conn = new SqlConnection(_connectionString))
@@ -70,12 +70,12 @@ namespace Stocqres.Infrastructure.EventRepository
                 scope.Complete();
             }
 
-            await RaiseEvents(events);
+            await RaiseEvents(aggregate);
         }
 
-        private async Task RaiseEvents(IEnumerable<IEvent> events)
+        private async Task RaiseEvents(IAggregateRoot aggregate)
         {
-            foreach (var @event in events)
+            foreach (var @event in aggregate.GetUncommitedEvents())
             {
                 await _eventBus.Publish(@event);
             }

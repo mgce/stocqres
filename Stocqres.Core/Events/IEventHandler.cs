@@ -5,7 +5,11 @@ using System.Threading.Tasks;
 
 namespace Stocqres.Core.Events
 {
-    public interface IEventHandler<in TEvent> where TEvent : IEvent
+    public interface IEventHandler
+    {
+
+    }
+    public interface IEventHandler<in TEvent> : IEventHandler where TEvent : IEvent
     {
         Task HandleAsync(TEvent @event);
     }

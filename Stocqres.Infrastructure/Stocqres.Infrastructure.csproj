@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Stocqres.Core\Stocqres.Core.csproj" />
-    <ProjectReference Include="..\Stocqres.Domain\Stocqres.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

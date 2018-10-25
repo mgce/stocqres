@@ -14,15 +14,20 @@ namespace Stocqres.Infrastructure.EventRepository
         public string Data { get; set; }
         public string Metadata { get; set; }
 
-        public EventData(Guid aggregateId, string aggregateType, int version, string data, string metadata)
+        public EventData()
         {
-            Id = Guid.NewGuid();
-            Created = DateTime.Now;
-            AggregateType = aggregateType;
-            AggregateId = aggregateId;
-            Version = version;
-            Data = data;
-            Metadata = metadata;
+            
+        }
+
+        public EventData(Guid Id, Guid AggregateId, string AggregateType, int Version, string Data, string Metadata, DateTime Created)
+        {
+            this.Id = Id;
+            this.Created = Created;
+            this.AggregateType = AggregateType;
+            this.AggregateId = AggregateId;
+            this.Version = Version;
+            this.Data = Data;
+            this.Metadata = Metadata;
         }
     }
 }

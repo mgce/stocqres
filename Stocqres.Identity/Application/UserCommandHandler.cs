@@ -6,7 +6,6 @@ using Stocqres.Core.Dispatcher;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
-using Stocqres.Domain;
 using Stocqres.Identity.Domain.Commands;
 using Stocqres.Identity.Repositories;
 using Stocqres.Infrastructure.EventRepository;

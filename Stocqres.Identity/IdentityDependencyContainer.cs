@@ -15,15 +15,15 @@ namespace Stocqres.Identity
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            builder
-                .RegisterAssemblyTypes(assembly)
-                .AsClosedTypesOf(typeof(ICommandHandler<>))
-                .InstancePerLifetimeScope();
+            //builder
+            //    .RegisterAssemblyTypes(assembly)
+            //    .AsClosedTypesOf(typeof(ICommandHandler<>))
+            //    .InstancePerLifetimeScope();
 
-            builder
-                .RegisterAssemblyTypes(assembly)
-                .AsClosedTypesOf(typeof(IEventHandler<>))
-                .InstancePerLifetimeScope();
+            //builder
+            //    .RegisterAssemblyTypes(assembly)
+            //    .AsClosedTypesOf(typeof(IEventHandler<>))
+            //    .InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
                 .Where(t => t.Name.EndsWith("Repository"))

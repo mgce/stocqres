@@ -8,12 +8,14 @@ namespace Stocqres.Customers.Companies.Domain.Events
     public class CompanyStockCreatedEvent : IEvent
     {
         public Guid AggregateId { get; set; }
+        public Guid StockId { get; set; }
         public string Code { get; set; }
         public int Unit { get; set; }
         public int Quantity { get; set; }
 
-        public CompanyStockCreatedEvent(Guid aggregateId, string code, int unit, int quantity)
+        public CompanyStockCreatedEvent(Guid aggregateId, Guid stockId,string code, int unit, int quantity)
         {
+            StockId = stockId;
             AggregateId = aggregateId;
             Code = code;
             Unit = unit;

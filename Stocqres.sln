@@ -25,12 +25,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.Identity", "Stocqr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{87C6D0F9-420A-4B0F-BA4C-A933DB972C21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.SharedKernel", "..\Users\MateuszGajda\source\repos\Stocqres.SharedKernel\Stocqres.SharedKernel.csproj", "{F4784495-CEF6-43C7-87A8-4A356E38370C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.SharedKernel", "..\Users\MateuszGajda\source\repos\Stocqres.SharedKernel\Stocqres.SharedKernel.csproj", "{F4784495-CEF6-43C7-87A8-4A356E38370C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer", "SqlServer", "{D840FD19-B8FD-49AC-BE7D-876CBCBA3AB0}"
 	ProjectSection(SolutionItems) = preProject
 		entrypoint.sh = entrypoint.sh
 		IdentityScript.sql = IdentityScript.sql
+		ProcessManager.sql = ProcessManager.sql
 		setup-database.sh = setup-database.sh
 	EndProjectSection
 EndProject

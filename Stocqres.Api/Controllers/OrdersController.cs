@@ -6,31 +6,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stocqres.Core.Dispatcher;
 using Stocqres.Customers.Investors.Domain.Commands;
-using Stocqres.Customers.Wallet.Commands;
+using Stocqres.Transactions.Orders.Domain.Command;
 
 namespace Stocqres.Api.Controllers
 {
-    public class InvestorsController : BaseController
+    public class OrdersController : BaseController
     {
         private readonly IDispatcher _dispatcher;
 
-        public InvestorsController(IDispatcher dispatcher)
+        public OrdersController(IDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
 
         [HttpPost("")]
         [AllowAnonymous]
-        public async Task<IActionResult> Post(CreateInvestorCommand command)
-        {
-            await _dispatcher.SendAsync(command);
-
-            return NoContent();
-        }
-
-        [HttpPost("wallet")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Post(CreateWalletCommand command)
+        public async Task<IActionResult> Post(CreateOrderCommand command)
         {
             await _dispatcher.SendAsync(command);
 

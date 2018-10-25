@@ -1,4 +1,5 @@
 ﻿using System;
+using Stocqres.Core.Events;
 
 namespace Stocqres.Identity.Domain.Events.Users
 {

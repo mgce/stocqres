@@ -2,6 +2,7 @@
 using Stocqres.Core.Domain;
 using Stocqres.Core.Exceptions;
 using Stocqres.Customers.Companies.Domain.Events;
+using Stocqres.SharedKernel.Events;
 using Stocqres.SharedKernel.Stocks;
 
 namespace Stocqres.Customers.Companies.Domain
@@ -30,7 +31,15 @@ namespace Stocqres.Customers.Companies.Domain
             if (quantity <= 0)
                 throw new StocqresException("Stock quantity must be greater than zero");
 
-            Publish(new CompanyStockCreatedEvent(Id, code, unit, quantity));
+            Publish(new CompanyStockCreatedEvent(Id, Guid.NewGuid(), code, unit, quantity));
+        }
+
+        public void ChargeCompanyStock(int stockQuantity)
+        {
+            if(stockQuantity < Stock.Quantity)
+                throw new StocqresException("Company doesn't have enough stocks");
+
+            Publish(new CompanyChargedEvent(Id,Stock.Name, Stock.Code, Stock.Unit, stockQuantity));
         }
 
         public void Apply(CompanyCreatedEvent @event)
@@ -41,8 +50,12 @@ namespace Stocqres.Customers.Companies.Domain
 
         public void Apply(CompanyStockCreatedEvent @event)
         {
-            Id = @event.AggregateId;
             Stock = new Stock(Name, @event.Code, @event.Unit, @event.Quantity);
+        }
+
+        public void Apply(CompanyChargedEvent @event)
+        {
+            Stock.Quantity -= @event.StockQuantity;
         }
     }
 }

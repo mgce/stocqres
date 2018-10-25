@@ -6,10 +6,11 @@ using Stocqres.Core.Events;
 using Stocqres.Customers.Companies.Domain.Events;
 using Stocqres.Customers.Companies.Presentation.Projections;
 using Stocqres.Infrastructure.ProjectionWriter;
+using Stocqres.SharedKernel.Events;
 
 namespace Stocqres.Customers.Companies.Presentation
 {
-    public class CompanyProjectionEventHandler : IEventHandler<CompanyCreatedEvent>, IEventHandler<CompanyStockCreatedEvent>
+    public class CompanyProjectionEventHandler : IEventHandler<CompanyCreatedEvent>, IEventHandler<CompanyStockCreatedEvent>, IEventHandler<CompanyChargedEvent>
     {
         private readonly IProjectionWriter _projectionWriter;
 
@@ -31,6 +32,14 @@ namespace Stocqres.Customers.Companies.Presentation
                     projection.StockQuantity = @event.Quantity;
                     projection.StockUnit = @event.Unit;
                 });
+        }
+
+        public async Task HandleAsync(CompanyChargedEvent @event)
+        {
+            await _projectionWriter.UpdateAsync<CompanyProjection>(@event.AggregateId, projection =>
+            {
+                projection.StockQuantity = @event.StockQuantity;
+            });
         }
     }
 }

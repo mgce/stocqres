@@ -30,11 +30,11 @@ namespace Stocqres.Core.Domain
         {
             _version++;
 
-            var type = e.GetType();
+            var type = e.GetType();         
 
             GetType()
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(ev => ev.Name == "ApplyEvent" && ev.GetParameters().Length == 1)
+                .Where(ev => ev.Name == "Apply" && ev.GetParameters().Length == 1)
                 .ToDictionary(ev => ev.GetParameters().First().ParameterType, ev => ev)
                 .TryGetValue(type, out var info);
 

@@ -12,10 +12,11 @@ using Stocqres.Infrastructure.EventRepository;
 using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
 using Stocqres.Infrastructure.ProjectionReader;
 using Stocqres.SharedKernel.Commands;
+using Stocqres.SharedKernel.Stocks;
 
 namespace Stocqres.Customers.Wallet.Application
 {
-    public class WalletCommandHandler : ICommandHandler<CreateWalletCommand>, ICommandHandler<ChargeWalletCommand>
+    public class WalletCommandHandler : ICommandHandler<CreateWalletCommand>, ICommandHandler<ChargeWalletCommand>, ICommandHandler<AddStockToWalletCommand>
     {
         private readonly IProjectionReader _projectionReader;
         private readonly IEventRepository _eventRepository;
@@ -51,7 +52,18 @@ namespace Stocqres.Customers.Wallet.Application
                 throw new StocqresException("Wallet doesn't exist");
 
             var stockPrice = await _stockExchangeService.GetStockPrice(company.Stock.Code);
-            wallet.ChargeWallet(stockPrice * command.Quantity * company.Stock.Unit);
+            wallet.ChargeWallet(stockPrice * command.Quantity);
+            await _eventRepository.SaveAsync(wallet);
+        }
+
+        public async Task HandleAsync(AddStockToWalletCommand command)
+        {
+            var wallet = await _eventRepository.GetByIdAsync<Domain.Wallet>(command.WalletId);
+            if (wallet == null)
+                throw new StocqresException("Wallet doesn't exist");
+
+            wallet.AddStock(command.StockName, command.StockCode, command.StockUnit, command.StockQuantity);
+
             await _eventRepository.SaveAsync(wallet);
         }
     }

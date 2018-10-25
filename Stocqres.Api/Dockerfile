@@ -9,9 +9,8 @@ COPY ["Stocqres.Api/Stocqres.Api.csproj", "Stocqres.Api/"]
 COPY ["../Users/MateuszGajda/source/repos/Stocqres.Transactions/Stocqres.Transactions.csproj", "../Users/MateuszGajda/source/repos/Stocqres.Transactions/"]
 COPY ["Stocqres.Core/Stocqres.Core.csproj", "Stocqres.Core/"]
 COPY ["Stocqres.Infrastructure/Stocqres.Infrastructure.csproj", "Stocqres.Infrastructure/"]
-COPY ["Stocqres.Domain/Stocqres.Domain.csproj", "Stocqres.Domain/"]
-COPY ["Stocqres.Customers/Stocqres.Customers.csproj", "Stocqres.Customers/"]
 COPY ["../Users/MateuszGajda/source/repos/Stocqres.SharedKernel/Stocqres.SharedKernel.csproj", "../Users/MateuszGajda/source/repos/Stocqres.SharedKernel/"]
+COPY ["Stocqres.Customers/Stocqres.Customers.csproj", "Stocqres.Customers/"]
 COPY ["Stocqres.Identity/Stocqres.Identity.csproj", "Stocqres.Identity/"]
 RUN dotnet restore "Stocqres.Api/Stocqres.Api.csproj"
 COPY . .

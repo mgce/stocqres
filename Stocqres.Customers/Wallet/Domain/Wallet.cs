@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Exceptions;
 using Stocqres.Customers.Investors.Domain;
@@ -29,6 +30,20 @@ namespace Stocqres.Customers.Wallet.Domain
             Publish(new WalletChargedEvent(Id, amountToCharge));
         }
 
+        public void AddStock(string name, string code, int unit, int quantity)
+        {
+            if(string.IsNullOrEmpty(name))
+                throw new StocqresException("Stock Name cannot be empty");
+            if (string.IsNullOrEmpty(code))
+                throw new StocqresException("Stock Code cannot be empty");
+            if (unit <= 0)
+                throw new StocqresException("Unit must be greater than zero");
+            if (quantity > Amount)
+                throw new StocqresException("Quantity must be greater than zero");
+
+            Publish(new StockToWalletAddedEvent(Id, name, code, unit, quantity));
+        }
+
         private void Apply(WalletChargedEvent @event)
         {
             Amount -= @event.Amount;
@@ -39,6 +54,17 @@ namespace Stocqres.Customers.Wallet.Domain
             InvestorId = @event.InvestorId;
             Currency = @event.Currency;
             Amount = @event.Amount;
+        }
+
+        private void Apply(StockToWalletAddedEvent @event)
+        {
+            var existingStock = StockList.SingleOrDefault(s => s.Code == @event.Code);
+            if (existingStock != null)
+                existingStock.Quantity += @event.Quantity;
+            else
+            {
+                StockList.Add(new Stock(@event.Name, @event.Code, @event.Unit, @event.Quantity));
+            }
         }
     }
 }
