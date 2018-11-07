@@ -16,7 +16,15 @@ namespace Stocqres.Core.Domain
         protected AggregateRoot()
         {}
 
-        protected AggregateRoot(IEnumerable<IEvent> events)
+        public AggregateRoot(IEnumerable<IEvent> events)
+        {
+            foreach (var @event in events)
+            {
+                Apply(@event);
+            }
+        }
+
+        public void RecreateAggregate(IEnumerable<IEvent> events)
         {
             foreach (var @event in events)
             {

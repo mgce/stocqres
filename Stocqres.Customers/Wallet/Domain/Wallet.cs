@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Stocqres.Core.Domain;
+using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
 using Stocqres.Customers.Investors.Domain;
 using Stocqres.Customers.Wallet.Events;
@@ -20,6 +21,10 @@ namespace Stocqres.Customers.Wallet.Domain
         public Wallet(Guid investorId, Currency currency, decimal amount)
         {
             Publish(new WalletCreatedEvent(Guid.NewGuid(), investorId, currency, amount));
+        }
+
+        protected Wallet(IEnumerable<IEvent> events) : base(events)
+        {
         }
 
         public void ChargeWallet(decimal amountToCharge)
@@ -54,6 +59,7 @@ namespace Stocqres.Customers.Wallet.Domain
             InvestorId = @event.InvestorId;
             Currency = @event.Currency;
             Amount = @event.Amount;
+            StockList = new List<Stock>();
         }
 
         private void Apply(StockToWalletAddedEvent @event)

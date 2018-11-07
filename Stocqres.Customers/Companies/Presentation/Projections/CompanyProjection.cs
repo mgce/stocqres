@@ -13,6 +13,9 @@ namespace Stocqres.Customers.Companies.Presentation.Projections
         public int StockUnit { get; set; }
         public int StockQuantity { get; set; }
 
+        public CompanyProjection()
+        {}
+
         public CompanyProjection(Guid id, string name)
         {
             Id = id;

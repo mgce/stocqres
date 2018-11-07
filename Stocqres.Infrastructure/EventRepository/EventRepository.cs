@@ -34,7 +34,7 @@ namespace Stocqres.Infrastructure.EventRepository
             {
                 var sql = $"Select * From [Customers].{typeof(T).Name}Events Where AggregateId='{id}'";
                 var listOfEventData = await conn.QueryAsync<EventData>(sql, new {id});
-                var events = listOfEventData.Select(x => x.DeserializeEvent());
+                var events = listOfEventData.OrderBy(e=>e.Version).Select(x => x.DeserializeEvent());
                 return (T)_factory.CreateAsync<T>(events);
             }
         }

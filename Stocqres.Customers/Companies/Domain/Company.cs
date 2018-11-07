@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Stocqres.Core.Domain;
+using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
 using Stocqres.Customers.Companies.Domain.Events;
 using Stocqres.SharedKernel.Events;
@@ -20,6 +22,10 @@ namespace Stocqres.Customers.Companies.Domain
             Publish(new CompanyCreatedEvent(Guid.NewGuid(), name));
         }
 
+        protected Company(IEnumerable<IEvent> events) : base(events)
+        {
+        }
+
         public void CreateCompanyStock(string code, int unit, int quantity)
         {
             if (string.IsNullOrEmpty(code))
@@ -36,7 +42,7 @@ namespace Stocqres.Customers.Companies.Domain
 
         public void ChargeCompanyStock(int stockQuantity)
         {
-            if(stockQuantity < Stock.Quantity)
+            if(stockQuantity > Stock.Quantity)
                 throw new StocqresException("Company doesn't have enough stocks");
 
             Publish(new CompanyChargedEvent(Id,Stock.Name, Stock.Code, Stock.Unit, stockQuantity));

@@ -29,8 +29,6 @@ namespace Stocqres.Customers.Investors.Application
         {
             var investor = new Investor(command.UserId, command.FirstName, command.LastName);
             await _eventRepository.SaveAsync(investor);
-            await _eventBus.Publish(new InvestorCreatedEvent(investor.Id, investor.UserId, investor.FirstName,
-                investor.LastName));
         }
 
  

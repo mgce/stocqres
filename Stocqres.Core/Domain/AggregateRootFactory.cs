@@ -14,6 +14,7 @@ namespace Stocqres.Core.Domain
         public object CreateAsync<T>(IEnumerable<IEvent> events)
         {
             var type = typeof(T);
+            //var recreateMethod = type.GetMethod("AggregateRoot", new[] {events.GetType()});
             var ctor = type.GetConstructor(BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance , null,new[] {typeof(IEnumerable<IEvent>) },null);
             //var flags = BindingFlags.NonPublic | BindingFlags.Instance;
             //var ctor = typeof(T).GetConstructors(flags).Single(
