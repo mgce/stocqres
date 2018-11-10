@@ -10,6 +10,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
+using Stocqres.Infrastructure.EventRepository.Scripts;
 
 namespace Stocqres.Infrastructure.EventRepository
 {
@@ -17,14 +18,12 @@ namespace Stocqres.Infrastructure.EventRepository
     {
         private readonly IAggregateRootFactory _factory;
         private readonly IEventBus _eventBus;
-        private readonly IConfiguration _configuration;
         private readonly string _connectionString;
 
         public EventRepository(IAggregateRootFactory factory, IEventBus eventBus, IConfiguration configuration)
         {
             _factory = factory;
             _eventBus = eventBus;
-            _configuration = configuration;
             _connectionString = configuration.GetConnectionString("SqlServer");
         }
 
@@ -32,7 +31,7 @@ namespace Stocqres.Infrastructure.EventRepository
         {
             using (var conn = new SqlConnection(_connectionString))
             {
-                var sql = $"Select * From [Customers].{typeof(T).Name}Events Where AggregateId='{id}'";
+                var sql = EventRepositoryScriptsAsStrings.GetAggregate(typeof(T).Name, id);
                 var listOfEventData = await conn.QueryAsync<EventData>(sql, new {id});
                 var events = listOfEventData.OrderBy(e=>e.Version).Select(x => x.DeserializeEvent());
                 return (T)_factory.CreateAsync<T>(events);
@@ -55,15 +54,11 @@ namespace Stocqres.Infrastructure.EventRepository
                     using (var tx = conn.BeginTransaction())
                     {
                         await CreateTableForAggregateIfNotExist(conn, tx, aggregateType);
-                        var foundVersionQuery = $"Select MAX(Version) FROM [Customers].{aggregateType}Events WHERE AggregateId='{aggregate.Id}'";
-                        var foundVersionResult = (int?)conn.ExecuteScalar(foundVersionQuery);
-                        if(foundVersionResult.HasValue && foundVersionResult >= originalVersion)
-                            throw new Exception("Concurrency Exception");
+                        await CheckAggregateVersion(conn, aggregateType, aggregate.Id, originalVersion);
 
-                        string sql = $"INSERT INTO [Customers].{aggregateType}Events(Id, AggregateId, AggregateType, Version, Data, Metadata, CreatedAt) " +
-                                     "VALUES(@Id, @AggregateId, @AggregateType, @Version, @Data, @Metadata, @Created)";
+                        string insertScript = EventRepositoryScriptsAsStrings.InsertIntoAggregate(aggregateType);
 
-                        await conn.ExecuteAsync(sql, eventsToSave, tx);
+                        await conn.ExecuteAsync(insertScript, eventsToSave, tx);
                         tx.Commit();
                     }
                 }
@@ -83,27 +78,20 @@ namespace Stocqres.Infrastructure.EventRepository
 
         private async Task CreateTableForAggregateIfNotExist(SqlConnection con, SqlTransaction tx, string aggregateTableName)
         {
-            var sql =
-                $"IF NOT EXISTS(SELECT * FROM sysobjects  WHERE name = '{aggregateTableName}Events' AND xtype='U') " +
-                $"CREATE TABLE [Customers].[{aggregateTableName}Events](" +
-                "[Id] UNIQUEIDENTIFIER default NEWID() NOT NULL, " +
-                "[AggregateId] UNIQUEIDENTIFIER NOT NULL, " +
-                "[AggregateType] NVARCHAR(255) NOT NULL, " +
-                "[Version] INT NOT NULL, " +
-                "[Data] NVARCHAR(MAX) NOT NULL, " +
-                "[MetaData] NVARCHAR(MAX) NOT NULL, " +
-                "[CreatedAt] DATETIME NOT NULL, " +
-                $"CONSTRAINT PK{aggregateTableName}Events PRIMARY KEY(ID) " +
-                ") ";
-            con.Execute(sql,null,tx);
-            
-            var indexSql =
-                $"IF NOT EXISTS(SELECT * FROM sys.indexes  WHERE name = 'Idx_{aggregateTableName}Events_AggregateId' AND object_id = OBJECT_ID('[Customers].{aggregateTableName}Events')) " +
-                $"begin " +
-                $"CREATE INDEX Idx_{aggregateTableName}Events_AggregateId ON [Customers].{aggregateTableName}Events(AggregateId)" +
-                $"end";
+            var sql = EventRepositoryScriptsAsStrings.CreateTableForAggregate(aggregateTableName);
+            await con.ExecuteAsync(sql,null,tx);
 
+            var indexSql = EventRepositoryScriptsAsStrings.CreateIndex(aggregateTableName);
             await con.ExecuteAsync(indexSql,null,tx);
+        }
+
+        private async Task CheckAggregateVersion(SqlConnection conn, string aggregateType, Guid aggregateId, int originalVersion)
+        {
+            var foundVersionQuery =
+                EventRepositoryScriptsAsStrings.FindAggregateVersion(aggregateType, aggregateId);
+            var foundVersionResult = await conn.ExecuteScalarAsync(foundVersionQuery);
+            if ((int?)foundVersionResult >= originalVersion)
+                throw new Exception("Concurrency Exception");
         }
     }
 }
