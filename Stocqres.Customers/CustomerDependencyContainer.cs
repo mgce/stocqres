@@ -12,15 +12,6 @@ namespace Stocqres.Customers
     {
         public static void Load(ContainerBuilder builder)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            //builder
-            //    .RegisterAssemblyTypes(assembly)
-            //    .AsClosedTypesOf(typeof(ICommandHandler<>));
-
-            //builder
-            //    .RegisterAssemblyTypes(assembly)
-            //    .AsClosedTypesOf(typeof(IEventHandler<>));
         }
     }
 }

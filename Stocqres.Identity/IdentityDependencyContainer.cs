@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Autofac;
+using Microsoft.AspNetCore.Identity;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Events;
 using Stocqres.Identity.Application.Services;
+using Stocqres.Identity.Domain;
 
 namespace Stocqres.Identity
 {
@@ -13,25 +15,9 @@ namespace Stocqres.Identity
     {
         public static void Load(ContainerBuilder builder)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            //builder
-            //    .RegisterAssemblyTypes(assembly)
-            //    .AsClosedTypesOf(typeof(ICommandHandler<>))
-            //    .InstancePerLifetimeScope();
-
-            //builder
-            //    .RegisterAssemblyTypes(assembly)
-            //    .AsClosedTypesOf(typeof(IEventHandler<>))
-            //    .InstancePerLifetimeScope();
-
-            builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
-                .Where(t => t.Name.EndsWith("Repository"))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-
             builder.RegisterType<TokenService>().As<ITokenService>();
             builder.RegisterType<RefreshTokenService>().As<IRefreshTokenService>();
+            builder.RegisterType<PasswordHasher<User>>().As<IPasswordHasher<User>>();
         }
     }
 }

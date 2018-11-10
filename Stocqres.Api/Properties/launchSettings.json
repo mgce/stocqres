@@ -20,7 +20,7 @@
     "Stocqres.Api": {
       "commandName": "Project",
       "launchBrowser": false,
-      "launchUrl": "",
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -29,7 +29,8 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": false,
-      "launchUrl": "{Scheme}://localhost:{ServicePort}/"
+      "launchUrl": "{Scheme}://localhost:{ServicePort}/swagger"
+
     }
   }
 }

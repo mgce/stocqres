@@ -33,6 +33,9 @@
     <Reference Include="Microsoft.IdentityModel.Tokens">
       <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.identitymodel.tokens\5.2.0\lib\netstandard1.4\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\..\Users\MateuszGajda\.nuget\packages\mongodb.driver\2.7.0\lib\netstandard1.5\MongoDB.Driver.dll</HintPath>
+    </Reference>
     <Reference Include="System.IdentityModel.Tokens.Jwt">
       <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.identitymodel.tokens.jwt\5.2.0\lib\netstandard1.4\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>

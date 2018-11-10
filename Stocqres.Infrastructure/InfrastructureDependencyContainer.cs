@@ -14,13 +14,6 @@ namespace Stocqres.Infrastructure
     {
         public static void Load(ContainerBuilder builder)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            builder
-                .RegisterAssemblyTypes(assembly)
-                .AsClosedTypesOf(typeof(IRepository<>))
-                .InstancePerLifetimeScope();
-
             builder.RegisterType<ProjectionWriter.ProjectionWriter>().As<IProjectionWriter>();
             builder.RegisterType<ProjectionReader.ProjectionReader>().As<IProjectionReader>();
         }

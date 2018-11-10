@@ -15,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using NJsonSchema;
+using NSwag.AspNetCore;
 using Stocqres.Core;
 using Stocqres.Core.Authentication;
 using Stocqres.Core.Commands;
@@ -55,6 +57,7 @@ namespace Stocqres.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSwagger();
             services.AddJwt();
 
             services.AddDbContext<IdentityDbContext>(options => 
@@ -69,7 +72,6 @@ namespace Stocqres.Api
             });
 
             return AddAutofac(services);
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,6 +88,10 @@ namespace Stocqres.Api
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSwaggerUi3WithApiExplorer(settings =>
+            {
+                settings.GeneratorSettings.DefaultPropertyNameHandling = PropertyNameHandling.CamelCase;
+            });
             app.UseAuthentication();
             app.UseErrorHandler();
             app.UseMvc();
@@ -99,140 +105,19 @@ namespace Stocqres.Api
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterType<PasswordHasher<User>>().As<IPasswordHasher<User>>();
-
-            //ApplicationDependencyContainer.Load(builder);
-
             CoreDependencyContainer.Load(builder);
             InfrastructureDependencyContainer.Load(builder);
-            SharedKernelDependencyResolver.Load(builder);
-            CustomerDependencyContainer.Load(builder);
             IdentityDependencyContainer.Load(builder);
-            TransactionsDependencyResolver.Load(builder);
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.Contains("Stocqres")).ToArray();
 
-            builder
-                .RegisterAssemblyTypes(assemblies)
-                .AsClosedTypesOf(typeof(IEventHandler<>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-
-            builder
-                .RegisterAssemblyTypes(assemblies)
-                .AsClosedTypesOf(typeof(ICommandHandler<>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-
-            builder.Register<Func<Type, IEnumerable<IEventHandler<IEvent>>>>(c =>
-            {
-                var ctx = c.Resolve<IComponentContext>();
-                return t =>
-                {
-                    var handlerType = typeof(IEventHandler<>).MakeGenericType(t);
-                    var handlersCollectionType = typeof(IEnumerable<>).MakeGenericType(handlerType);
-                    return (IEnumerable<IEventHandler<IEvent>>) ctx.Resolve(handlersCollectionType);
-                };
-            });
-
             builder.Populate(services);
-
-            //RegisterJwt(ref services, builder);
-            RegisterMongo(builder);
+            builder.ConfigureMongo();
+            builder.ConfigureCqrs(assemblies);
             RegisterRepositories(builder);
             ApplicationContainer = builder.Build();
 
             return new AutofacServiceProvider(ApplicationContainer);
-        }
-
-        //private void RegisterMarten(ContainerBuilder builder)
-        //{
-        //    builder.Register(add =>
-        //    {
-        //        var documentStore = DocumentStore.For(options =>
-        //        {
-        //            var config = Configuration.GetSection("EventStore");
-        //            var connectionString = config.GetValue<string>("ConnectionString");
-        //            var schemaName = config.GetValue<string>("Schema");
-
-        //            options.Connection(connectionString);
-        //            options.AutoCreateSchemaObjects = AutoCreate.All;
-        //            options.Events.DatabaseSchemaName = schemaName;
-        //            options.DatabaseSchemaName = schemaName;
-        //            RegisterEvents(options);
-        //        });
-        //        return documentStore.OpenSession();
-        //    }).InstancePerLifetimeScope();
-        //}
-
-        //private void RegisterEvents(StoreOptions options)
-        //{
-        //    var eventType = typeof(IEvent);
-        //    var assembly = typeof(UserCreatedEvent).Assembly;
-        //    var types = assembly.GetTypes().Where(p => eventType.IsAssignableFrom(p));
-        //    foreach (var type in types)
-        //    {
-        //        options.Events.AddEventType(type);
-        //    }
-        //}
-
-        private void RegisterJwt(ref IServiceCollection services, ContainerBuilder builder)
-        {
-            var jwtSection = Configuration.GetSection("Jwt");
-            var options = new JwtOptions
-            {
-                SecretKey = jwtSection.GetValue<string>("SecretKey"),
-                ValidAudience = jwtSection.GetValue<string>("ValidAudience"),
-                Issuer = jwtSection.GetValue<string>("ValidIssuer"),
-                ValidateAudience = jwtSection.GetValue<bool>("ValidateAudience"),
-                ValidateLifetime = jwtSection.GetValue<bool>("ValidateLifetime"),
-                ExpiryMinutes = jwtSection.GetValue<int>("ExpiryMinutes"),
-            };
-
-            builder.RegisterInstance(options);
-            builder.RegisterType<JwtHandler>().As<IJwtHandler>().SingleInstance();
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(cfg =>
-            {
-                cfg.RequireHttpsMetadata = false;
-                cfg.SaveToken = true;
-                cfg.TokenValidationParameters = new TokenValidationParameters
-                {
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.SecretKey)),
-                    ValidAudience = options.ValidAudience,
-                    ValidIssuer = options.Issuer,
-                    ValidateAudience = options.ValidateAudience,
-                    ValidateLifetime = options.ValidateLifetime,
-                    NameClaimType = JwtRegisteredClaimNames.Sub,
-                };
-            });
-        }
-
-        private void RegisterMongo(ContainerBuilder builder)
-        {
-            builder.Register(context =>
-            {
-                var configuration = context.Resolve<IConfiguration>();
-                var mongoOptions = new MongoOptions();
-                configuration.GetSection("mongo").Bind(mongoOptions);
-
-                return mongoOptions;
-            }).SingleInstance();
-
-            builder.Register(context =>
-            {
-                var mongoOptions = context.Resolve<MongoOptions>();
-                return new MongoClient(mongoOptions.ConnectionString);
-            }).SingleInstance();
-
-            builder.Register(context =>
-            {
-                var mongoOptions = context.Resolve<MongoOptions>();
-                var mongoClient = context.Resolve<MongoClient>();
-                return mongoClient.GetDatabase(mongoOptions.Database);
-            }).InstancePerLifetimeScope();
         }
 
         public void RegisterRepositories(ContainerBuilder builder)
