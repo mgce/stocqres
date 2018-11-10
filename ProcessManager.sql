@@ -11,6 +11,7 @@ CREATE TABLE [Transactions].[OrderProcessManager](
 	[StockUnit] INT NULL,
 	[StockQuantity] INT NULL,
 	[ChargedWalletAmount] DECIMAL(10,2) NULL,
+	[CancelReason] NVARCHAR(Max) NULL,
 	[CreatedAt] DATETIME NULL,
 	[ModifiedAt] DATETIME NULL,
 	[State] INT  NULL

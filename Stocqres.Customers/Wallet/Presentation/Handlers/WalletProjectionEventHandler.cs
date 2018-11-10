@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Stocqres.Core.Events;
 using Stocqres.Customers.Wallet.Events;
 using Stocqres.Infrastructure.ProjectionWriter;
+using Stocqres.SharedKernel.Events;
 
 namespace Stocqres.Customers.Wallet.Presentation.Handlers
 {
-    public class WalletProjectionEventHandler : IEventHandler<WalletCreatedEvent>
+    public class WalletProjectionEventHandler : IEventHandler<WalletCreatedEvent>, IEventHandler<WalletChargeRollbackedEvent>
     {
         private readonly IProjectionWriter _projectionWriter;
 
@@ -18,9 +19,13 @@ namespace Stocqres.Customers.Wallet.Presentation.Handlers
         }
         public async Task HandleAsync(WalletCreatedEvent @event)
         {
-            var projection = new WalletProjection(
-                @event.AggregateId, @event.InvestorId, @event.Currency, @event.Amount);
-            await _projectionWriter.AddAsync(projection);
+            await _projectionWriter.AddAsync(new WalletProjection(
+                @event.AggregateId, @event.InvestorId, @event.Currency, @event.Amount));
+        }
+
+        public async Task HandleAsync(WalletChargeRollbackedEvent @event)
+        {
+            await _projectionWriter.UpdateAsync<WalletProjection>(@event.AggregateId, e => e.Amount += @event.Amount);
         }
     }
 }

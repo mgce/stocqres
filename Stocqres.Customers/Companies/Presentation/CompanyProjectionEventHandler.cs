@@ -10,7 +10,10 @@ using Stocqres.SharedKernel.Events;
 
 namespace Stocqres.Customers.Companies.Presentation
 {
-    public class CompanyProjectionEventHandler : IEventHandler<CompanyCreatedEvent>, IEventHandler<CompanyStockCreatedEvent>, IEventHandler<CompanyChargedEvent>
+    public class CompanyProjectionEventHandler : 
+        IEventHandler<CompanyCreatedEvent>, 
+        IEventHandler<CompanyStockCreatedEvent>, 
+        IEventHandler<CompanyChargedEvent>
     {
         private readonly IProjectionWriter _projectionWriter;
 

@@ -28,7 +28,7 @@ namespace Stocqres.Infrastructure.EventRepository.Scripts
             $"CONSTRAINT PK{aggregateName}Events PRIMARY KEY(ID) " +
             ") ";
         public static string CreateIndex(string aggregateName) =>
-            $"IF NOT EXISTS(SELECT * FROM sys.indexes  WHERE name = 'Idx_{aggregateName}Events_AggregateId' AND object_id = OBJECT_ID('[Customers].{aggregateTableName}Events')) " +
+            $"IF NOT EXISTS(SELECT * FROM sys.indexes  WHERE name = 'Idx_{aggregateName}Events_AggregateId' AND object_id = OBJECT_ID('[Customers].{aggregateName}Events')) " +
             $"begin " +
             $"CREATE INDEX Idx_{aggregateName}Events_AggregateId ON [Customers].{aggregateName}Events(AggregateId)" +
             $"end";
