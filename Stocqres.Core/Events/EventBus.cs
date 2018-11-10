@@ -26,15 +26,14 @@ namespace Stocqres.Core.Events
             var handlerCollectionType = typeof(IEnumerable<>).MakeGenericType(handlerType);
             var eventHandlers = _context.Resolve(handlerCollectionType);
 
-            var hadnlers = new List<Task>();
+            var handlers = new List<Task>();
 
             foreach (var handler in (IEnumerable) eventHandlers)
             {
-                var handlerMethod = handler.GetType().GetMethod("HandleAsync", new[] {@event.GetType()});
-                hadnlers.Add((Task) (handlerMethod.Invoke(handler, new object[] {@event})));
+                handlers.Add((Task)((dynamic)handler).HandleAsync((dynamic)@event));
             }
 
-            await Task.WhenAll(hadnlers);
+            await Task.WhenAll(handlers);
         }
     }
 }

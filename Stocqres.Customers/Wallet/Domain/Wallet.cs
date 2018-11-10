@@ -49,6 +49,14 @@ namespace Stocqres.Customers.Wallet.Domain
             Publish(new StockToWalletAddedEvent(Id, name, code, unit, quantity));
         }
 
+        public void RollbackCharge(decimal amount)
+        {
+            if(amount <= 0)
+                throw new StocqresException("Amount to rollback must be greater than zero");
+
+            Publish(new WalletChargeRollbackedEvent(Id, amount));
+        }
+
         private void Apply(WalletChargedEvent @event)
         {
             Amount -= @event.Amount;
@@ -71,6 +79,11 @@ namespace Stocqres.Customers.Wallet.Domain
             {
                 StockList.Add(new Stock(@event.Name, @event.Code, @event.Unit, @event.Quantity));
             }
+        }
+
+        private void Apply(WalletChargeRollbackedEvent @event)
+        {
+            Amount += @event.Amount;
         }
     }
 }

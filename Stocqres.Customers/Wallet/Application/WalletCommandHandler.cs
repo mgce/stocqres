@@ -16,7 +16,11 @@ using Stocqres.SharedKernel.Stocks;
 
 namespace Stocqres.Customers.Wallet.Application
 {
-    public class WalletCommandHandler : ICommandHandler<CreateWalletCommand>, ICommandHandler<ChargeWalletCommand>, ICommandHandler<AddStockToWalletCommand>
+    public class WalletCommandHandler : 
+        ICommandHandler<CreateWalletCommand>, 
+        ICommandHandler<ChargeWalletCommand>, 
+        ICommandHandler<AddStockToWalletCommand>,
+        ICommandHandler<RollbackWalletChargeCommand>
     {
         private readonly IProjectionReader _projectionReader;
         private readonly IEventRepository _eventRepository;
@@ -47,9 +51,7 @@ namespace Stocqres.Customers.Wallet.Application
             if(company.Stock == null)
                 throw new StocqresException("Company doesn't have any stock");
 
-            var wallet = await _eventRepository.GetByIdAsync<Domain.Wallet>(command.WalletId);
-            if(wallet == null)
-                throw new StocqresException("Wallet doesn't exist");
+            var wallet = await GetWallet(command.WalletId);
 
             var stockPrice = await _stockExchangeService.GetStockPrice(company.Stock.Code);
             wallet.ChargeWallet(stockPrice * command.Quantity);
@@ -58,13 +60,24 @@ namespace Stocqres.Customers.Wallet.Application
 
         public async Task HandleAsync(AddStockToWalletCommand command)
         {
-            var wallet = await _eventRepository.GetByIdAsync<Domain.Wallet>(command.WalletId);
-            if (wallet == null)
-                throw new StocqresException("Wallet doesn't exist");
+            var wallet = await GetWallet(command.WalletId);
 
             wallet.AddStock(command.StockName, command.StockCode, command.StockUnit, command.StockQuantity);
 
             await _eventRepository.SaveAsync(wallet);
+        }
+
+        public async Task HandleAsync(RollbackWalletChargeCommand command)
+        {
+            var wallet = await GetWallet(command.WalletId);
+        }
+
+        private async Task<Domain.Wallet> GetWallet(Guid walletId)
+        {
+            var wallet = await _eventRepository.GetByIdAsync<Domain.Wallet>(walletId);
+            if (wallet == null)
+                throw new StocqresException("Wallet doesn't exist");
+            return wallet;
         }
     }
 }
