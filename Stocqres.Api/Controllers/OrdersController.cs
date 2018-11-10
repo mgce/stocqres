@@ -25,7 +25,7 @@ namespace Stocqres.Api.Controllers
         {
             await _dispatcher.SendAsync(command);
 
-            return NoContent();
+            return Ok();
         }
     }
 }
