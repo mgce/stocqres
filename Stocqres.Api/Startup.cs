@@ -108,12 +108,13 @@ namespace Stocqres.Api
             CoreDependencyContainer.Load(builder);
             InfrastructureDependencyContainer.Load(builder);
             IdentityDependencyContainer.Load(builder);
+            SharedKernelDependencyResolver.Load(builder);
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.Contains("Stocqres")).ToArray();
 
+            builder.ConfigureCqrs(assemblies);
             builder.Populate(services);
             builder.ConfigureMongo();
-            builder.ConfigureCqrs(assemblies);
             RegisterRepositories(builder);
             ApplicationContainer = builder.Build();
 

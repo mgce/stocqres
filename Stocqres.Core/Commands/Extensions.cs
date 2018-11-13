@@ -12,15 +12,11 @@ namespace Stocqres.Core.Commands
         {
             builder
                 .RegisterAssemblyTypes(assemblies)
-                .AsClosedTypesOf(typeof(IEventHandler<>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+                .AsClosedTypesOf(typeof(IEventHandler<>));
 
             builder
                 .RegisterAssemblyTypes(assemblies)
-                .AsClosedTypesOf(typeof(ICommandHandler<>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+                .AsClosedTypesOf(typeof(ICommandHandler<>));
 
             builder.Register<Func<Type, IEnumerable<IEventHandler<IEvent>>>>(c =>
             {

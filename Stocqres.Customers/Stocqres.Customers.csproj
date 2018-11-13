@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Users\MateuszGajda\source\repos\Stocqres.SharedKernel\Stocqres.SharedKernel.csproj" />
     <ProjectReference Include="..\Stocqres.Core\Stocqres.Core.csproj" />
     <ProjectReference Include="..\Stocqres.Infrastructure\Stocqres.Infrastructure.csproj" />
+    <ProjectReference Include="..\Stocqres.SharedKernel\Stocqres.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>

@@ -21,9 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Users\MateuszGajda\source\repos\Stocqres.Transactions\Stocqres.Transactions.csproj" />
     <ProjectReference Include="..\Stocqres.Customers\Stocqres.Customers.csproj" />
     <ProjectReference Include="..\Stocqres.Identity\Stocqres.Identity.csproj" />
+    <ProjectReference Include="..\Stocqres.SharedKernel\Stocqres.SharedKernel.csproj" />
+    <ProjectReference Include="..\Stocqres.Transactions\Stocqres.Transactions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
