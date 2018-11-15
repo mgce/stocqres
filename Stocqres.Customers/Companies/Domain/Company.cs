@@ -40,12 +40,12 @@ namespace Stocqres.Customers.Companies.Domain
             Publish(new CompanyStockCreatedEvent(Id, Guid.NewGuid(), code, unit, quantity));
         }
 
-        public void ChargeCompanyStock(int stockQuantity)
+        public void ChargeCompanyStock(Guid orderId, int stockQuantity)
         {
             if(stockQuantity > Stock.Quantity)
                 throw new StocqresException("Company doesn't have enough stocks");
 
-            Publish(new CompanyChargedEvent(Id,Stock.Name, Stock.Code, Stock.Unit, stockQuantity));
+            Publish(new CompanyChargedEvent(Id, orderId, Stock.Name, Stock.Code, Stock.Unit, stockQuantity));
         }
 
         public void Apply(CompanyCreatedEvent @event)

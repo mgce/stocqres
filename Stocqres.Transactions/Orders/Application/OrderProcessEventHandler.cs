@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
 using Stocqres.SharedKernel.Events;
+using Stocqres.Transactions.Infrastructure.OrderProcessManagerRepository;
 using Stocqres.Transactions.Infrastructure.ProcessManager;
 using Stocqres.Transactions.Orders.Domain;
 using Stocqres.Transactions.Orders.Domain.Events;
@@ -21,111 +22,102 @@ namespace Stocqres.Transactions.Orders.Application
         IEventHandler<WalletChargeRollbackedEvent>,
         IEventHandler<OrderCancelledEvent>
     {
-        private readonly IProcessManagerRepository _processManagerRepository;
-        private OrderProcessManager _orderProcessManager {get; set; }
+        private readonly IOrderProcessManagerRepository _processManagerRepository;
 
-        public OrderProcessEventHandler(IProcessManagerRepository processManagerRepository)
+        public OrderProcessEventHandler(IOrderProcessManagerRepository processManagerRepository)
         {
             _processManagerRepository = processManagerRepository;
         }
 
         public async Task HandleAsync(OrderCreatedEvent message)
         {
-            var pm = await _processManagerRepository.Get<OrderProcessManager>(message.AggregateId);
+            var pm = await _processManagerRepository.Get(message.AggregateId);
             if(pm != null)
                 throw new StocqresException("Process Manager for this Order currently exist");
 
-            _orderProcessManager = new OrderProcessManager(message.AggregateId);
+            var orderProcessManager = new OrderProcessManager(message.AggregateId);
 
-            _orderProcessManager.When(message);
+            orderProcessManager.When(message);
 
-            await _processManagerRepository.Save(_orderProcessManager);
+            await _processManagerRepository.Save(orderProcessManager);
         }
 
         public async Task HandleAsync(WalletChargedEvent message)
         {
-            if (_orderProcessManager == null)
-            {
-                _orderProcessManager = await _processManagerRepository.Get<OrderProcessManager>(message.AggregateId);
-            }
+            var orderProcessManager = await _processManagerRepository.Get(message.OrderId);
 
             try
             {
-                _orderProcessManager.When(message);
+                orderProcessManager.When(message);
             }
             catch (StocqresException e)
             {
 
-                _orderProcessManager.When(new OrderCancelledEvent(e.Message));
+                orderProcessManager.When(new OrderCancelledEvent(e.Message));
             }
 
-            await _processManagerRepository.Save(_orderProcessManager);
+            await _processManagerRepository.Save(orderProcessManager);
         }
 
         public async Task HandleAsync(CompanyChargedEvent message)
         {
-            if (_orderProcessManager == null)
-            {
-                _orderProcessManager = await _processManagerRepository.Get<OrderProcessManager>(message.AggregateId);
-            }
+            var orderProcessManager = await _processManagerRepository.Get(message.OrderId);
 
             try
             {
-                _orderProcessManager.When(message);
+                orderProcessManager.When(message);
             }
             catch (StocqresException e)
             {
-                _orderProcessManager.When(new CompanyChargeFailedEvent(e.Message));
+                orderProcessManager.When(new CompanyChargeFailedEvent(message.OrderId, e.Message));
             }
 
-            await _processManagerRepository.Save(_orderProcessManager);
+            await _processManagerRepository.Save(orderProcessManager);
         }
 
         public async Task HandleAsync(CompanyChargeFailedEvent message)
         {
-            if (_orderProcessManager == null)
-            {
-                _orderProcessManager = await _processManagerRepository.Get<OrderProcessManager>(message.AggregateId);
-            }
-            _orderProcessManager.When(message);
-            await _processManagerRepository.Save(_orderProcessManager);
+            var orderProcessManager = await _processManagerRepository.Get(message.OrderId);
+
+            orderProcessManager.When(message);
+
+            await _processManagerRepository.Save(orderProcessManager);
         }
 
         public async Task HandleAsync(WalletChargeRollbackedEvent message)
         {
-            if (_orderProcessManager == null)
-            {
-                _orderProcessManager = await _processManagerRepository.Get<OrderProcessManager>(message.AggregateId);
-            }
-            _orderProcessManager.When(message);
-            await _processManagerRepository.Save(_orderProcessManager);
+            var orderProcessManager = await _processManagerRepository.Get(message.OrderId);
+
+            orderProcessManager.When(message);
+
+            await _processManagerRepository.Save(orderProcessManager);
         }
 
         public async Task HandleAsync(OrderCancelledEvent message)
         {
-            if (_orderProcessManager == null)
-            {
-                _orderProcessManager = await _processManagerRepository.Get<OrderProcessManager>(message.AggregateId);
-            }
-            _orderProcessManager.When(message);
-            await _processManagerRepository.Save(_orderProcessManager);
+            var orderProcessManager = await _processManagerRepository.Get(message.AggregateId);
+
+            orderProcessManager.When(message);
+
+            await _processManagerRepository.Save(orderProcessManager);
         }
 
         public async Task HandleAsync(StockToWalletAddedEvent message)
         {
-            await Act<StockToWalletAddedEvent>(message.AggregateId, () => _orderProcessManager.When(message));
+            var orderProcessManager = await _processManagerRepository.Get(message.OrderId);
+
+            orderProcessManager.When(message);
+
+            await _processManagerRepository.Save(orderProcessManager);
         }
 
         private async Task Act<T>(Guid aggregateId, Action action)
         {
-            if (_orderProcessManager == null)
-            {
-                _orderProcessManager = await _processManagerRepository.Get<OrderProcessManager>(aggregateId);
-            }
+            var orderProcessManager = await _processManagerRepository.Get(aggregateId);
 
             action();
 
-            await _processManagerRepository.Save(_orderProcessManager);
+            await _processManagerRepository.Save(orderProcessManager);
         }
 
         

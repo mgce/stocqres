@@ -27,15 +27,15 @@ namespace Stocqres.Customers.Wallet.Domain
         {
         }
 
-        public void ChargeWallet(decimal amountToCharge)
+        public void ChargeWallet(Guid orderId, decimal amountToCharge)
         {
             if(amountToCharge > Amount)
                 throw new StocqresException("You don't have enought money");
 
-            Publish(new WalletChargedEvent(Id, amountToCharge));
+            Publish(new WalletChargedEvent(Id, orderId, amountToCharge));
         }
 
-        public void AddStock(string name, string code, int unit, int quantity)
+        public void AddStock(Guid orderId, string name, string code, int unit, int quantity)
         {
             if(string.IsNullOrEmpty(name))
                 throw new StocqresException("Stock Name cannot be empty");
@@ -46,15 +46,15 @@ namespace Stocqres.Customers.Wallet.Domain
             if (quantity > Amount)
                 throw new StocqresException("Quantity must be greater than zero");
 
-            Publish(new StockToWalletAddedEvent(Id, name, code, unit, quantity));
+            Publish(new StockToWalletAddedEvent(Id, orderId, name, code, unit, quantity));
         }
 
-        public void RollbackCharge(decimal amount)
+        public void RollbackCharge(Guid orderId, decimal amount)
         {
             if(amount <= 0)
                 throw new StocqresException("Amount to rollback must be greater than zero");
 
-            Publish(new WalletChargeRollbackedEvent(Id, amount));
+            Publish(new WalletChargeRollbackedEvent(Id, orderId, amount));
         }
 
         private void Apply(WalletChargedEvent @event)

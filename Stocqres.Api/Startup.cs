@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -108,9 +109,10 @@ namespace Stocqres.Api
             CoreDependencyContainer.Load(builder);
             InfrastructureDependencyContainer.Load(builder);
             IdentityDependencyContainer.Load(builder);
+            CustomerDependencyContainer.Load(builder);
             SharedKernelDependencyResolver.Load(builder);
 
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.Contains("Stocqres")).ToArray();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypesSafely()).Where(a => a.Namespace != null && a.Namespace.Contains("Stocqres")).ToArray();
 
             builder.ConfigureCqrs(assemblies);
             builder.Populate(services);
@@ -127,6 +129,23 @@ namespace Stocqres.Api
                 .Where(t => t.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+        }
+    }
+
+    internal static class AssemblyExtensions
+    {
+        public static Type[] GetTypesSafely(this Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                return ex.Types
+                    .Where(t => t != null)
+                    .ToArray();
+            }
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Stocqres.Customers.Companies.Application
         public async Task HandleAsync(ChargeCompanyCommand command)
         {
             var company = await _eventRepository.GetByIdAsync<Company>(command.CompanyId);
-            company.ChargeCompanyStock(command.Quantity);
+            company.ChargeCompanyStock(command.OrderId, command.Quantity);
             await _eventRepository.SaveAsync(company);
         }
     }

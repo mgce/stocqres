@@ -8,11 +8,12 @@ namespace Stocqres.SharedKernel.Events
     public class CompanyChargeFailedEvent : IEvent
     {
         public Guid AggregateId { get; set; }
-        public decimal AmountToRollback { get; set; }
+        public Guid OrderId { get; set; }
         public string CancelReason { get; set; }
 
-        public CompanyChargeFailedEvent(string cancelReason)
+        public CompanyChargeFailedEvent(Guid orderId, string cancelReason)
         {
+            OrderId = orderId;
             CancelReason = cancelReason;
         }
     }

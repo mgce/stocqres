@@ -13,19 +13,19 @@ namespace Stocqres.SharedKernel
     {
         public static void Load(ContainerBuilder builder)
         {
-            //var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.Contains("Stocqres.SharedKernel")).ToArray();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.Contains("Stocqres.SharedKernel")).ToArray();
 
-            //builder
-            //   .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-            //   .AsClosedTypesOf(typeof(IEventHandler<>))
-            //   .AsImplementedInterfaces()
-            //   .InstancePerLifetimeScope();
+            builder
+               .RegisterAssemblyTypes(assemblies)
+               .AsClosedTypesOf(typeof(IEventHandler<>))
+               .AsImplementedInterfaces()
+               .InstancePerLifetimeScope();
 
-            //builder
-            //    .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-            //    .AsClosedTypesOf(typeof(ICommandHandler<>))
-            //    .AsImplementedInterfaces()
-            //    .InstancePerLifetimeScope();
+            builder
+                .RegisterAssemblyTypes(assemblies)
+                .AsClosedTypesOf(typeof(ICommandHandler<>))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
         }
     }
 }

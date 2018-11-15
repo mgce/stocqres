@@ -8,14 +8,14 @@ namespace Stocqres.Core.Commands
 {
     public static class Extensions
     {
-        public static void ConfigureCqrs(this ContainerBuilder builder, Assembly[] assemblies)
+        public static void ConfigureCqrs(this ContainerBuilder builder, Type[] assemblies)
         {
             builder
-                .RegisterAssemblyTypes(assemblies)
+                .RegisterTypes(assemblies)
                 .AsClosedTypesOf(typeof(IEventHandler<>));
 
             builder
-                .RegisterAssemblyTypes(assemblies)
+                .RegisterTypes(assemblies)
                 .AsClosedTypesOf(typeof(ICommandHandler<>));
 
             builder.Register<Func<Type, IEnumerable<IEventHandler<IEvent>>>>(c =>

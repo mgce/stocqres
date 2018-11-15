@@ -54,7 +54,7 @@ namespace Stocqres.Customers.Wallet.Application
             var wallet = await GetWallet(command.WalletId);
 
             var stockPrice = await _stockExchangeService.GetStockPrice(company.Stock.Code);
-            wallet.ChargeWallet(stockPrice * command.Quantity);
+            wallet.ChargeWallet(command.OrderId, stockPrice * command.Quantity);
             await _eventRepository.SaveAsync(wallet);
         }
 
@@ -62,7 +62,7 @@ namespace Stocqres.Customers.Wallet.Application
         {
             var wallet = await GetWallet(command.WalletId);
 
-            wallet.AddStock(command.StockName, command.StockCode, command.StockUnit, command.StockQuantity);
+            wallet.AddStock(command.OrderId, command.StockName, command.StockCode, command.StockUnit, command.StockQuantity);
 
             await _eventRepository.SaveAsync(wallet);
         }
@@ -70,6 +70,10 @@ namespace Stocqres.Customers.Wallet.Application
         public async Task HandleAsync(RollbackWalletChargeCommand command)
         {
             var wallet = await GetWallet(command.WalletId);
+
+            wallet.RollbackCharge(command.OrderId, command.AmountToRollback);
+
+            await _eventRepository.SaveAsync(wallet);
         }
 
         private async Task<Domain.Wallet> GetWallet(Guid walletId)

@@ -9,12 +9,14 @@ namespace Stocqres.SharedKernel.Commands
     {
         public Guid WalletId { get; set; }
         public Guid CompanyId { get; set; }
+        public Guid OrderId { get; set; }
         public int Quantity { get; set; }
 
-        public ChargeWalletCommand(Guid walletId, Guid companyId, int quantity)
+        public ChargeWalletCommand(Guid walletId, Guid companyId,Guid orderId, int quantity)
         {
             WalletId = walletId;
             CompanyId = companyId;
+            OrderId = orderId;
             Quantity = quantity;
         }
     }

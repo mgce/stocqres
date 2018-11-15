@@ -39,7 +39,7 @@ namespace Stocqres.Transactions.Orders.Domain.OrderProcessManager
                         CompanyId = message.CompanyId;
                         StockQuantity = message.Quantity;
                         State = OrderProcessManagerState.OrderPlaced;
-                        ProcessCommand(new ChargeWalletCommand(message.WalletId, message.CompanyId, message.Quantity));
+                        ProcessCommand(new ChargeWalletCommand(message.WalletId, message.CompanyId, message.AggregateId, message.Quantity));
                     break;
                 // idempotence - same message sent twice
                 case OrderProcessManagerState.OrderPlaced:
@@ -56,7 +56,7 @@ namespace Stocqres.Transactions.Orders.Domain.OrderProcessManager
                 case OrderProcessManagerState.OrderPlaced:
                     State = OrderProcessManagerState.InvestorWalletCharged;
                     ChargedWalletAmount = message.Amount;
-                    ProcessCommand(new ChargeCompanyCommand(CompanyId, StockQuantity));
+                    ProcessCommand(new ChargeCompanyCommand(CompanyId, AggregateId, StockQuantity));
                     break;
                 case OrderProcessManagerState.InvestorWalletCharged:
                     break;
@@ -75,7 +75,7 @@ namespace Stocqres.Transactions.Orders.Domain.OrderProcessManager
                     StockCode = message.StockCode;
                     StockQuantity = message.StockQuantity;
                     StockUnit = message.StockUnit;
-                    ProcessCommand(new AddStockToWalletCommand(WalletId, message.StockName, message.StockCode, message.StockUnit, message.StockQuantity));
+                    ProcessCommand(new AddStockToWalletCommand(WalletId, AggregateId, message.StockName, message.StockCode, message.StockUnit, message.StockQuantity));
                     break;
                 case OrderProcessManagerState.StockAddedToWallet:
                     break;
@@ -104,7 +104,7 @@ namespace Stocqres.Transactions.Orders.Domain.OrderProcessManager
                 case OrderProcessManagerState.CompanyCharged:
                     State = OrderProcessManagerState.CompanyChargeFailed;
                     CancelReason = message.CancelReason;
-                    ProcessCommand(new RollbackWalletChargeCommand(WalletId, ChargedWalletAmount));
+                    ProcessCommand(new RollbackWalletChargeCommand(WalletId, AggregateId, ChargedWalletAmount));
                     break;
                 case OrderProcessManagerState.CompanyChargeFailed:
                     break;
