@@ -25,10 +25,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{87C6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer", "SqlServer", "{D840FD19-B8FD-49AC-BE7D-876CBCBA3AB0}"
 	ProjectSection(SolutionItems) = preProject
-		entrypoint.sh = entrypoint.sh
-		IdentityScript.sql = IdentityScript.sql
-		ProcessManager.sql = ProcessManager.sql
-		setup-database.sh = setup-database.sh
+		scripts\SqlServer\entrypoint.sh = scripts\SqlServer\entrypoint.sh
+		scripts\SqlServer\IdentityScript.sql = scripts\SqlServer\IdentityScript.sql
+		InitDb.sql = InitDb.sql
+		scripts\SqlServer\ProcessManager.sql = scripts\SqlServer\ProcessManager.sql
+		Settings.sql = Settings.sql
+		scripts\SqlServer\setup-database.sh = scripts\SqlServer\setup-database.sh
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.SharedKernel", "Stocqres.SharedKernel\Stocqres.SharedKernel.csproj", "{49690770-AC80-4419-944C-4AE2D829B9F0}"

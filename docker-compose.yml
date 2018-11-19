@@ -6,10 +6,23 @@ services:
     build:
       context: .
       dockerfile: Stocqres.Api/Dockerfile
-    expose:
-      - "1433"
     links:
       - mongoDb
+      - sqlServer
+
+  sqlServer:
+    image: microsoft/mssql-server-linux:latest
+    container_name: "sqlServer"
+    environment:
+      SA_PASSWORD: Your_password123
+      ACCEPT_EULA: Y
+    ports:
+      - '20:1433'
+    working_dir: /usr/src/app
+    volumes:
+      - /var/opt/mssql
+      - ./scripts/SqlServer:/usr/src/app
+    command: bash -c "sh entrypoint.sh & /opt/mssql/bin/sqlservr"
 
   mongoDb:
     image: mongo:latest

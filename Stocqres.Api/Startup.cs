@@ -98,8 +98,9 @@ namespace Stocqres.Api
             app.UseMvc();
 
             var dispatcher = ApplicationContainer.Resolve<IDispatcher>();
-            var seeder = new CustomerSeed(dispatcher);
-            //seeder.Seed();
+            var config = ApplicationContainer.Resolve<IConfiguration>();
+            var seeder = new Seeder(dispatcher, config);
+            seeder.Seed();
         }
 
         private IServiceProvider AddAutofac(IServiceCollection services)

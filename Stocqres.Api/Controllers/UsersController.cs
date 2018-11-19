@@ -29,13 +29,13 @@ namespace Stocqres.Api.Controllers
             return Ok();
         }
 
-        [HttpPost("investor")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Create(CreateInvestorCommand command)
-        {
-            await _dispatcher.SendAsync(command);
+        //[HttpPost("investor")]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> Create(CreateInvestorCommand command)
+        //{
+        //    await _dispatcher.SendAsync(command);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
     }
 }

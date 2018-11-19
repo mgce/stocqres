@@ -1,0 +1,5 @@
+﻿DROP DATABASE Stocqres;
+GO
+
+CREATE DATABASE Stocqres;
+GO
