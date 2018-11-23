@@ -9,10 +9,11 @@ echo 'Please wait while SQL Server 2017 warms up'
 
 sleep "$wait_time"
 echo 'Scripts starts running'
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Your_password123" -i ./Settings.sql
-echo 'Settings done'
+
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Your_password123" -i ./InitDb.sql
 echo 'InitDb done'
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Your_password123" -d $database -i ./Settings.sql
+echo 'Settings done'
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Your_password123" -d $database -i ./IdentityScript.sql
 echo 'IdentityScript done'
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Your_password123" -d $database -i ./ProcessManager.sql

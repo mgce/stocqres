@@ -3,6 +3,7 @@ version: '3.4'
 services:
   stocqres.api:
     image: ${DOCKER_REGISTRY}stocqresapi
+    network_mode: bridge
     build:
       context: .
       dockerfile: Stocqres.Api/Dockerfile
@@ -12,6 +13,7 @@ services:
 
   sqlServer:
     image: microsoft/mssql-server-linux:latest
+    network_mode: bridge
     container_name: "sqlServer"
     environment:
       SA_PASSWORD: Your_password123
@@ -26,6 +28,7 @@ services:
 
   mongoDb:
     image: mongo:latest
+    network_mode: bridge
     container_name: "mongodb"
     volumes:
       - mongodata:/data/db
