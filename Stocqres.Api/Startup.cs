@@ -35,7 +35,7 @@ using Stocqres.Infrastructure.Commands;
 using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
 using Stocqres.SharedKernel;
 using Stocqres.Transactions;
-using Stocqres.Transactions.Infrastructure.ProcessManager;
+using Stocqres.Transactions.Infrastructure.ProcessManagers;
 using Stocqres.Transactions.Orders.Domain;
 
 namespace Stocqres.Api

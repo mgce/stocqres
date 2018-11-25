@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Stocqres.Transactions.Orders.Domain;
-using Stocqres.Transactions.Orders.Domain.OrderProcessManager;
+using Stocqres.Transactions.Orders.Domain.ProcessManagers;
 
-namespace Stocqres.Transactions.Infrastructure.ProcessManager
+namespace Stocqres.Transactions.Infrastructure.ProcessManagers
 {
     public class ProcessManagerDbContext : DbContext
     {

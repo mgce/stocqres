@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
 using Stocqres.SharedKernel.Events;
-using Stocqres.Transactions.Infrastructure.OrderProcessManagerRepository;
-using Stocqres.Transactions.Infrastructure.ProcessManager;
+using Stocqres.Transactions.Infrastructure.ProcessManagers;
 using Stocqres.Transactions.Orders.Domain;
 using Stocqres.Transactions.Orders.Domain.Events;
-using Stocqres.Transactions.Orders.Domain.OrderProcessManager;
+using Stocqres.Transactions.Orders.Domain.ProcessManagers;
 
 namespace Stocqres.Transactions.Orders.Application
 {

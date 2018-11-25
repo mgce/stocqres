@@ -5,11 +5,9 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Stocqres.Core.Dispatcher;
-using Stocqres.Transactions.Infrastructure.ProcessManager;
-using Stocqres.Transactions.Infrastructure.ProcessManagerRepository;
-using Stocqres.Transactions.Orders.Domain.OrderProcessManager;
+using Stocqres.Transactions.Orders.Domain.ProcessManagers;
 
-namespace Stocqres.Transactions.Infrastructure.OrderProcessManagerRepository
+namespace Stocqres.Transactions.Infrastructure.ProcessManagers
 {
     public interface IOrderProcessManagerRepository : IProcessManagerRepository<OrderProcessManager>
     {

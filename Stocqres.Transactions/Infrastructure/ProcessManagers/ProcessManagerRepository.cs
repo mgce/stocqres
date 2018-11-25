@@ -4,17 +4,16 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Dispatcher;
-using Stocqres.Transactions.Infrastructure.ProcessManager;
 
-namespace Stocqres.Transactions.Infrastructure.ProcessManagerRepository
+namespace Stocqres.Transactions.Infrastructure.ProcessManagers
 {
-    public interface IProcessManagerRepository<T> where T : Orders.Domain.ProcessManager
+    public interface IProcessManagerRepository<T> where T : Orders.Domain.ProcessManagers.ProcessManager
     {
         Task<T> Get(Guid aggregateId);
         Task Save(T processManager);
     }
 
-    public class ProcessManagerRepository<T> : IProcessManagerRepository<T> where T:Orders.Domain.ProcessManager
+    public class ProcessManagerRepository<T> : IProcessManagerRepository<T> where T:Orders.Domain.ProcessManagers.ProcessManager
     {
         protected readonly ProcessManagerDbContext _dbContext;
         private readonly IDispatcher _dispatcher;
@@ -50,7 +49,7 @@ namespace Stocqres.Transactions.Infrastructure.ProcessManagerRepository
             
         }
 
-        private async Task HandleCommands(Orders.Domain.ProcessManager processManager)
+        private async Task HandleCommands(Orders.Domain.ProcessManagers.ProcessManager processManager)
         {
             var commandsToHandle = new List<ICommand>(processManager.GetUnhandledCommands());
             

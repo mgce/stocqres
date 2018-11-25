@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Stocqres.Core.Commands;
 
-namespace Stocqres.Transactions.Orders.Domain
+namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
 {
     public class ProcessManager
     {

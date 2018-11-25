@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Stocqres.Transactions.Orders.Domain.OrderProcessManager
+﻿namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
 {
     public enum OrderProcessManagerState
     {

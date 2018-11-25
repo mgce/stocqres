@@ -1,14 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Threading.Tasks;
-using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
 using Stocqres.SharedKernel.Commands;
 using Stocqres.SharedKernel.Events;
 using Stocqres.Transactions.Orders.Domain.Command;
 using Stocqres.Transactions.Orders.Domain.Events;
 
-namespace Stocqres.Transactions.Orders.Domain.OrderProcessManager
+namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
 {
     [Table("OrderProcessManager", Schema = "Transactions")]
     public class OrderProcessManager : ProcessManager
