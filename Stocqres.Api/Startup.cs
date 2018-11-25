@@ -31,6 +31,7 @@ using Stocqres.Identity.Domain;
 using Stocqres.Identity.Infrastructure;
 using Stocqres.Identity.Repositories;
 using Stocqres.Infrastructure;
+using Stocqres.Infrastructure.Commands;
 using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
 using Stocqres.SharedKernel;
 using Stocqres.Transactions;
@@ -116,6 +117,8 @@ namespace Stocqres.Api
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypesSafely()).Where(a => a.Namespace != null && a.Namespace.Contains("Stocqres")).ToArray();
 
             builder.ConfigureCqrs(assemblies);
+            builder.RegisterGenericDecorator(typeof(TransactionalCommandHandlerDecorator<>), typeof(ICommandHandler<>),
+                "commandHandler");
             builder.Populate(services);
             builder.ConfigureMongo();
             RegisterRepositories(builder);

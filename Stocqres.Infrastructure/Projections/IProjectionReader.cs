@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Stocqres.Core.Domain;
 
-namespace Stocqres.Infrastructure.ProjectionReader
+namespace Stocqres.Infrastructure.Projections
 {
     public interface IProjectionReader
     {

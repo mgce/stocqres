@@ -6,7 +6,7 @@ using Stocqres.Core.Events;
 using Stocqres.Customers.Investors.Domain.Events;
 using Stocqres.Customers.Investors.Presentation.Projections;
 using Stocqres.Customers.Wallet.Events;
-using Stocqres.Infrastructure.ProjectionWriter;
+using Stocqres.Infrastructure.Projections;
 
 namespace Stocqres.Customers.Investors.Presentation.Handlers
 {

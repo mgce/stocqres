@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Autofac;
+using Autofac.Core;
 using Stocqres.Core.Events;
 
 namespace Stocqres.Core.Commands
@@ -14,9 +16,17 @@ namespace Stocqres.Core.Commands
                 .RegisterTypes(assemblies)
                 .AsClosedTypesOf(typeof(IEventHandler<>));
 
-            builder
-                .RegisterTypes(assemblies)
-                .AsClosedTypesOf(typeof(ICommandHandler<>));
+            //builder
+            //    .RegisterTypes(assemblies)
+            //    .AsClosedTypesOf(typeof(ICommandHandler<>));
+
+            var commandHandlers = assemblies.Where(t => t.IsClosedTypeOf(typeof(ICommandHandler<>))).ToArray();
+
+            builder.RegisterTypes(commandHandlers).As(type =>
+                    type.GetInterfaces().Where(interfaceType => interfaceType.IsClosedTypeOf(typeof(ICommandHandler<>)))
+                        .Select(interfaceType => new KeyedService("commandHandler", interfaceType)))
+                .InstancePerLifetimeScope();
+
 
             builder.Register<Func<Type, IEnumerable<IEventHandler<IEvent>>>>(c =>
             {

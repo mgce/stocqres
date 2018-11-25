@@ -10,7 +10,7 @@ using Stocqres.Customers.Investors.Presentation.Projections;
 using Stocqres.Customers.Wallet.Commands;
 using Stocqres.Infrastructure.EventRepository;
 using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
-using Stocqres.Infrastructure.ProjectionReader;
+using Stocqres.Infrastructure.Projections;
 using Stocqres.SharedKernel.Commands;
 using Stocqres.SharedKernel.Stocks;
 

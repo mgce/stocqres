@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Stocqres.Core.Domain;
 
-namespace Stocqres.Infrastructure.ProjectionWriter
+namespace Stocqres.Infrastructure.Projections
 {
     public interface IProjectionWriter
     {

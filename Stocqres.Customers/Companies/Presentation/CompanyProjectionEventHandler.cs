@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Stocqres.Core.Events;
 using Stocqres.Customers.Companies.Domain.Events;
 using Stocqres.Customers.Companies.Presentation.Projections;
-using Stocqres.Infrastructure.ProjectionWriter;
+using Stocqres.Infrastructure.Projections;
 using Stocqres.SharedKernel.Events;
 
 namespace Stocqres.Customers.Companies.Presentation

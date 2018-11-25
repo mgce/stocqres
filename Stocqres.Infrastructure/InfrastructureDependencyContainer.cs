@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using Autofac;
-using Stocqres.Core.Commands;
-using Stocqres.Infrastructure.ProjectionReader;
-using Stocqres.Infrastructure.ProjectionWriter;
-using Stocqres.Infrastructure.Repositories.Api;
+﻿using Autofac;
+using Stocqres.Infrastructure.Projections;
+using Stocqres.Infrastructure.UnitOfWork;
 
 namespace Stocqres.Infrastructure
 {
@@ -14,8 +8,9 @@ namespace Stocqres.Infrastructure
     {
         public static void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ProjectionWriter.ProjectionWriter>().As<IProjectionWriter>();
-            builder.RegisterType<ProjectionReader.ProjectionReader>().As<IProjectionReader>();
+            builder.RegisterType<ProjectionWriter>().As<IProjectionWriter>();
+            builder.RegisterType<ProjectionReader>().As<IProjectionReader>();
+            builder.RegisterType<UnitOfWork.UnitOfWork>().As<IUnitOfWork>().SingleInstance();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Stocqres.Core.Events;
-using Stocqres.Infrastructure.ProjectionWriter;
+using Stocqres.Infrastructure.Projections;
 using Stocqres.Transactions.Orders.Domain.Enums;
 using Stocqres.Transactions.Orders.Domain.Events;
 

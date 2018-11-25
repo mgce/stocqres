@@ -9,7 +9,7 @@ using Stocqres.Customers.Investors.Domain.Commands;
 using Stocqres.Customers.Investors.Domain.Events;
 using Stocqres.Customers.Investors.Presentation.Projections;
 using Stocqres.Infrastructure.EventRepository;
-using Stocqres.Infrastructure.ProjectionReader;
+using Stocqres.Infrastructure.Projections;
 
 namespace Stocqres.Customers.Investors.Application
 {

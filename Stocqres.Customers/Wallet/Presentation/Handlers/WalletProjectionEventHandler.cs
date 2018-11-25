@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Core.Events;
 using Stocqres.Customers.Wallet.Events;
-using Stocqres.Infrastructure.ProjectionWriter;
+using Stocqres.Infrastructure.Projections;
 using Stocqres.SharedKernel.Events;
 
 namespace Stocqres.Customers.Wallet.Presentation.Handlers

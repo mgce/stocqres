@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
 using Stocqres.Infrastructure.EventRepository.Scripts;
+using Stocqres.Infrastructure.UnitOfWork;
 
 namespace Stocqres.Infrastructure.EventRepository
 {
@@ -18,24 +20,25 @@ namespace Stocqres.Infrastructure.EventRepository
     {
         private readonly IAggregateRootFactory _factory;
         private readonly IEventBus _eventBus;
+        private readonly IUnitOfWork _unitOfWork;
+        private IDbConnection _connection => _unitOfWork.Connection;
+        private IDbTransaction _transaction => _unitOfWork.Transaction;
         private readonly string _connectionString;
 
-        public EventRepository(IAggregateRootFactory factory, IEventBus eventBus, IConfiguration configuration)
+        public EventRepository(IAggregateRootFactory factory, IEventBus eventBus, IConfiguration configuration, IUnitOfWork unitOfWork)
         {
             _factory = factory;
             _eventBus = eventBus;
+            _unitOfWork = unitOfWork;
             _connectionString = configuration.GetConnectionString("SqlServer");
         }
 
         public async Task<T> GetByIdAsync<T>(Guid id)
         {
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                var sql = EventRepositoryScriptsAsStrings.GetAggregate(typeof(T).Name, id);
-                var listOfEventData = await conn.QueryAsync<EventData>(sql, new {id});
-                var events = listOfEventData.OrderBy(e=>e.Version).Select(x => x.DeserializeEvent());
-                return (T)_factory.CreateAsync<T>(events);
-            }
+            var sql = EventRepositoryScriptsAsStrings.GetAggregate(typeof(T).Name, id);
+            var listOfEventData = await _connection.QueryAsync<EventData>(sql, new {id});
+            var events = listOfEventData.OrderBy(e=>e.Version).Select(x => x.DeserializeEvent());
+            return (T)_factory.CreateAsync<T>(events);
         }
 
         public async Task SaveAsync(IAggregateRoot aggregate)
@@ -43,27 +46,18 @@ namespace Stocqres.Infrastructure.EventRepository
             var events = aggregate.GetUncommitedEvents();
             if (!events.Any())
                 return;
+
             var aggregateType = aggregate.GetType().Name;
             var originalVersion = aggregate.Version - events.Count + 1;
             var eventsToSave = events.Select(e => e.ToEventData(aggregate.Id, aggregateType, originalVersion++, DateTime.Now));
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-            {
-                using (var conn = new SqlConnection(_connectionString))
-                {
-                    await conn.OpenAsync();
-                    using (var tx = conn.BeginTransaction())
-                    {
-                        await CreateTableForAggregateIfNotExist(conn, tx, aggregateType);
-                        await CheckAggregateVersion(conn, aggregateType, aggregate.Id, originalVersion);
 
-                        string insertScript = EventRepositoryScriptsAsStrings.InsertIntoAggregate(aggregateType);
+            await CreateTableForAggregateIfNotExist(aggregateType);
 
-                        await conn.ExecuteAsync(insertScript, eventsToSave, tx);
-                        tx.Commit();
-                    }
-                }
-                scope.Complete();
-            }
+            await CheckAggregateVersion(aggregateType, aggregate.Id, originalVersion);
+
+            string insertScript = EventRepositoryScriptsAsStrings.InsertIntoAggregate(aggregateType);
+
+            await _connection.ExecuteAsync(insertScript, eventsToSave, _transaction);
 
             await RaiseEvents(aggregate);
         }
@@ -76,20 +70,20 @@ namespace Stocqres.Infrastructure.EventRepository
             }
         }
 
-        private async Task CreateTableForAggregateIfNotExist(SqlConnection con, SqlTransaction tx, string aggregateTableName)
+        private async Task CreateTableForAggregateIfNotExist(string aggregateTableName)
         {
             var sql = EventRepositoryScriptsAsStrings.CreateTableForAggregate(aggregateTableName);
-            await con.ExecuteAsync(sql,null,tx);
+            await _connection.ExecuteAsync(sql,null,_transaction);
 
             var indexSql = EventRepositoryScriptsAsStrings.CreateIndex(aggregateTableName);
-            await con.ExecuteAsync(indexSql,null,tx);
+            await _connection.ExecuteAsync(indexSql,null, _transaction);
         }
 
-        private async Task CheckAggregateVersion(SqlConnection conn, string aggregateType, Guid aggregateId, int originalVersion)
+        private async Task CheckAggregateVersion(string aggregateType, Guid aggregateId, int originalVersion)
         {
             var foundVersionQuery =
                 EventRepositoryScriptsAsStrings.FindAggregateVersion(aggregateType, aggregateId);
-            var foundVersionResult = await conn.ExecuteScalarAsync(foundVersionQuery);
+            var foundVersionResult = await _connection.ExecuteScalarAsync(foundVersionQuery,null,_transaction);
             if ((int?)foundVersionResult >= originalVersion)
                 throw new Exception("Concurrency Exception");
         }

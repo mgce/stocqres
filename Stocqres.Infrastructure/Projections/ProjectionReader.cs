@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using Stocqres.Core.Domain;
 
-namespace Stocqres.Infrastructure.ProjectionReader
+namespace Stocqres.Infrastructure.Projections
 {
     public class ProjectionReader : IProjectionReader
     {

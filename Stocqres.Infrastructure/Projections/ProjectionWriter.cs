@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using Stocqres.Core.Domain;
 
-namespace Stocqres.Infrastructure.ProjectionWriter
+namespace Stocqres.Infrastructure.Projections
 {
     public class ProjectionWriter : IProjectionWriter
     {
