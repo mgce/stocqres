@@ -51,7 +51,7 @@ namespace Stocqres.Infrastructure.EventRepository
             var originalVersion = aggregate.Version - events.Count + 1;
             var eventsToSave = events.Select(e => e.ToEventData(aggregate.Id, aggregateType, originalVersion++, DateTime.Now));
 
-            await CreateTableForAggregateIfNotExist(aggregateType);
+            //await CreateTableForAggregateIfNotExist(aggregateType);
 
             await CheckAggregateVersion(aggregateType, aggregate.Id, originalVersion);
 

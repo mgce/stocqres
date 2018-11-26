@@ -18,5 +18,7 @@ echo 'Settings done'
 echo 'IdentityScript done'
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Your_password123" -d $database -i ./ProcessManager.sql
 echo 'ProcessManager done'
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Your_password123" -d $database -i ./AggregatesTables.sql
+echo 'AggregatesTables done'
 
 echo 'Finished initializing the database'
