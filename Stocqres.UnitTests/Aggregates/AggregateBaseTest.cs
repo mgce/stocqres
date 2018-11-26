@@ -10,7 +10,7 @@ namespace Stocqres.UnitTests.Aggregates
 {
     public class AggregateBaseTest
     {
-        protected readonly IFixture _fixture;
+        protected IFixture _fixture;
 
         protected AggregateBaseTest()
         {
