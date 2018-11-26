@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.5.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\stocqres\Stocqres.Core\Stocqres.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\..\stocqres\Stocqres.Customers\Stocqres.Customers.csproj" />
+    <ProjectReference Include="..\..\..\..\..\stocqres\Stocqres.Identity\Stocqres.Identity.csproj" />
+    <ProjectReference Include="..\..\..\..\..\stocqres\Stocqres.Infrastructure\Stocqres.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\..\..\stocqres\Stocqres.SharedKernel\Stocqres.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\..\..\..\stocqres\Stocqres.Transactions\Stocqres.Transactions.csproj" />
+  </ItemGroup>
+
+</Project>
