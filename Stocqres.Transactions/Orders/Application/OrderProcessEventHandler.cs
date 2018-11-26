@@ -30,7 +30,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         public async Task HandleAsync(OrderCreatedEvent message)
         {
-            var pm = await _processManagerRepository.Get(message.AggregateId);
+            var pm = await _processManagerRepository.FindAsync(message.AggregateId);
             if(pm != null)
                 throw new StocqresException("Process Manager for this Order currently exist");
 
@@ -43,7 +43,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         public async Task HandleAsync(WalletChargedEvent message)
         {
-            var orderProcessManager = await _processManagerRepository.Get(message.OrderId);
+            var orderProcessManager = await _processManagerRepository.FindAsync(message.OrderId);
 
             try
             {
@@ -60,7 +60,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         public async Task HandleAsync(CompanyChargedEvent message)
         {
-            var orderProcessManager = await _processManagerRepository.Get(message.OrderId);
+            var orderProcessManager = await _processManagerRepository.FindAsync(message.OrderId);
 
             try
             {
@@ -76,7 +76,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         public async Task HandleAsync(CompanyChargeFailedEvent message)
         {
-            var orderProcessManager = await _processManagerRepository.Get(message.OrderId);
+            var orderProcessManager = await _processManagerRepository.FindAsync(message.OrderId);
 
             orderProcessManager.When(message);
 
@@ -85,7 +85,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         public async Task HandleAsync(WalletChargeRollbackedEvent message)
         {
-            var orderProcessManager = await _processManagerRepository.Get(message.OrderId);
+            var orderProcessManager = await _processManagerRepository.FindAsync(message.OrderId);
 
             orderProcessManager.When(message);
 
@@ -94,7 +94,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         public async Task HandleAsync(OrderCancelledEvent message)
         {
-            var orderProcessManager = await _processManagerRepository.Get(message.AggregateId);
+            var orderProcessManager = await _processManagerRepository.FindAsync(message.AggregateId);
 
             orderProcessManager.When(message);
 
@@ -103,7 +103,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         public async Task HandleAsync(StockToWalletAddedEvent message)
         {
-            var orderProcessManager = await _processManagerRepository.Get(message.OrderId);
+            var orderProcessManager = await _processManagerRepository.FindAsync(message.OrderId);
 
             orderProcessManager.When(message);
 
@@ -112,7 +112,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         private async Task Act<T>(Guid aggregateId, Action action)
         {
-            var orderProcessManager = await _processManagerRepository.Get(aggregateId);
+            var orderProcessManager = await _processManagerRepository.FindAsync(aggregateId);
 
             action();
 

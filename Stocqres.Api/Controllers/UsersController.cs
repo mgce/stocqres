@@ -20,14 +20,14 @@ namespace Stocqres.Api.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpPost("")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Create(CreateUserCommand command)
-        {
-            await _dispatcher.SendAsync(command);
+        //[HttpPost("")]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> Create(CreateUserCommand command)
+        //{
+        //    await _dispatcher.SendAsync(command);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
         //[HttpPost("investor")]
         //[AllowAnonymous]

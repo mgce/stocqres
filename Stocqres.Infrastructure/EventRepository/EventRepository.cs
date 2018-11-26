@@ -36,7 +36,7 @@ namespace Stocqres.Infrastructure.EventRepository
         public async Task<T> GetByIdAsync<T>(Guid id)
         {
             var sql = EventRepositoryScriptsAsStrings.GetAggregate(typeof(T).Name, id);
-            var listOfEventData = await _connection.QueryAsync<EventData>(sql, new {id});
+            var listOfEventData = await _connection.QueryAsync<EventData>(sql, new {id}, _transaction);
             var events = listOfEventData.OrderBy(e=>e.Version).Select(x => x.DeserializeEvent());
             return (T)_factory.CreateAsync<T>(events);
         }

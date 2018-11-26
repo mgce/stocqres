@@ -17,7 +17,7 @@ namespace Stocqres.Identity.Domain
         public User()
         {}
 
-        public User(string username, string email)
+        public User(Guid userId, string username, string email)
         {
             if(string.IsNullOrEmpty(username))
                 throw new StocqresException("Username cannot be empty");
@@ -25,7 +25,7 @@ namespace Stocqres.Identity.Domain
             if (string.IsNullOrEmpty(email))
                 throw new StocqresException("Email cannot be empty");
 
-            Publish(new UserCreatedEvent(Guid.NewGuid(), username, email.ToLowerInvariant()));
+            Publish(new UserCreatedEvent(userId, username, email.ToLowerInvariant()));
         }
 
         public void SetPassword(string password, IPasswordHasher<User> passwordHasher)

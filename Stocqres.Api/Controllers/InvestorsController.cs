@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stocqres.Core.Dispatcher;
-using Stocqres.Customers.Investors.Domain.Commands;
 using Stocqres.Customers.Wallet.Commands;
+using Stocqres.Identity.Domain.Commands;
 
 namespace Stocqres.Api.Controllers
 {

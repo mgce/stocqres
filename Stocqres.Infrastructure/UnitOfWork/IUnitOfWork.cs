@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using MongoDB.Driver;
 
 namespace Stocqres.Infrastructure.UnitOfWork
 {
@@ -6,6 +7,7 @@ namespace Stocqres.Infrastructure.UnitOfWork
     {
         IDbConnection Connection { get; }
         IDbTransaction Transaction { get; }
+        IMongoDatabase MongoDatabase { get; }
         void BeginTransaction();
         void Commit();
         void Rollback();

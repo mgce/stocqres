@@ -1,33 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Dispatcher;
+using Stocqres.Infrastructure.UnitOfWork;
+using Stocqres.Transactions.Orders.Domain.ProcessManagers;
 
 namespace Stocqres.Transactions.Infrastructure.ProcessManagers
 {
-    public interface IProcessManagerRepository<T> where T : Orders.Domain.ProcessManagers.ProcessManager
+    public interface IProcessManagerRepository<T> where T : ProcessManager
     {
         Task<T> Get(Guid aggregateId);
         Task Save(T processManager);
     }
 
-    public class ProcessManagerRepository<T> : IProcessManagerRepository<T> where T:Orders.Domain.ProcessManagers.ProcessManager
+    public class ProcessManagerRepository<T> : IProcessManagerRepository<T> where T: ProcessManager
     {
-        protected readonly ProcessManagerDbContext _dbContext;
+        protected ProcessManagerDbContext _dbContext;
         private readonly IDispatcher _dispatcher;
+        private readonly IUnitOfWork _unitOfWork;
+        protected IDbTransaction _transaction => _unitOfWork.Transaction;
+        protected IDbConnection _connection => _unitOfWork.Connection;
 
-        public ProcessManagerRepository(ProcessManagerDbContext dbContext, IDispatcher dispatcher)
+        public ProcessManagerRepository(ProcessManagerDbContext dbContext, IDispatcher dispatcher, IUnitOfWork unitOfWork)
         {
             _dbContext = dbContext;
             _dispatcher = dispatcher;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<T> Get(Guid aggregateId)
         {
             return await _dbContext.Set<T>().SingleOrDefaultAsync(pm => pm.AggregateId == aggregateId);
-
         }
 
         public async Task Save(T processManager)
@@ -49,7 +56,7 @@ namespace Stocqres.Transactions.Infrastructure.ProcessManagers
             
         }
 
-        private async Task HandleCommands(Orders.Domain.ProcessManagers.ProcessManager processManager)
+        protected async Task HandleCommands(ProcessManager processManager)
         {
             var commandsToHandle = new List<ICommand>(processManager.GetUnhandledCommands());
             

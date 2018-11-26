@@ -38,7 +38,7 @@ namespace Stocqres.Identity.Application
             var user = await _userRepository.GetUserByEmailAsync(command.Email);
             if (user != null)
                 throw new StocqresException($"User with mail {command.Email} currently exist");
-            user = new Domain.User(command.Username, command.Email);
+            user = new Domain.User(command.UserId, command.Username, command.Email);
             user.SetPassword(command.Password, _passwordHasher);
             await _userRepository.CreateAsync(user);
             await _userRepository.SaveAsync();
@@ -55,6 +55,7 @@ namespace Stocqres.Identity.Application
         {
             var createUserCommand = new CreateUserCommand
             {
+                UserId = Guid.NewGuid(),
                 Email = command.Email,
                 Password = command.Password,
                 Username = command.Username
@@ -64,7 +65,7 @@ namespace Stocqres.Identity.Application
 
             var user = await _userRepository.GetUserByEmailAsync(command.Email);
 
-            await _eventBus.Publish(new UserForInvestorCreated(user.Id, command.FirstName, command.LastName));
+            await _eventBus.Publish(new UserForInvestorCreated(createUserCommand.UserId, command.FirstName, command.LastName));
         }
     }
 }

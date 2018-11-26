@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="DapperExtensions" Version="1.4.4" />
     <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
   </ItemGroup>
 
