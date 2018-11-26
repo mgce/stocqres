@@ -13,10 +13,10 @@ namespace Stocqres.Customers.Wallet.Domain
 {
     public class Wallet : AggregateRoot
     {
-        public Guid InvestorId { get; set; }
-        public Currency Currency { get; set; }
-        public decimal Amount { get; set; }
-        public List<Stock> StockList { get; set; }
+        public Guid InvestorId { get; protected set; }
+        public Currency Currency { get; protected set; }
+        public decimal Amount { get; protected set; }
+        public List<Stock> StockList { get; protected set; }
 
         public Wallet(Guid investorId, Currency currency, decimal amount)
         {
@@ -29,6 +29,9 @@ namespace Stocqres.Customers.Wallet.Domain
 
         public void ChargeWallet(Guid orderId, decimal amountToCharge)
         {
+            if(amountToCharge <= 0)
+                throw new StocqresException("Amount to charge cannot be lower or equal 0");
+
             if(amountToCharge > Amount)
                 throw new StocqresException("You don't have enought money");
 
@@ -43,7 +46,7 @@ namespace Stocqres.Customers.Wallet.Domain
                 throw new StocqresException("Stock Code cannot be empty");
             if (unit <= 0)
                 throw new StocqresException("Unit must be greater than zero");
-            if (quantity > Amount)
+            if (quantity <= 0)
                 throw new StocqresException("Quantity must be greater than zero");
 
             Publish(new StockToWalletAddedEvent(Id, orderId, name, code, unit, quantity));
