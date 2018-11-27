@@ -11,6 +11,8 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
+using Stocqres.Core.Exceptions;
+using Stocqres.Infrastructure.DatabaseProvider;
 using Stocqres.Infrastructure.EventRepository.Scripts;
 using Stocqres.Infrastructure.UnitOfWork;
 
@@ -20,23 +22,26 @@ namespace Stocqres.Infrastructure.EventRepository
     {
         private readonly IAggregateRootFactory _factory;
         private readonly IEventBus _eventBus;
-        private readonly IUnitOfWork _unitOfWork;
-        private IDbConnection _connection => _unitOfWork.Connection;
-        private IDbTransaction _transaction => _unitOfWork.Transaction;
-        private readonly string _connectionString;
+        private readonly IDatabaseProvider _databaseProvider;
 
-        public EventRepository(IAggregateRootFactory factory, IEventBus eventBus, IConfiguration configuration, IUnitOfWork unitOfWork)
+        public EventRepository(IAggregateRootFactory factory, IEventBus eventBus, IDatabaseProvider databaseProvider)
         {
             _factory = factory;
             _eventBus = eventBus;
-            _unitOfWork = unitOfWork;
-            _connectionString = configuration.GetConnectionString("SqlServer");
+            _databaseProvider = databaseProvider;
         }
 
         public async Task<T> GetByIdAsync<T>(Guid id)
         {
-            var sql = EventRepositoryScriptsAsStrings.GetAggregate(typeof(T).Name, id);
-            var listOfEventData = await _connection.QueryAsync<EventData>(sql, new {id}, _transaction);
+            if(id == Guid.Empty)
+                throw new StocqresException("Aggregate Id cannot be empty");
+
+            var getAggregateSql = EventRepositoryScriptsAsStrings.GetAggregate(typeof(T).Name, id);
+            var listOfEventData = await _databaseProvider.QueryAsync<EventData>(getAggregateSql, new {id});
+
+            if(listOfEventData == null || !listOfEventData.Any())
+                throw new StocqresException("Aggregate doesn't exist");
+
             var events = listOfEventData.OrderBy(e=>e.Version).Select(x => x.DeserializeEvent());
             return (T)_factory.CreateAsync<T>(events);
         }
@@ -57,7 +62,7 @@ namespace Stocqres.Infrastructure.EventRepository
 
             string insertScript = EventRepositoryScriptsAsStrings.InsertIntoAggregate(aggregateType);
 
-            await _connection.ExecuteAsync(insertScript, eventsToSave, _transaction);
+            await _databaseProvider.ExecuteAsync(insertScript, eventsToSave);
 
             await RaiseEvents(aggregate);
         }
@@ -73,17 +78,17 @@ namespace Stocqres.Infrastructure.EventRepository
         private async Task CreateTableForAggregateIfNotExist(string aggregateTableName)
         {
             var sql = EventRepositoryScriptsAsStrings.CreateTableForAggregate(aggregateTableName);
-            await _connection.ExecuteAsync(sql,null,_transaction);
+            await _databaseProvider.ExecuteAsync(sql);
 
             var indexSql = EventRepositoryScriptsAsStrings.CreateIndex(aggregateTableName);
-            await _connection.ExecuteAsync(indexSql,null, _transaction);
+            await _databaseProvider.ExecuteAsync(indexSql);
         }
 
         private async Task CheckAggregateVersion(string aggregateType, Guid aggregateId, int originalVersion)
         {
             var foundVersionQuery =
                 EventRepositoryScriptsAsStrings.FindAggregateVersion(aggregateType, aggregateId);
-            var foundVersionResult = await _connection.ExecuteScalarAsync(foundVersionQuery,null,_transaction);
+            var foundVersionResult = await _databaseProvider.ExecuteScalarAsync(foundVersionQuery);
             if ((int?)foundVersionResult >= originalVersion)
                 throw new Exception("Concurrency Exception");
         }

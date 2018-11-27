@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Core.Events;
+using Stocqres.Core.Exceptions;
 
 namespace Stocqres.Core.Domain
 {
@@ -13,6 +15,9 @@ namespace Stocqres.Core.Domain
     {
         public object CreateAsync<T>(IEnumerable<IEvent> events)
         {
+            if(events == null || !events.Any())
+                throw new StocqresException("List of events cannot be null or empty");
+
             var type = typeof(T);
             //var recreateMethod = type.GetMethod("AggregateRoot", new[] {events.GetType()});
             var ctor = type.GetConstructor(BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance , null,new[] {typeof(IEnumerable<IEvent>) },null);

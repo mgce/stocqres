@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Stocqres.Infrastructure.DatabaseProvider;
 using Stocqres.Infrastructure.Projections;
 using Stocqres.Infrastructure.UnitOfWork;
 
@@ -11,6 +12,7 @@ namespace Stocqres.Infrastructure
             builder.RegisterType<ProjectionWriter>().As<IProjectionWriter>();
             builder.RegisterType<ProjectionReader>().As<IProjectionReader>();
             builder.RegisterType<UnitOfWork.UnitOfWork>().As<IUnitOfWork>().SingleInstance();
+            builder.RegisterType<DatabaseProvider.DatabaseProvider>().As<IDatabaseProvider>().SingleInstance();
         }
     }
 }

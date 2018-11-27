@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AutoFixture;
+using Stocqres.Core.Domain;
 using Stocqres.Core.Exceptions;
 using Stocqres.Customers.Investors.Domain;
 using Stocqres.Customers.Investors.Domain.Events;
@@ -11,6 +12,19 @@ namespace Stocqres.UnitTests.Aggregates
 {
     public class InvestorUnitTests : AggregateBaseTest
     {
+        private readonly Investor _investor;
+
+        public InvestorUnitTests()
+        {
+            _investor = CreateInvestor();
+        }
+
+        [Fact]
+        public void Wallet_IsAggregateRoot()
+        {
+            Assert.IsAssignableFrom<AggregateRoot>(_investor);
+        }
+
         [Fact]
         public void Investor_WithEmptyFirstName_ShouldNotBeCreated()
         {
@@ -47,31 +61,28 @@ namespace Stocqres.UnitTests.Aggregates
         [Fact]
         public void Investor_CurrentlyCreated_ShouldProduceEvent()
         {
-            var investor = CreateInvestor();
-            AssertProducedEvent<InvestorCreatedEvent>(investor);
+            AssertProducedEvent<InvestorCreatedEvent>(_investor);
         }
 
         [Fact]
         public void Investor_WithValidData_ShouldAssignWallet()
         {
-            var investor = CreateInvestor();
             var walletId = Guid.NewGuid();
 
-            investor.AssignWallet(walletId);
+            _investor.AssignWallet(walletId);
 
-            Assert.NotEqual(Guid.Empty, investor.WalletId);
-            Assert.Equal(walletId, investor.WalletId);
-            AssertProducedEvent<WalletToInvestorAssignedEvent>(investor);
+            Assert.NotEqual(Guid.Empty, _investor.WalletId);
+            Assert.Equal(walletId, _investor.WalletId);
+            AssertProducedEvent<WalletToInvestorAssignedEvent>(_investor);
         }
 
         [Fact]
         public void Investor_WithEmptyWalletId_ShouldNotAssignWallet()
         {
-            var investor = CreateInvestor();
             var walletId = Guid.Empty;
 
-            Assert.Throws<StocqresException>(() => investor.AssignWallet(walletId));
-            AssertThatEventIsNotCreated<WalletToInvestorAssignedEvent>(investor);
+            Assert.Throws<StocqresException>(() => _investor.AssignWallet(walletId));
+            AssertThatEventIsNotCreated<WalletToInvestorAssignedEvent>(_investor);
         }
 
         private Investor CreateInvestor()

@@ -38,6 +38,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{442F4BE5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocqres.UnitTests", "Stocqres.UnitTests\Stocqres.UnitTests.csproj", "{CFDBDB10-120F-4234-82F0-9D165060B733}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocqres.IntegrationTests", "Stocqres.IntegrationTests\Stocqres.IntegrationTests.csproj", "{57E71B3A-D7D9-422B-B9A5-457B56A2CC78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{CFDBDB10-120F-4234-82F0-9D165060B733}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFDBDB10-120F-4234-82F0-9D165060B733}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFDBDB10-120F-4234-82F0-9D165060B733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57E71B3A-D7D9-422B-B9A5-457B56A2CC78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57E71B3A-D7D9-422B-B9A5-457B56A2CC78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57E71B3A-D7D9-422B-B9A5-457B56A2CC78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57E71B3A-D7D9-422B-B9A5-457B56A2CC78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{49690770-AC80-4419-944C-4AE2D829B9F0} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
 		{EA7078F8-BA8A-4062-8ADE-B6164A961861} = {AAD94D7E-BAA3-47AA-B51B-FA9F67D93FE3}
 		{CFDBDB10-120F-4234-82F0-9D165060B733} = {442F4BE5-AD6B-4A84-8098-6E02C4801A05}
+		{57E71B3A-D7D9-422B-B9A5-457B56A2CC78} = {442F4BE5-AD6B-4A84-8098-6E02C4801A05}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6709BAD5-9D57-4D0D-9F3E-BE8AC0856C09}

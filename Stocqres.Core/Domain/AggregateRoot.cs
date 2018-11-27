@@ -24,14 +24,6 @@ namespace Stocqres.Core.Domain
             }
         }
 
-        public void RecreateAggregate(IEnumerable<IEvent> events)
-        {
-            foreach (var @event in events)
-            {
-                Apply(@event);
-            }
-        }
-
         public List<IEvent> GetUncommitedEvents() => _uncommitedEvents;
 
         private void Apply(IEvent e)
