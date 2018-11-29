@@ -10,5 +10,6 @@ namespace Stocqres.Core.Domain
         Guid Id { get; }
         int Version { get; }
         List<IEvent> GetUncommitedEvents();
+        void ApplyEvents(IEnumerable<IEvent> events);
     }
 }

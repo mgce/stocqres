@@ -33,5 +33,10 @@ namespace Stocqres.Infrastructure.DatabaseProvider
         {
             return await _connection.ExecuteScalarAsync(sql, parameters, _transaction);
         }
+
+        public async Task<T> QueryFirstOrDefaultAsync<T>(string sql, object parameters = null)
+        {
+            return await _connection.QueryFirstOrDefaultAsync<T>(sql, parameters);
+        }
     }
 }

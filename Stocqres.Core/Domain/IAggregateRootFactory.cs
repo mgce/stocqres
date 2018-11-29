@@ -9,5 +9,6 @@ namespace Stocqres.Core.Domain
     public interface IAggregateRootFactory
     {
         object CreateAsync<T>(IEnumerable<IEvent> events);
+        object CreateFromSnapshotAsync<T>(IAggregateRoot aggregateRoot, IEnumerable<IEvent> events);
     }
 }

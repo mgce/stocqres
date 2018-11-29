@@ -18,13 +18,18 @@ namespace Stocqres.Core.Domain
 
         public AggregateRoot(IEnumerable<IEvent> events)
         {
+            ApplyEvents(events);
+        }
+
+        public List<IEvent> GetUncommitedEvents() => _uncommitedEvents;
+
+        public void ApplyEvents(IEnumerable<IEvent> events)
+        {
             foreach (var @event in events)
             {
                 Apply(@event);
             }
         }
-
-        public List<IEvent> GetUncommitedEvents() => _uncommitedEvents;
 
         private void Apply(IEvent e)
         {
@@ -54,8 +59,5 @@ namespace Stocqres.Core.Domain
             _uncommitedEvents.Add(e);
             Apply(e);
         }
-
-
-        
     }
 }

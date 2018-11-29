@@ -36,5 +36,11 @@ namespace Stocqres.Core.Domain
             return ctor.Invoke(new object[] {events});
             
         }
+
+        public object CreateFromSnapshotAsync<T>(IAggregateRoot aggregateRoot, IEnumerable<IEvent> events)
+        {
+            aggregateRoot.ApplyEvents(events);
+            return aggregateRoot;
+        }
     }
 }

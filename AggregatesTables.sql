@@ -67,6 +67,19 @@ CONSTRAINT PKOrderEvents PRIMARY KEY(ID)
 )
 GO
 
+IF NOT EXISTS(SELECT * FROM sysobjects  WHERE name = 'Snapshots' AND xtype='U')
+CREATE TABLE [Aggregates].[Snapshots](
+[Id] UNIQUEIDENTIFIER default NEWID() NOT NULL,
+[AggregateId] UNIQUEIDENTIFIER NOT NULL,
+[AggregateType] NVARCHAR(255) NOT NULL,
+[SnapshottedVersion] INT NOT NULL,
+[Data] NVARCHAR(MAX) NOT NULL,
+[MetaData] NVARCHAR(MAX) NOT NULL,
+[CreatedAt] DATETIME NOT NULL,
+CONSTRAINT PKOrderEvents PRIMARY KEY(ID)
+)
+GO
+
 IF NOT EXISTS(SELECT * FROM sys.indexes  WHERE name = 'Idx_OrderEvents_AggregateId' AND object_id = OBJECT_ID('[Customers].OrderEvents'))
 begin
 CREATE INDEX Idx_OrderEvents_AggregateId ON [Customers].OrderEvents(AggregateId)

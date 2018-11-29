@@ -9,6 +9,11 @@ BEGIN
 	EXEC('CREATE SCHEMA [Customers]');
 END
 
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'Aggregates')
+BEGIN
+	EXEC('CREATE SCHEMA [Aggregates]');
+END
+
 
 IF (NOT EXISTS (SELECT * 
                  FROM INFORMATION_SCHEMA.TABLES 

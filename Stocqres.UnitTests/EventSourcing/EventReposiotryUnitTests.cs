@@ -10,10 +10,12 @@ using FluentAssertions;
 using NSubstitute;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
+using Stocqres.Core.Exceptions;
 using Stocqres.Customers.Investors.Domain;
 using Stocqres.Customers.Investors.Domain.Events;
 using Stocqres.Infrastructure.DatabaseProvider;
 using Stocqres.Infrastructure.EventRepository;
+using Stocqres.Infrastructure.EventRepository.Scripts;
 using Stocqres.Infrastructure.UnitOfWork;
 using Xunit;
 
@@ -21,7 +23,6 @@ namespace Stocqres.UnitTests.EventSourcing
 {
     public class EventReposiotryUnitTests : EventSourcingUnitTestsBase
     {
-        private readonly IFixture _fixture;
         private readonly IAggregateRootFactory _aggregateRootFactory;
         private readonly IEventBus _eventBus;
         private readonly IDatabaseProvider _databaseProvider;
@@ -29,7 +30,6 @@ namespace Stocqres.UnitTests.EventSourcing
 
         public EventReposiotryUnitTests()
         {
-            _fixture = new Fixture();
             _aggregateRootFactory = Substitute.For<IAggregateRootFactory>();
             _eventBus = Substitute.For<IEventBus>();
             _databaseProvider = Substitute.For<IDatabaseProvider>();
@@ -40,32 +40,45 @@ namespace Stocqres.UnitTests.EventSourcing
         public async void GetByIdAsync_WithExistingInvestor_ShouldReturnInvestorAggregate()
         {
             var eventToReturn = GetEvents();
-            _databaseProvider.QueryAsync<EventData>(Arg.Any<string>()).ReturnsForAnyArgs(eventToReturn);
+
+            var getAggregateSql = EventRepositoryScriptsAsStrings.GetAggregate(typeof(Investor).Name, _aggregateId);
+
+            _databaseProvider.QueryAsync<EventData>(getAggregateSql, Arg.Any<object>()).Returns(eventToReturn);
 
             var deserializedEvents = GetEvents().OrderBy(e => e.Version).Select(x => x.DeserializeEvent());
 
             _aggregateRootFactory
                 .CreateAsync<Investor>(deserializedEvents)
-                .ReturnsForAnyArgs(_investor);
+                .Returns(_investor);
 
             var aggregate = await _eventRepository.GetByIdAsync<Investor>(_aggregateId);
 
             aggregate.Should().Be(_investor);
             aggregate.Should().NotBeNull();
+            _databaseProvider.Received().QueryAsync<EventData>(getAggregateSql, Arg.Any<object>());
+            _aggregateRootFactory.Received().CreateAsync<Investor>(deserializedEvents);
         }
 
         [Fact]
-        public async void GetByIdAsync_WithNotFoundEvents_ShouldReturnNull()
+        public void GetByIdAsync_WithNotFoundEvents_ShouldThrowException()
         {
             var emptyEventList = new List<EventData>();
 
             _databaseProvider.QueryAsync<EventData>(Arg.Any<string>()).ReturnsForAnyArgs(emptyEventList);
 
-            var aggregate = await _eventRepository.GetByIdAsync<Investor>(_aggregateId);
+            Action act = () => _eventRepository.GetByIdAsync<Investor>(_aggregateId);
 
-            aggregate.Should().BeNull();
+            act.Should().Throw<StocqresException>();
         }
 
-        
+        [Fact]
+        public void GetByIdAsync_WithEmptyGuid_ShouldThrowException()
+        {
+            Action act = () => _eventRepository.GetByIdAsync<Investor>(Guid.Empty);
+
+            Assert.Throws<StocqresException>(act);
+        }
+
+
     }
 }

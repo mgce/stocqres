@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Transactions;
-using Dapper;
-using Microsoft.Extensions.Configuration;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
+using Stocqres.Core.EventSourcing;
 using Stocqres.Core.Exceptions;
 using Stocqres.Infrastructure.DatabaseProvider;
 using Stocqres.Infrastructure.EventRepository.Scripts;
-using Stocqres.Infrastructure.UnitOfWork;
 
 namespace Stocqres.Infrastructure.EventRepository
 {
@@ -36,6 +28,10 @@ namespace Stocqres.Infrastructure.EventRepository
             if(id == Guid.Empty)
                 throw new StocqresException("Aggregate Id cannot be empty");
 
+            var snapshot = await GetSnapshotIfExist(id);
+            if (snapshot != null)
+                return await RecreateAggregateFromSnapshot<T>(snapshot);
+
             var getAggregateSql = EventRepositoryScriptsAsStrings.GetAggregate(typeof(T).Name, id);
             var listOfEventData = await _databaseProvider.QueryAsync<EventData>(getAggregateSql, new {id});
 
@@ -43,6 +39,7 @@ namespace Stocqres.Infrastructure.EventRepository
                 throw new StocqresException("Aggregate doesn't exist");
 
             var events = listOfEventData.OrderBy(e=>e.Version).Select(x => x.DeserializeEvent());
+
             return (T)_factory.CreateAsync<T>(events);
         }
 
@@ -65,6 +62,17 @@ namespace Stocqres.Infrastructure.EventRepository
             await _databaseProvider.ExecuteAsync(insertScript, eventsToSave);
 
             await RaiseEvents(aggregate);
+        }
+
+        public async Task TakeSnapshot<T>(Guid aggregateId) where T : IAggregateRoot
+        {
+            var aggregate = await GetByIdAsync<T>(aggregateId);
+
+            var snapshot = aggregate.ToSnapshot();
+
+            string insertScript = EventRepositoryScriptsAsStrings.InsertSnapshot();
+
+            await _databaseProvider.ExecuteAsync(insertScript, snapshot);
         }
 
         private async Task RaiseEvents(IAggregateRoot aggregate)
@@ -91,6 +99,24 @@ namespace Stocqres.Infrastructure.EventRepository
             var foundVersionResult = await _databaseProvider.ExecuteScalarAsync(foundVersionQuery);
             if ((int?)foundVersionResult >= originalVersion)
                 throw new Exception("Concurrency Exception");
+        }
+
+        private async Task<Snapshot> GetSnapshotIfExist(Guid aggregateId)
+        {
+            var sql = EventRepositoryScriptsAsStrings.GetAggregateSnapshot(aggregateId);
+            var snapshot = _databaseProvider.QueryFirstOrDefaultAsync<Snapshot>(sql);
+            return await snapshot;
+        }
+
+        private async Task<T> RecreateAggregateFromSnapshot<T>(Snapshot snapshot)
+        {
+            var sql = EventRepositoryScriptsAsStrings.GetEventsAfterSnapshot(snapshot);
+            var listOfEventData = await _databaseProvider.QueryAsync<EventData>(sql, new { snapshot.AggregateId });
+            var events = listOfEventData.OrderBy(e => e.Version).Select(x => x.DeserializeEvent());
+
+            var aggregate = snapshot.DeserializeSnapshot<T>();
+
+            return (T)_factory.CreateFromSnapshotAsync<T>(aggregate, events);
         }
     }
 }
