@@ -24,7 +24,7 @@ namespace Stocqres.UnitTests.EventSourcing
         [Fact]
         public void Create_WithListOfEvents_ShouldReturnAggregate()
         {
-            var events = GetEvents().OrderBy(e => e.Version).Select(x => x.DeserializeEvent());
+            var events = GetEventDatas().OrderBy(e => e.Version).Select(x => x.DeserializeEvent());
 
             var aggregate = _aggregateRootFactory.CreateAsync<Investor>(events);
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AutoFixture;
 using Stocqres.Core.Domain;
+using Stocqres.Core.Events;
 using Stocqres.Customers.Investors.Domain;
 using Stocqres.Customers.Investors.Domain.Events;
 using Stocqres.Infrastructure.EventRepository;
@@ -35,7 +36,7 @@ namespace Stocqres.UnitTests.EventSourcing
             _investor = RecreateInvestor();
         }
 
-        protected IEnumerable<EventData> GetEvents()
+        protected IEnumerable<EventData> GetEventDatas()
         {
             var investorCreatedEvent = new InvestorCreatedEvent(_aggregateId, _userId, _firstName, _lastName);
 
@@ -50,11 +51,25 @@ namespace Stocqres.UnitTests.EventSourcing
             return eventDatas;
         }
 
+        protected IEnumerable<IEvent> GetEvents()
+        {
+            var investorCreatedEvent = new InvestorCreatedEvent(_aggregateId, _userId, _firstName, _lastName);
+
+            var walletToInvestorAssignedEvent = new WalletToInvestorAssignedEvent(_aggregateId, _walletId);
+
+            var events = new List<IEvent>
+            {
+                investorCreatedEvent, walletToInvestorAssignedEvent
+            };
+
+            return events;
+        }
+
         protected Investor RecreateInvestor()
         {
             var aggregateFactory = new AggregateRootFactory();
 
-            var events = GetEvents().OrderBy(e => e.Version).Select(x => x.DeserializeEvent());
+            var events = GetEventDatas().OrderBy(e => e.Version).Select(x => x.DeserializeEvent());
 
             return (Investor)aggregateFactory.CreateAsync<Investor>(events);
         }

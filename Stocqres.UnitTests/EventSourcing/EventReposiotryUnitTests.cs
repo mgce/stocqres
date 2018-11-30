@@ -10,12 +10,15 @@ using FluentAssertions;
 using NSubstitute;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
+using Stocqres.Core.EventSourcing;
 using Stocqres.Core.Exceptions;
 using Stocqres.Customers.Investors.Domain;
 using Stocqres.Customers.Investors.Domain.Events;
 using Stocqres.Infrastructure.DatabaseProvider;
 using Stocqres.Infrastructure.EventRepository;
 using Stocqres.Infrastructure.EventRepository.Scripts;
+using Stocqres.Infrastructure.EventStore;
+using Stocqres.Infrastructure.Snapshots;
 using Stocqres.Infrastructure.UnitOfWork;
 using Xunit;
 
@@ -25,15 +28,17 @@ namespace Stocqres.UnitTests.EventSourcing
     {
         private readonly IAggregateRootFactory _aggregateRootFactory;
         private readonly IEventBus _eventBus;
-        private readonly IDatabaseProvider _databaseProvider;
+        private readonly IEventStore _eventStore;
+        private readonly ISnapshotService _snapshotService;
         private readonly IEventRepository _eventRepository;
 
         public EventReposiotryUnitTests()
         {
             _aggregateRootFactory = Substitute.For<IAggregateRootFactory>();
             _eventBus = Substitute.For<IEventBus>();
-            _databaseProvider = Substitute.For<IDatabaseProvider>();
-            _eventRepository = new EventRepository(_aggregateRootFactory, _eventBus, _databaseProvider);
+            _eventStore = Substitute.For<IEventStore>();
+            _snapshotService = Substitute.For<ISnapshotService>();
+            _eventRepository = new EventRepository(_aggregateRootFactory, _eventBus, _eventStore, _snapshotService);
         }
 
         [Fact]
@@ -41,43 +46,40 @@ namespace Stocqres.UnitTests.EventSourcing
         {
             var eventToReturn = GetEvents();
 
-            var getAggregateSql = EventRepositoryScriptsAsStrings.GetAggregate(typeof(Investor).Name, _aggregateId);
+            _eventStore.GetFromAsync<Investor>(_aggregateId).ReturnsForAnyArgs(eventToReturn);
 
-            _databaseProvider.QueryAsync<EventData>(getAggregateSql, Arg.Any<object>()).Returns(eventToReturn);
+            Snapshot snapshot = null;
 
-            var deserializedEvents = GetEvents().OrderBy(e => e.Version).Select(x => x.DeserializeEvent());
+            _snapshotService.GetLastAsync(Arg.Any<Guid>()).ReturnsForAnyArgs(snapshot);
 
             _aggregateRootFactory
-                .CreateAsync<Investor>(deserializedEvents)
+                .CreateAsync<Investor>(eventToReturn)
                 .Returns(_investor);
 
             var aggregate = await _eventRepository.GetByIdAsync<Investor>(_aggregateId);
 
             aggregate.Should().Be(_investor);
             aggregate.Should().NotBeNull();
-            _databaseProvider.Received().QueryAsync<EventData>(getAggregateSql, Arg.Any<object>());
-            _aggregateRootFactory.Received().CreateAsync<Investor>(deserializedEvents);
+            _aggregateRootFactory.Received().CreateAsync<Investor>(eventToReturn);
         }
 
         [Fact]
         public void GetByIdAsync_WithNotFoundEvents_ShouldThrowException()
         {
-            var emptyEventList = new List<EventData>();
+            var emptyEventList = new List<IEvent>();
 
-            _databaseProvider.QueryAsync<EventData>(Arg.Any<string>()).ReturnsForAnyArgs(emptyEventList);
+            Snapshot snapshot = null;
 
-            Action act = () => _eventRepository.GetByIdAsync<Investor>(_aggregateId);
+            _snapshotService.GetLastAsync(Arg.Any<Guid>()).ReturnsForAnyArgs(snapshot);
 
-            act.Should().Throw<StocqresException>();
+            _eventStore.GetFromAsync<Investor>(_aggregateId).ReturnsForAnyArgs(emptyEventList);
+
+            Assert.ThrowsAsync<StocqresException>(() => _eventRepository.GetByIdAsync<Investor>(_aggregateId));
         }
 
         [Fact]
-        public void GetByIdAsync_WithEmptyGuid_ShouldThrowException()
-        {
-            Action act = () => _eventRepository.GetByIdAsync<Investor>(Guid.Empty);
-
-            Assert.Throws<StocqresException>(act);
-        }
+        public void GetByIdAsync_WithEmptyGuid_ShouldThrowException() => 
+            Assert.ThrowsAsync<StocqresException>(() => _eventRepository.GetByIdAsync<Investor>(Guid.Empty));
 
 
     }
