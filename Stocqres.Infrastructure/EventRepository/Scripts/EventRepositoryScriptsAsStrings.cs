@@ -11,6 +11,9 @@ namespace Stocqres.Infrastructure.EventRepository.Scripts
         public static string GetAggregate(string aggregateName, Guid aggregateId) =>
             $"Select * From [Customers].{aggregateName}Events Where AggregateId='{aggregateId}'";
 
+        public static string GetFromVersion(string aggregateName, Guid aggregateId, int fromVersion = 0) =>
+            $"Select * From [Customers].{aggregateName}Events Where AggregateId='{aggregateId}' && Version > {fromVersion}";
+
         public static string GetEventsAfterSnapshot(Snapshot snapshot) =>
             $"Select * From [Customers].{snapshot.AggregateType}Events Where AggregateId='{snapshot.AggregateId}' && Version > {snapshot.SnapshottedVersion}";
 
