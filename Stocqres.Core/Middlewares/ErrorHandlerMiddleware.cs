@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Serilog;
 using Stocqres.Core.Exceptions;
 
 namespace Stocqres.Core.Middlewares
@@ -41,6 +42,8 @@ namespace Stocqres.Core.Middlewares
                 var payload = JsonConvert.SerializeObject(response);
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)statusCode;
+
+                Log.Error(payload);
 
                 await context.Response.WriteAsync(payload);
             }

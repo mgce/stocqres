@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
+using Serilog;
 
 namespace Stocqres.Core.Commands
 {
@@ -16,8 +17,12 @@ namespace Stocqres.Core.Commands
         {
             ICommandHandler<TCommand> instance;
             _context.TryResolve(out instance);
+
+            Log.Information($"Command {command.GetType()} has been handled", command);
+
             if(instance != null)
                 await instance.HandleAsync(command);
+
             else
             {
                 var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
@@ -25,7 +30,6 @@ namespace Stocqres.Core.Commands
                 var handlerMethod = commandHandlers.GetType().GetMethod("HandleAsync", new[] { command.GetType() });
                 await (Task)((dynamic)handlerMethod.Invoke(commandHandlers, new object[] { command }));
             }
-            //await _context.Resolve<ICommandHandler<TCommand>>().HandleAsync(command);
         }
             
     }

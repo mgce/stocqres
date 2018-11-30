@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 using Stocqres.Core.Domain;
 using Stocqres.Core.EventSourcing;
 using Stocqres.Infrastructure.DatabaseProvider;
@@ -26,6 +27,8 @@ namespace Stocqres.Infrastructure.Snapshots
             string insertScript = EventRepositoryScriptsAsStrings.InsertSnapshot();
 
             await _databaseProvider.ExecuteAsync(insertScript, snapshot);
+
+            Log.Information($"Snapshot for aggregate {aggregate.GetType().Name} has been created from version {aggregate.Version}");
         }
 
         public async Task<Snapshot> GetLastAsync(Guid aggregateId)

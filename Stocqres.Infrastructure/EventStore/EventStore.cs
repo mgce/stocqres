@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
@@ -44,6 +45,8 @@ namespace Stocqres.Infrastructure.EventStore
             await validator;
 
             await _databaseProvider.ExecuteAsync(insertScript, eventsToSave);
+
+            Log.Information($"Events for aggregate {aggregateType} with Id {aggregateId} has been saved.");
         }
 
         public async Task ValidateVersionAsync<T>(Guid aggregateId, int originalVersion)
@@ -53,8 +56,12 @@ namespace Stocqres.Infrastructure.EventStore
             var foundVersionQuery =
                 EventRepositoryScriptsAsStrings.FindAggregateVersion(aggregateTypeName, aggregateId);
             var foundVersionResult = await _databaseProvider.ExecuteScalarAsync(foundVersionQuery);
-            if ((int?)foundVersionResult >= originalVersion)
+            if ((int?) foundVersionResult >= originalVersion)
+            {
+                Log.Error("Concurrency Exception");
                 throw new Exception("Concurrency Exception");
+            }
+                
         }
     }
 }

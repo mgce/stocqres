@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using Serilog;
 
 namespace Stocqres.Core.Events
 {
@@ -30,6 +31,7 @@ namespace Stocqres.Core.Events
 
             foreach (var handler in (IEnumerable) eventHandlers)
             {
+                Log.Information($"Event {@event.GetType()} has been raised", @event);
                 handlers.Add((Task)((dynamic)handler).HandleAsync((dynamic)@event));
             }
 

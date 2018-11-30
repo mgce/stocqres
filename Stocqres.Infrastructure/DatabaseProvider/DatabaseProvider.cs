@@ -4,6 +4,7 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using Serilog;
 using Stocqres.Infrastructure.UnitOfWork;
 
 namespace Stocqres.Infrastructure.DatabaseProvider
@@ -21,22 +22,58 @@ namespace Stocqres.Infrastructure.DatabaseProvider
 
         public async Task<IEnumerable<T>> QueryAsync<T>(string sql, object parameters = null)
         {
-            return await _connection.QueryAsync<T>(sql, parameters, _transaction);
+            try
+            {
+                return await _connection.QueryAsync<T>(sql, parameters, _transaction);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e.Message);
+                throw;
+            }
+            
         }
 
         public async Task<int> ExecuteAsync(string sql, object parameters = null)
         {
-            return await _connection.ExecuteAsync(sql, parameters, _transaction);
+            try
+            {
+                return await _connection.ExecuteAsync(sql, parameters, _transaction);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e.Message);
+                throw;
+            }
+            
         }
 
         public async Task<object> ExecuteScalarAsync(string sql, object parameters = null)
         {
-            return await _connection.ExecuteScalarAsync(sql, parameters, _transaction);
+            try
+            {
+                return await _connection.ExecuteScalarAsync(sql, parameters, _transaction);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e.Message);
+                throw;
+            }
+            
         }
 
         public async Task<T> QueryFirstOrDefaultAsync<T>(string sql, object parameters = null)
         {
-            return await _connection.QueryFirstOrDefaultAsync<T>(sql, parameters);
+            try
+            {
+                return await _connection.QueryFirstOrDefaultAsync<T>(sql, parameters);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e.Message);
+                throw;
+            }
+            
         }
     }
 }
