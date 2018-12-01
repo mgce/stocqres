@@ -1,0 +1,3 @@
+rootProject.name = 'StocqresMobile'
+
+include ':app'
