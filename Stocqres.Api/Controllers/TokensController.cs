@@ -30,7 +30,7 @@ namespace Stocqres.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("sign-in")]
+        [HttpGet("sign-in")]
         public async Task<IActionResult> SignIn(SignIn command)
             => Ok(await _tokenService.SignInAsync(command.Username, command.Password));
 

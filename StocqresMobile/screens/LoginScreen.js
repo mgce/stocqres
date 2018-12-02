@@ -2,8 +2,10 @@ import React, {Component} from 'react';
 import { StyleSheet } from 'react-native';
 import { Container, Header, Content, Form, Item, Input, Label, Button, Text } from 'native-base';
 import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {login} from '../ducks/login'
 
-export default class LoginScreen extends Component{
+class LoginScreen extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -14,18 +16,17 @@ export default class LoginScreen extends Component{
     render(){
         return(
             <Container>
-                {/* <Header/> */}
                 <Content contentContainerStyle={styles.container}>
                     <Form style={styles.form}>
                         <Item floatingLabel>
                             <Label>Username</Label>
-                            <Input/>
+                            <Input onChangeText={(value) => this.setState({login})}/>
                         </Item>
                         <Item floatingLabel>
                             <Label>Password</Label>
-                            <Input/>
+                            <Input onChangeText={(value) => this.setState({password})}/>
                         </Item>
-                        <Button primary style={styles.submit}>
+                        <Button primary style={styles.submit} onPress={() => this.props.login(this.state.login, this.state.password)}>
                             <Text>Sign In</Text>
                         </Button>
                     </Form>
@@ -46,26 +47,32 @@ const styles = StyleSheet.create({
   
     },
     submit:{
-      marginTop: 40,
+      alignSelf: 'stretch',
+      borderRadius: 10,
       justifyContent: 'center',
-      alignSelf: 'stretch'
+      marginTop: 40,
     },
     form: {
-      padding: 10,
-      paddingBottom: 30,
+      alignSelf: 'stretch',
+      backgroundColor: '#ffffff',
+      borderColor: '#d6d7da',
       borderRadius: 10,
       borderWidth: 1,
-      borderColor: '#d6d7da',
-      backgroundColor: '#ffffff',
-      alignSelf: 'stretch'
+      padding: 10,
+      paddingBottom: 30,
     }
   });
 
-// function mapStateToProps(state){
-//     return{
-//         username: state.username,
-//         password: state.password
-//     }
-// }
+  const mapDispatchToProps = {
+      login
+  };
 
-// export default connect(mapStateToProps)(LoginScreen);
+
+const mapStateToProps = (state) => {
+    return{
+        username: state.username,
+        password: state.password
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
