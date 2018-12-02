@@ -9,7 +9,9 @@
   "dependencies": {
     "native-base": "^2.8.1",
     "react": "16.6.1",
-    "react-native": "0.57.7"
+    "react-native": "0.57.7",
+    "react-redux": "^5.1.1",
+    "redux": "^4.0.1"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

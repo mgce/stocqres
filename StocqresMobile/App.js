@@ -4,7 +4,7 @@ import {default as LoginScreen} from './screens/LoginScreen'
 import { Provider, connect } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 
-const store = createStore();
+// const store = createStore();
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -17,9 +17,9 @@ type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <Provider store={store}>
+      // <Provider store={store}>
         <LoginScreen/>
-      </Provider>
+      // </Provider>
     );
   }
 }
