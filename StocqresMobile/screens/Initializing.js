@@ -6,10 +6,10 @@ import { View, Text } from 'native-base';
 class Initialize extends React.PureComponent{
     async componentDidMount(){
         try{
-            if(this.props.jwt != null || this.props.jwt != '')
+            if(this.props.jwt !== null && this.props.jwt !== undefined && this.props.jwt !== '')
                 goToHome();
             else
-                goToAuth();
+                goToAuth(); 
         }
         catch(err){
             console.log('error: ' + err);
@@ -27,7 +27,7 @@ class Initialize extends React.PureComponent{
 
 const mapStateToProps = (state) => {
     return{
-        jwt: state.jwt
+        jwt: state.login.initialState.jwt
     }
 }
 

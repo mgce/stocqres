@@ -6,8 +6,19 @@ registerScreens();
 Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
     root: {
-      component: {
-        name: 'App'
+      stack:{
+          options:{
+            topBar:{
+                visible: false
+            }
+        },
+        children:[
+          {
+            component: {
+            name: 'App'
+          }
+        }
+        ]
       }
     },
   });

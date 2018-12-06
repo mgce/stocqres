@@ -1,17 +1,30 @@
 import { Navigation } from 'react-native-navigation'
 
-export const goToAuth = () => Navigation.setStackRoot({
+export const goToAuth = () => Navigation.setRoot({
     root:{
         stack:{
-            id: 'LoginScreen'
-        }
+            id:'Authorization',
+            options:{
+                topBar:{
+                    visible: false
+                },
+            },
+            children:[
+                {
+                    component:{
+                        name: 'Auth'
+                    }
+                }
+            ]
+            
+        } 
     }
 })
 
 export const goToHome = () => Navigation.setStackRoot({
     root:{
         stack:{
-            id: 'MainScreen'
+            id: 'Main'
         }
     }
 })

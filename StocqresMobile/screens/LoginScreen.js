@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { StyleSheet } from 'react-native';
 import { Container, Header, Content, Form, Item, Input, Label, Button, Text } from 'native-base';
 import {connect} from 'react-redux';
-import { bindActionCreators } from 'redux';
 import {login} from '../ducks/login'
 import {goToHome} from './navigation'
 
@@ -76,8 +75,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
     return{
-        username: state.username,
-        password: state.password
+        username: state.login.initialState.username,
+        password: state.login.initialState.password
     }
 }
 

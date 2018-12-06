@@ -1,4 +1,10 @@
 {
   "name": "StocqresMobile",
-  "displayName": "StocqresMobile"
+  "displayName": "StocqresMobile",
+  "expo": {
+    "slug": "StocqresMobile",
+    "name": "StocqresMobile",
+    "sdkVersion": "31.0.0",
+    "entryPoint": "c:\\stocqres\\StocqresMobile\\.vscode\\exponentIndex.js"
+  }
 }

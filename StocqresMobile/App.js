@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import {StyleSheet} from 'react-native';
-import {default as LoginScreen} from './screens/LoginScreen';
-import {default as MainScreen} from './screens/MainScreen';
 import {default as Initializing} from './screens/Initializing';
 import { Provider} from 'react-redux';
 import {default as store} from './store'
