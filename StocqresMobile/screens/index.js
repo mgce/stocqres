@@ -1,5 +1,8 @@
-const LoginScreen = require('./LoginScreen');
+import {Navigation} from 'react-native-navigation';
 
-module.exports = {
-    screens
-  };
+export function registerScreens(){
+  Navigation.registerComponent('Login', () => require('./LoginScreen').default);
+  Navigation.registerComponent('Main', () => require('./MainScreen').default);
+  Navigation.registerComponent('Initializing', () => require('./Initializing').default);
+  Navigation.registerComponent('App', () => require('../App').default);
+}

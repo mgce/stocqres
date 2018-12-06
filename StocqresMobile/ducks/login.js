@@ -5,7 +5,8 @@ export const types = {
 }
 
 const initialState  ={
-    success: false
+    success: false,
+    jwt: ''
 }
 
 export default function loginReducer(state={initialState}, action){
@@ -26,7 +27,7 @@ export function login(username, password){
         type: types.LOGIN,
         payload:{
             request:{
-                url:'sign-in'
+                url:'/tokens/create'
             }
         }
     }

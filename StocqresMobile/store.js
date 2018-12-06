@@ -4,7 +4,8 @@ import axiosMiddleware from 'redux-axios-middleware';
 import axios from 'axios';
 
 const client = axios.create({
-  baseUrl: 'http://localhost:44328/api/'
+  baseUrl: 'https://localhost:44327/api',
+  responseType: 'json'
 })
 
 const reducers = combineReducers({login:loginReducer});

@@ -4,6 +4,7 @@ import { Container, Header, Content, Form, Item, Input, Label, Button, Text } fr
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {login} from '../ducks/login'
+import {goToHome} from './navigation'
 
 class LoginScreen extends Component{
     constructor(props){
@@ -12,6 +13,11 @@ class LoginScreen extends Component{
             login:'',
             password:''
         }
+    }
+    loginTo = () => {
+        this.props.login(this.state.login, this.state.password).then(()=>{
+            goToHome();
+        })
     }
     render(){
         return(
@@ -26,7 +32,7 @@ class LoginScreen extends Component{
                             <Label>Password</Label>
                             <Input onChangeText={(value) => this.setState({password})}/>
                         </Item>
-                        <Button primary style={styles.submit} onPress={() => this.props.login(this.state.login, this.state.password)}>
+                        <Button primary style={styles.submit} onPress={() => this.loginTo()}>
                             <Text>Sign In</Text>
                         </Button>
                     </Form>
