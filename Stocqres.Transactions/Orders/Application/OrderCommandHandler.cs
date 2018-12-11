@@ -7,23 +7,28 @@ using Stocqres.Core.Exceptions;
 using Stocqres.Infrastructure.EventRepository;
 using Stocqres.Transactions.Orders.Domain;
 using Stocqres.Transactions.Orders.Domain.Command;
+using Stocqres.Transactions.Orders.Domain.Enums;
+using Stocqres.Transactions.Orders.Domain.Order;
+using Stocqres.Transactions.Orders.Domain.Order.Factories;
 
 namespace Stocqres.Transactions.Orders.Application
 {
     public class OrderCommandHandler : 
-        ICommandHandler<CreateOrderCommand>,
+        ICommandHandler<CreateBuyOrderCommand>,
         ICommandHandler<CancelOrderCommand>,
         ICommandHandler<FinishOrderCommand>
     {
         private readonly IEventRepository _eventRepository;
+        private readonly IOrderFactory _orderFactory;
 
-        public OrderCommandHandler(IEventRepository eventRepository)
+        public OrderCommandHandler(IEventRepository eventRepository, IOrderFactory orderFactory)
         {
             _eventRepository = eventRepository;
+            _orderFactory = orderFactory;
         }
-        public async Task HandleAsync(CreateOrderCommand command)
+        public async Task HandleAsync(CreateBuyOrderCommand command)
         {
-            var order = new Order(command.WalletId, command.CompanyId, command.Quantity);
+            var order = _orderFactory.CreateBuyOrder(command.WalletId, command.CompanyId, command.Quantity);
             await _eventRepository.SaveAsync(order);
         }
 

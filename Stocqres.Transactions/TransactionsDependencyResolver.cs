@@ -6,6 +6,7 @@ using System.Text;
 using Autofac;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Events;
+using Stocqres.Transactions.Orders.Domain.Order.Factories;
 
 namespace Stocqres.Transactions
 {
@@ -28,6 +29,7 @@ namespace Stocqres.Transactions
             //    .AsClosedTypesOf(typeof(IEventHandler<>))
             //    .InstancePerLifetimeScope();
 
+            builder.RegisterType<OrderFactory>().As<IOrderFactory>();
         }
     }
 }

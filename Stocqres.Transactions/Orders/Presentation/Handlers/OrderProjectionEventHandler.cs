@@ -8,7 +8,7 @@ using Stocqres.Transactions.Orders.Domain.Events;
 namespace Stocqres.Transactions.Orders.Presentation.Handlers
 {
     public class OrderProjectionEventHandler : 
-        IEventHandler<OrderCreatedEvent>,
+        IEventHandler<BuyOrderCreatedEvent>,
         IEventHandler<OrderCancelledEvent>,
         IEventHandler<OrderFinishedEvent>
     {
@@ -19,7 +19,7 @@ namespace Stocqres.Transactions.Orders.Presentation.Handlers
             _projectionWriter = projectionWriter;
         }
 
-        public async Task HandleAsync(OrderCreatedEvent @event)
+        public async Task HandleAsync(BuyOrderCreatedEvent @event)
         {
             await _projectionWriter.AddAsync(new OrderProjection(@event.AggregateId, @event.WalletId, @event.CompanyId, @event.Quantity,
                 OrderState.Started));

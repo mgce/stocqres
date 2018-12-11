@@ -5,7 +5,7 @@ using Stocqres.Core.Commands;
 
 namespace Stocqres.Transactions.Orders.Domain.Command
 {
-    public class CreateOrderCommand : ICommand
+    public class CreateBuyOrderCommand : ICommand
     {
         public Guid WalletId { get; set; }
         public Guid CompanyId { get; set; }

@@ -28,7 +28,7 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
         public OrderProcessManagerState State { get; set; }
         
 
-        public void When(OrderCreatedEvent message)
+        public void When(BuyOrderCreatedEvent message)
         {
             switch (State)
             {

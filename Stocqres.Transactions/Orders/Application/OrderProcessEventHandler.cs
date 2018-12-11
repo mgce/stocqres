@@ -13,7 +13,7 @@ using Stocqres.Transactions.Orders.Domain.ProcessManagers;
 namespace Stocqres.Transactions.Orders.Application
 {
     public class OrderProcessEventHandler : 
-        IEventHandler<OrderCreatedEvent>, 
+        IEventHandler<BuyOrderCreatedEvent>, 
         IEventHandler<WalletChargedEvent>, 
         IEventHandler<CompanyChargedEvent>, 
         IEventHandler<StockToWalletAddedEvent>,
@@ -28,7 +28,7 @@ namespace Stocqres.Transactions.Orders.Application
             _processManagerRepository = processManagerRepository;
         }
 
-        public async Task HandleAsync(OrderCreatedEvent message)
+        public async Task HandleAsync(BuyOrderCreatedEvent message)
         {
             var pm = await _processManagerRepository.FindAsync(message.AggregateId);
             if(pm != null)
