@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const types = {
     LOGIN: 'stocqres/login/LOGIN',
     LOGIN_SUCCESS:'stocqres/login/LOGIN_SUCCESS',
@@ -18,17 +20,45 @@ export default function loginReducer(state={initialState}, action){
         case types.LOGIN_FAIL:
             return {...state, loading: false, success: false}
         default:
-            return state;
+            return state; 
     }
 }
 
-export function login(username, password){
-    return{
-        type: types.LOGIN,
-        payload:{
-            request:{
-                url:'/tokens/create'
-            }
+// export function login(username, password){
+//     return{
+//         type: types.LOGIN,
+//         payload:{
+//             request:{
+//                 method: 'POST',
+//                 url:`/tokens/create`,
+//                 data:{
+//                     command:{
+//                         Username: username,
+//                         Password:password
+//                     }
+//                 },
+//                 headers:{
+//                     'Content-Type': 'application/json'
+//                   }
+//             }
+//         }
+//     }
+// }
+
+export function login (username, password) {
+    return {
+      type: types.LOGIN,
+      payload: {
+        request: {
+          url: '/tokens/create',
+          method: 'POST',
+          data: {
+             command:{
+                 Username: username,
+                 Password:password
+             }
+          }
         }
+      }
     }
-}
+  }
