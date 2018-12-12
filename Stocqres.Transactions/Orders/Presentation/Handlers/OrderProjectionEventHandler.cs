@@ -9,6 +9,7 @@ namespace Stocqres.Transactions.Orders.Presentation.Handlers
 {
     public class OrderProjectionEventHandler : 
         IEventHandler<BuyOrderCreatedEvent>,
+        IEventHandler<SellOrderCreatedEvent>,
         IEventHandler<OrderCancelledEvent>,
         IEventHandler<OrderFinishedEvent>
     {
@@ -35,6 +36,12 @@ namespace Stocqres.Transactions.Orders.Presentation.Handlers
         {
             await _projectionWriter.UpdateAsync<OrderProjection>(@event.AggregateId,
                 e => { e.State = OrderState.Finished; });
+        }
+
+        public async Task HandleAsync(SellOrderCreatedEvent @event)
+        {
+            await _projectionWriter.AddAsync(new OrderProjection(@event.AggregateId, @event.WalletId, @event.CompanyId, @event.Quantity,
+                OrderState.Started));
         }
     }
 }

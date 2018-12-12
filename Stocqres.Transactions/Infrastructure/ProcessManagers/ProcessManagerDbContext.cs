@@ -9,6 +9,6 @@ namespace Stocqres.Transactions.Infrastructure.ProcessManagers
         {
         }
 
-        public DbSet<OrderProcessManager> OrderProcessManagers { get; set; }
+        public DbSet<BuyOrderProcessManager> OrderProcessManagers { get; set; }
     }
 }

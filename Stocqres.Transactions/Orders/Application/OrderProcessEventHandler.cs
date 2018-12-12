@@ -14,6 +14,7 @@ namespace Stocqres.Transactions.Orders.Application
 {
     public class OrderProcessEventHandler : 
         IEventHandler<BuyOrderCreatedEvent>, 
+        IEventHandler<SellOrderCreatedEvent>, 
         IEventHandler<WalletChargedEvent>, 
         IEventHandler<CompanyChargedEvent>, 
         IEventHandler<StockToWalletAddedEvent>,
@@ -34,7 +35,7 @@ namespace Stocqres.Transactions.Orders.Application
             if(pm != null)
                 throw new StocqresException("Process Manager for this Order currently exist");
 
-            var orderProcessManager = new OrderProcessManager(message.AggregateId);
+            var orderProcessManager = new BuyOrderProcessManager(message.AggregateId);
 
             orderProcessManager.When(message);
 
@@ -119,6 +120,18 @@ namespace Stocqres.Transactions.Orders.Application
             await _processManagerRepository.Save(orderProcessManager);
         }
 
-        
+
+        public async Task HandleAsync(SellOrderCreatedEvent message)
+        {
+            var pm = await _processManagerRepository.FindAsync(message.AggregateId);
+            if (pm != null)
+                throw new StocqresException("Process Manager for this Order currently exist");
+
+            var orderProcessManager = new BuyOrderProcessManager(message.AggregateId);
+
+            orderProcessManager.When(message);
+
+            await _processManagerRepository.Save(orderProcessManager);
+        }
     }
 }

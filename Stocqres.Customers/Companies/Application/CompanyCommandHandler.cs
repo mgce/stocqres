@@ -10,7 +10,10 @@ using Stocqres.SharedKernel.Commands;
 
 namespace Stocqres.Customers.Companies.Application
 {
-    public class CompanyCommandHandler : ICommandHandler<CreateCompanyCommand>, ICommandHandler<ChargeCompanyCommand>
+    public class CompanyCommandHandler : 
+        ICommandHandler<CreateCompanyCommand>, 
+        ICommandHandler<ChargeCompanyCommand>,
+        ICommandHandler<AddStocksToCompanyCommand>
     {
         private readonly IEventRepository _eventRepository;
 
@@ -30,6 +33,13 @@ namespace Stocqres.Customers.Companies.Application
         {
             var company = await _eventRepository.GetByIdAsync<Company>(command.CompanyId);
             company.ChargeCompanyStock(command.OrderId, command.Quantity);
+            await _eventRepository.SaveAsync(company);
+        }
+
+        public async Task HandleAsync(AddStocksToCompanyCommand command)
+        {
+            var company = await _eventRepository.GetByIdAsync<Company>(command.CompanyId);
+            company.AddStocksToCompany(command.OrderId, command.Quantity, command.StockCode);
             await _eventRepository.SaveAsync(company);
         }
     }

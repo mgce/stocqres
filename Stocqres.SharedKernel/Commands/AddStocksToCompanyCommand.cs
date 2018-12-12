@@ -3,19 +3,17 @@ using Stocqres.Core.Commands;
 
 namespace Stocqres.SharedKernel.Commands
 {
-    public class AddStocksToCompanyCommand : ICommand
+    public class ChargeCompanyCommand : ICommand
     {
         public Guid CompanyId { get; set; }
         public Guid OrderId { get; set; }
         public int Quantity { get; set; }
-        public string StockCode { get; set; }
 
-        public AddStocksToCompanyCommand(Guid companyId, Guid orderId, int quantity, string stockCode)
+        public ChargeCompanyCommand(Guid companyId, Guid orderId, int quantity)
         {
             CompanyId = companyId;
             OrderId = orderId;
             Quantity = quantity;
-            StockCode = stockCode;
         }
     }
 }

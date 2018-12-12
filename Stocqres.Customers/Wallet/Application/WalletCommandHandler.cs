@@ -18,9 +18,11 @@ namespace Stocqres.Customers.Wallet.Application
 {
     public class WalletCommandHandler : 
         ICommandHandler<CreateWalletCommand>, 
-        ICommandHandler<ChargeWalletCommand>, 
+        ICommandHandler<ChargeWalletAmountCommand>, 
         ICommandHandler<AddStockToWalletCommand>,
-        ICommandHandler<RollbackWalletChargeCommand>
+        ICommandHandler<RollbackWalletChargeCommand>,
+        ICommandHandler<TakeOffStocksFromWalletCommand>,
+        ICommandHandler<TopUpWalletAmountCommand>,
     {
         private readonly IProjectionReader _projectionReader;
         private readonly IEventRepository _eventRepository;
@@ -42,19 +44,19 @@ namespace Stocqres.Customers.Wallet.Application
             await _eventRepository.SaveAsync(wallet);
         }
 
-        public async Task HandleAsync(ChargeWalletCommand command)
+        public async Task HandleAsync(ChargeWalletAmountCommand amountCommand)
         {
-            var company = await _eventRepository.GetByIdAsync<Company>(command.CompanyId);
+            var company = await _eventRepository.GetByIdAsync<Company>(amountCommand.CompanyId);
             if(company == null)
                 throw new StocqresException("Company doesn't exist");
 
             if(company.Stock == null)
                 throw new StocqresException("Company doesn't have any stock");
 
-            var wallet = await GetWallet(command.WalletId);
+            var wallet = await GetWallet(amountCommand.WalletId);
 
             var stockPrice = await _stockExchangeService.GetStockPrice(company.Stock.Code);
-            wallet.ChargeWallet(command.OrderId, stockPrice * command.Quantity);
+            wallet.ChargeWallet(amountCommand.OrderId, stockPrice * amountCommand.Quantity);
             await _eventRepository.SaveAsync(wallet);
         }
 
@@ -62,7 +64,7 @@ namespace Stocqres.Customers.Wallet.Application
         {
             var wallet = await GetWallet(command.WalletId);
 
-            wallet.AddStock(command.OrderId, command.StockName, command.StockCode, command.StockUnit, command.StockQuantity);
+            wallet.AddStock(command.OrderId, command.CompanyId, command.StockName, command.StockCode, command.StockUnit, command.StockQuantity);
 
             await _eventRepository.SaveAsync(wallet);
         }
@@ -82,6 +84,24 @@ namespace Stocqres.Customers.Wallet.Application
             if (wallet == null)
                 throw new StocqresException("Wallet doesn't exist");
             return wallet;
+        }
+
+        public async Task HandleAsync(TakeOffStocksFromWalletCommand command)
+        {
+            var wallet = await GetWallet(command.WalletId);
+
+            wallet.TakeOffStocks(command.CompanyId, command.Quantity);
+
+            await _eventRepository.SaveAsync(wallet);
+        }
+
+        public async Task HandleAsync(TopUpWalletAmountCommand command)
+        {
+            var wallet = await GetWallet(command.WalletId);
+
+            var stockPrice = await _stockExchangeService.GetStockPrice(command.StockCode);
+            wallet.ChargeWallet(command.OrderId, stockPrice * command.Quantity);
+            await _eventRepository.SaveAsync(wallet);
         }
     }
 }

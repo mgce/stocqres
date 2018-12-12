@@ -5,18 +5,18 @@ using Stocqres.Core.Commands;
 
 namespace Stocqres.SharedKernel.Commands
 {
-    public class ChargeWalletCommand : ICommand
+    public class TopUpWalletAmountCommand : ICommand
     {
         public Guid WalletId { get; set; }
-        public Guid CompanyId { get; set; }
         public Guid OrderId { get; set; }
+        public string StockCode { get; set; }
         public int Quantity { get; set; }
 
-        public ChargeWalletCommand(Guid walletId, Guid companyId,Guid orderId, int quantity)
+        public TopUpWalletAmountCommand(Guid walletId, Guid orderId, string stockCode, int quantity)
         {
             WalletId = walletId;
-            CompanyId = companyId;
             OrderId = orderId;
+            StockCode = stockCode;
             Quantity = quantity;
         }
     }

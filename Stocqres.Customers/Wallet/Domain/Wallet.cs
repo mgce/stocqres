@@ -38,7 +38,7 @@ namespace Stocqres.Customers.Wallet.Domain
             Publish(new WalletChargedEvent(Id, orderId, amountToCharge));
         }
 
-        public void AddStock(Guid orderId, string name, string code, int unit, int quantity)
+        public void AddStock(Guid orderId, Guid companyId, string name, string code, int unit, int quantity)
         {
             if(string.IsNullOrEmpty(name))
                 throw new StocqresException("Stock Name cannot be empty");
@@ -49,7 +49,7 @@ namespace Stocqres.Customers.Wallet.Domain
             if (quantity <= 0)
                 throw new StocqresException("Quantity must be greater than zero");
 
-            Publish(new StockToWalletAddedEvent(Id, orderId, name, code, unit, quantity));
+            Publish(new StockToWalletAddedEvent(Id, companyId, orderId, name, code, unit, quantity));
         }
 
         public void RollbackCharge(Guid orderId, decimal amount)
@@ -58,6 +58,25 @@ namespace Stocqres.Customers.Wallet.Domain
                 throw new StocqresException("Amount to rollback must be greater than zero");
 
             Publish(new WalletChargeRollbackedEvent(Id, orderId, amount));
+        }
+
+        public void TakeOffStocks(Guid companyId, int quantity)
+        {
+            var stock = StockList.FirstOrDefault(s => s.CompanyId == companyId);
+            if(stock == null)
+                throw new Exception($"Stock for company with id {companyId} doesn't exist");
+            if(stock.Quantity < quantity)
+                throw new StocqresException("You don't have enought stocks");
+
+            Publish(new StocksTakedOffFromWalletEvent(Id, companyId, quantity));
+        }
+
+        public void TopUpAmount(Guid orderId, decimal amountToCharge)
+        {
+            if (amountToCharge <= 0)
+                throw new StocqresException("Amount to top up cannot be lower or equal 0");
+
+            Publish(new WalletAmountToppedUpEvent(Id, orderId, amountToCharge));
         }
 
         private void Apply(WalletChargedEvent @event)
@@ -80,13 +99,24 @@ namespace Stocqres.Customers.Wallet.Domain
                 existingStock.Quantity += @event.Quantity;
             else
             {
-                StockList.Add(new Stock(@event.Name, @event.Code, @event.Unit, @event.Quantity));
+                StockList.Add(new Stock(@event.CompanyId, @event.Name, @event.Code, @event.Unit, @event.Quantity));
             }
         }
 
         private void Apply(WalletChargeRollbackedEvent @event)
         {
             Amount += @event.Amount;
+        }
+
+        private void Apply(WalletAmountToppedUpEvent @event)
+        {
+            Amount += @event.Amount;
+        }
+
+        private void Apply(StocksTakedOffFromWalletEvent @event)
+        {
+            var stock = StockList.First(s => s.CompanyId == @event.CompanyId);
+            stock.Quantity -= @event.Quantity;
         }
     }
 }

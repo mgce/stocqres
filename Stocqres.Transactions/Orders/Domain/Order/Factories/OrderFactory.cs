@@ -7,14 +7,14 @@ namespace Stocqres.Transactions.Orders.Domain.Order.Factories
 {
     public class OrderFactory : IOrderFactory
     {
-        public Order CreateBuyOrder(Guid walletId, Guid companyId, int quantity)
+        public BuyOrder CreateBuyOrder(Guid walletId, Guid companyId, int quantity)
         {
-            return new Order(walletId, companyId, quantity, OrderType.Buy);
+            return new BuyOrder(walletId, companyId, quantity);
         }
 
-        public Order CreateSellOrder(Guid walletId, Guid companyId, int quantity)
+        public SellOrder CreateSellOrder(Guid walletId, Guid companyId, int quantity, string stockCode)
         {
-            return new Order(walletId, companyId, quantity, OrderType.Sell);
+            return new SellOrder(walletId, companyId, quantity, stockCode);
         }
     }
 }

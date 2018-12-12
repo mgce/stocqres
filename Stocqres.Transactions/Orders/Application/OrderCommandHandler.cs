@@ -16,7 +16,8 @@ namespace Stocqres.Transactions.Orders.Application
     public class OrderCommandHandler : 
         ICommandHandler<CreateBuyOrderCommand>,
         ICommandHandler<CancelOrderCommand>,
-        ICommandHandler<FinishOrderCommand>
+        ICommandHandler<FinishOrderCommand>,
+        ICommandHandler<CreateSellOrderCommand>
     {
         private readonly IEventRepository _eventRepository;
         private readonly IOrderFactory _orderFactory;
@@ -54,5 +55,10 @@ namespace Stocqres.Transactions.Orders.Application
             await _eventRepository.SaveAsync(order);
         }
 
+        public async Task HandleAsync(CreateSellOrderCommand command)
+        {
+            var order = _orderFactory.CreateSellOrder(command.WalletId, command.CompanyId, command.Quantity, command.StockCode);
+            await _eventRepository.SaveAsync(order);
+        }
     }
 }

@@ -48,6 +48,14 @@ namespace Stocqres.Customers.Companies.Domain
             Publish(new CompanyChargedEvent(Id, orderId, Stock.Name, Stock.Code, Stock.Unit, stockQuantity));
         }
 
+        public void AddStocksToCompany(Guid orderId, int stockQuantity, string stockCode)
+        {
+            if(stockCode != Stock.Code)
+                throw new StocqresException("Invalid Stock Code");
+
+            Publish(new StocksAddedToCompanyEvent(Id, orderId, stockQuantity));
+        }
+
         public void Apply(CompanyCreatedEvent @event)
         {
             Id = @event.AggregateId;
@@ -56,12 +64,17 @@ namespace Stocqres.Customers.Companies.Domain
 
         public void Apply(CompanyStockCreatedEvent @event)
         {
-            Stock = new Stock(Name, @event.Code, @event.Unit, @event.Quantity);
+            Stock = new Stock(Id, Name, @event.Code, @event.Unit, @event.Quantity);
         }
 
         public void Apply(CompanyChargedEvent @event)
         {
             Stock.Quantity -= @event.StockQuantity;
+        }
+
+        public void Apply(StocksAddedToCompanyEvent @event)
+        {
+            Stock.Quantity += @event.StockQuantity;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
 {
-    public enum OrderProcessManagerState
+    public enum BuyOrderProcessManagerState
     {
         NotStarted,
         OrderPlaced,

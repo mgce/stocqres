@@ -6,11 +6,14 @@ using Stocqres.Transactions.Orders.Domain.Enums;
 
 namespace Stocqres.Transactions.Orders.Domain.Events
 {
-    public class BuyOrderCreatedEvent : OrderCreatedBaseEvent
+    public class SellOrderCreatedEvent : OrderCreatedBaseEvent
     {
-        public BuyOrderCreatedEvent(Guid aggregateId, Guid walletId, Guid companyId, int quantity) 
+        public string StockCode { get; set; }
+
+        public SellOrderCreatedEvent(Guid aggregateId, Guid walletId, Guid companyId, int quantity, string stockCode) 
             : base(aggregateId, walletId, companyId, quantity)
         {
+            StockCode = stockCode;
         }
     }
 }

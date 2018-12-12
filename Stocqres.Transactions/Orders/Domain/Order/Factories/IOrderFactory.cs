@@ -4,7 +4,7 @@ namespace Stocqres.Transactions.Orders.Domain.Order.Factories
 {
     public interface IOrderFactory
     {
-        Order CreateBuyOrder(Guid walletId, Guid companyId, int quantity);
-        Order CreateSellOrder(Guid walletId, Guid companyId, int quantity);
+        BuyOrder CreateBuyOrder(Guid walletId, Guid companyId, int quantity);
+        SellOrder CreateSellOrder(Guid walletId, Guid companyId, int quantity, string stockCode);
     }
 }
