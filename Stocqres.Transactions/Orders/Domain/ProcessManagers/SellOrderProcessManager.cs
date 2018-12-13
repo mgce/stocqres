@@ -22,11 +22,8 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
         public Guid CompanyId { get; set; }
         public string StockCode { get; set; }
         public int StockQuantity { get; set; }
-        public decimal ChargedWalletAmount { get; set; }
         public string CancelReason { get; set; }
         public SellOrderProcessManagerState State { get; set; }
-        public OrderType OrderType { get; set; }
-
 
         public void When(SellOrderCreatedEvent message)
         {
@@ -37,7 +34,6 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
                     CompanyId = message.CompanyId;
                     StockQuantity = message.Quantity;
                     State = SellOrderProcessManagerState.OrderPlaced;
-                    OrderType = OrderType.Sell;
                     ProcessCommand(new TakeOffStocksFromWalletCommand(message.WalletId, message.CompanyId,
                         message.AggregateId, message.Quantity));
                     break;
@@ -90,7 +86,7 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
             {
                 case SellOrderProcessManagerState.StocksTakedOffFromWallet:
                     State = SellOrderProcessManagerState.WalletToppedUp;
-                    ProcessCommand(new FinishOrderCommand(AggregateId));
+                    ProcessCommand(new FinishBuyOrderCommand(AggregateId));
                     break;
                 // idempotence - same message sent twice
                 case SellOrderProcessManagerState.StocksAddedToCompany:
@@ -100,6 +96,25 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
             }
         }
 
+        public void When(SellOrderCancelledEvent message)
+        {
+            State = SellOrderProcessManagerState.OrderFailed;
+        }
+
+        public void When(SellOrderFinishedEvent message)
+        {
+            switch (State)
+            {
+                case SellOrderProcessManagerState.WalletToppedUp:
+                    State = SellOrderProcessManagerState.OrderFinished;
+                    break;
+                // idempotence - same message sent twice
+                case SellOrderProcessManagerState.OrderFinished:
+                    break;
+                default:
+                    throw new StocqresException("Invalid state for this message");
+            }
+        }
 
     }
 }

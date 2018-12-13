@@ -18,21 +18,21 @@ namespace Stocqres.Transactions.Orders.Domain.Order
 
         public void CancelOrder(string cancelReason)
         {
-            Publish(new OrderCancelledEvent(Id, cancelReason));
+            Publish(new BuyOrderCancelledEvent(Id, cancelReason));
         }
 
         public void FinishOrder()
         {
-            Publish(new OrderFinishedEvent(Id));
+            Publish(new BuyOrderFinishedEvent(Id));
         }
 
-        private void Apply(OrderCancelledEvent @event)
+        private void Apply(BuyOrderCancelledEvent @event)
         {
             CancelReason = @event.CancelReason;
             State = OrderState.Cancelled;
         }
 
-        private void Apply(OrderFinishedEvent @event)
+        private void Apply(BuyOrderFinishedEvent @event)
         {
             State = OrderState.Finished;
         }

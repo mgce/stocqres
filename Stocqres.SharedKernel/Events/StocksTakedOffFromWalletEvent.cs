@@ -9,12 +9,14 @@ namespace Stocqres.SharedKernel.Events
     {
         public Guid AggregateId { get; set; }
         public Guid CompanyId { get; set; }
+        public Guid OrderId { get; set; }
         public int Quantity { get; set; }
 
-        public StocksTakedOffFromWalletEvent(Guid aggregateId, Guid companyId, int quantity)
+        public StocksTakedOffFromWalletEvent(Guid aggregateId, Guid companyId, Guid orderId, int quantity)
         {
             AggregateId = aggregateId;
             CompanyId = companyId;
+            OrderId = orderId;
             Quantity = quantity;
         }
     }

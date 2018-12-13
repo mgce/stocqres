@@ -5,11 +5,11 @@ using Stocqres.Core.Events;
 
 namespace Stocqres.Transactions.Orders.Domain.Events
 {
-    public class OrderFinishedEvent : IEvent
+    public class BuyOrderFinishedEvent : IEvent
     {
         public Guid AggregateId { get; set; }
 
-        public OrderFinishedEvent(Guid aggregateId)
+        public BuyOrderFinishedEvent(Guid aggregateId)
         {
             AggregateId = aggregateId;
         }

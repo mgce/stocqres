@@ -7,5 +7,7 @@
         StocksTakedOffFromWallet,
         StocksAddedToCompany,
         WalletToppedUp,
+        OrderFinished,
+        OrderFailed
     }
 }

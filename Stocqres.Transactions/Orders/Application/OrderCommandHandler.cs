@@ -16,8 +16,9 @@ namespace Stocqres.Transactions.Orders.Application
     public class OrderCommandHandler : 
         ICommandHandler<CreateBuyOrderCommand>,
         ICommandHandler<CancelOrderCommand>,
-        ICommandHandler<FinishOrderCommand>,
-        ICommandHandler<CreateSellOrderCommand>
+        ICommandHandler<FinishBuyOrderCommand>,
+        ICommandHandler<CreateSellOrderCommand>,
+        ICommandHandler<FinishSellOrderCommand>,
     {
         private readonly IEventRepository _eventRepository;
         private readonly IOrderFactory _orderFactory;
@@ -44,7 +45,7 @@ namespace Stocqres.Transactions.Orders.Application
             await _eventRepository.SaveAsync(order);
         }
 
-        public async Task HandleAsync(FinishOrderCommand command)
+        public async Task HandleAsync(FinishBuyOrderCommand command)
         {
             var order = await _eventRepository.GetByIdAsync<Order>(command.OrderId);
             if (order == null)
@@ -58,6 +59,17 @@ namespace Stocqres.Transactions.Orders.Application
         public async Task HandleAsync(CreateSellOrderCommand command)
         {
             var order = _orderFactory.CreateSellOrder(command.WalletId, command.CompanyId, command.Quantity, command.StockCode);
+            await _eventRepository.SaveAsync(order);
+        }
+
+        public async Task HandleAsync(FinishSellOrderCommand command)
+        {
+            var order = await _eventRepository.GetByIdAsync<Order>(command.OrderId);
+            if (order == null)
+                throw new StocqresException("Order does not exist");
+
+            order.FinishOrder();
+
             await _eventRepository.SaveAsync(order);
         }
     }

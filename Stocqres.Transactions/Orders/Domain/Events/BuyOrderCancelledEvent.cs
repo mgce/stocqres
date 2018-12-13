@@ -5,18 +5,18 @@ using Stocqres.Core.Events;
 
 namespace Stocqres.Transactions.Orders.Domain.Events
 {
-    public class OrderCancelledEvent : IEvent
+    public class BuyOrderCancelledEvent : IEvent
     {
         public Guid AggregateId { get; set; }
         public string CancelReason { get; set; }
 
-        public OrderCancelledEvent(Guid aggregateId, string cancelReason)
+        public BuyOrderCancelledEvent(Guid aggregateId, string cancelReason)
         {
             AggregateId = aggregateId;
             CancelReason = cancelReason;
         }
 
-        public OrderCancelledEvent(string cancelReason)
+        public BuyOrderCancelledEvent(string cancelReason)
         {
             CancelReason = cancelReason;
         }

@@ -14,33 +14,33 @@ using Stocqres.Transactions.Orders.Domain.ProcessManagers;
 
 namespace Stocqres.Transactions.Infrastructure.ProcessManagers
 {
-    public interface IOrderProcessManagerRepository
+    public interface ISellOrderProcessManagerRepository
     {
-        Task<BuyOrderProcessManager> FindAsync(Guid aggregateId);
-        Task Save(BuyOrderProcessManager processManager);
+        Task<SellOrderProcessManager> FindAsync(Guid aggregateId);
+        Task Save(SellOrderProcessManager processManager);
     }
 
-    public class OrderProcessManagerRepository :  IOrderProcessManagerRepository
+    public class SellOrderProcessManagerRepository : ISellOrderProcessManagerRepository
     {
         private readonly IDispatcher _dispatcher;
         private readonly IUnitOfWork _unitOfWork;
         protected IDbTransaction _transaction => _unitOfWork.Transaction;
         protected IDbConnection _connection => _unitOfWork.Connection;
 
-        public OrderProcessManagerRepository(IDispatcher dispatcher, IUnitOfWork unitOfWork)
+        public SellOrderProcessManagerRepository(IDispatcher dispatcher, IUnitOfWork unitOfWork)
         {
             _dispatcher = dispatcher;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<BuyOrderProcessManager> FindAsync(Guid aggregateId)
+        public async Task<SellOrderProcessManager> FindAsync(Guid aggregateId)
         {
             return await _connection.QueryFirstOrDefault(
-                $"SELECT * FROM Transaction.{nameof(BuyOrderProcessManager)} where AggregateId = @AggregateId",
+                $"SELECT * FROM Transaction.{nameof(SellOrderProcessManager)} where AggregateId = @AggregateId",
                 new {AggregateId = aggregateId}, _transaction);
         }
 
-        public async Task Save(BuyOrderProcessManager processManager)
+        public async Task Save(SellOrderProcessManager processManager)
         {
             processManager.UpdateModifiedDate();
             var pm = await FindAsync(processManager.AggregateId);
@@ -56,22 +56,19 @@ namespace Stocqres.Transactions.Infrastructure.ProcessManagers
             await HandleCommands(processManager);
         }
 
-        private async Task Add(BuyOrderProcessManager processManager)
+        private async Task Add(SellOrderProcessManager processManager)
         {
             await _connection.ExecuteAsync(
-               $@"INSERT INTO Transactions.{nameof(BuyOrderProcessManager)}(Id, AggregateId, WalletId, CompanyId, StockName, StockCode, StockUnit, StockQuantity, ChargedWalletAmount, CancelReason, State, CreatedAt, ModifiedAt)
-                                            VALUES(@Id, @AggregateId, @WalletId, @CompanyId, @StockName, @StockCode, @StockUnit, @StockQuantity, @ChargedWalletAmount, @CancelReason, @State, @CreatedAt, @ModifiedAt)",
+               $@"INSERT INTO Transactions.{nameof(SellOrderProcessManager)}(Id, AggregateId, WalletId, CompanyId, StockCode, StockQuantity, CancelReason, State, CreatedAt, ModifiedAt)
+                                            VALUES(@Id, @AggregateId, @WalletId, @CompanyId, @StockCode, @StockQuantity, @CancelReason, @State, @CreatedAt, @ModifiedAt)",
                 new
                 {
                     Id = Guid.NewGuid(),
                     AggregateId = processManager.AggregateId,
                     WalletId = processManager.WalletId,
                     CompanyId = processManager.CompanyId,
-                    StockName = processManager.StockName,
                     StockCode = processManager.StockCode,
-                    StockUnit = processManager.StockUnit,
                     StockQuantity = processManager.StockQuantity,
-                    ChargedWalletAmount = processManager.ChargedWalletAmount,
                     CancelReason = processManager.CancelReason,
                     State = processManager.State,
                     CreatedAt = processManager.CreatedAt,
@@ -79,16 +76,13 @@ namespace Stocqres.Transactions.Infrastructure.ProcessManagers
                 }, _transaction);
         }
 
-        private async Task Update(BuyOrderProcessManager processManager)
+        private async Task Update(SellOrderProcessManager processManager)
         {
-            await _connection.ExecuteAsync($@"UPDATE Transactions.{nameof(BuyOrderProcessManager)}
+            await _connection.ExecuteAsync($@"UPDATE Transactions.{nameof(SellOrderProcessManager)}
                                             SET WalletId = @WalletId,
                                             CompanyId = @CompanyId,
-                                            StockName = @StockName,
                                             StockCode = @StockCode,
-                                            StockUnit = @StockUnit,
                                             StockQuantity = @StockQuantity,
-                                            ChargedWalletAmount = @ChargedWalletAmount,
                                             CancelReason = @CancelReason,
                                             State = @State,
                                             ModifiedAt = @ModifiedAt
@@ -96,11 +90,8 @@ namespace Stocqres.Transactions.Infrastructure.ProcessManagers
             {
                 WalletId = processManager.WalletId,
                 CompanyId = processManager.CompanyId,
-                StockName = processManager.StockName,
                 StockCode = processManager.StockCode,
-                StockUnit = processManager.StockUnit,
                 StockQuantity = processManager.StockQuantity,
-                ChargedWalletAmount = processManager.ChargedWalletAmount,
                 CancelReason = processManager.CancelReason,
                 State = processManager.State,
                 ModifiedAt = processManager.ModifiedAt,

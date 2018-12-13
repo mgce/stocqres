@@ -12,19 +12,18 @@ using Stocqres.Transactions.Orders.Domain.ProcessManagers;
 
 namespace Stocqres.Transactions.Orders.Application
 {
-    public class OrderProcessEventHandler : 
+    public class BuyOrderProcessEventHandler : 
         IEventHandler<BuyOrderCreatedEvent>, 
-        IEventHandler<SellOrderCreatedEvent>, 
         IEventHandler<WalletChargedEvent>, 
         IEventHandler<CompanyChargedEvent>, 
         IEventHandler<StockToWalletAddedEvent>,
         IEventHandler<CompanyChargeFailedEvent>,
         IEventHandler<WalletChargeRollbackedEvent>,
-        IEventHandler<OrderCancelledEvent>
+        IEventHandler<BuyOrderCancelledEvent>
     {
-        private readonly IOrderProcessManagerRepository _processManagerRepository;
+        private readonly IBuyOrderProcessManagerRepository _processManagerRepository;
 
-        public OrderProcessEventHandler(IOrderProcessManagerRepository processManagerRepository)
+        public BuyOrderProcessEventHandler(IBuyOrderProcessManagerRepository processManagerRepository)
         {
             _processManagerRepository = processManagerRepository;
         }
@@ -53,7 +52,7 @@ namespace Stocqres.Transactions.Orders.Application
             catch (StocqresException e)
             {
 
-                orderProcessManager.When(new OrderCancelledEvent(e.Message));
+                orderProcessManager.When(new BuyOrderCancelledEvent(e.Message));
             }
 
             await _processManagerRepository.Save(orderProcessManager);
@@ -93,7 +92,7 @@ namespace Stocqres.Transactions.Orders.Application
             await _processManagerRepository.Save(orderProcessManager);
         }
 
-        public async Task HandleAsync(OrderCancelledEvent message)
+        public async Task HandleAsync(BuyOrderCancelledEvent message)
         {
             var orderProcessManager = await _processManagerRepository.FindAsync(message.AggregateId);
 
@@ -116,20 +115,6 @@ namespace Stocqres.Transactions.Orders.Application
             var orderProcessManager = await _processManagerRepository.FindAsync(aggregateId);
 
             action();
-
-            await _processManagerRepository.Save(orderProcessManager);
-        }
-
-
-        public async Task HandleAsync(SellOrderCreatedEvent message)
-        {
-            var pm = await _processManagerRepository.FindAsync(message.AggregateId);
-            if (pm != null)
-                throw new StocqresException("Process Manager for this Order currently exist");
-
-            var orderProcessManager = new BuyOrderProcessManager(message.AggregateId);
-
-            orderProcessManager.When(message);
 
             await _processManagerRepository.Save(orderProcessManager);
         }

@@ -27,7 +27,6 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
         public decimal ChargedWalletAmount { get; set; }
         public string CancelReason { get; set; }
         public BuyOrderProcessManagerState State { get; set; }
-        public OrderType OrderType { get; set; }
         
 
         public void When(BuyOrderCreatedEvent message)
@@ -39,7 +38,6 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
                         CompanyId = message.CompanyId;
                         StockQuantity = message.Quantity;
                         State = BuyOrderProcessManagerState.OrderPlaced;
-                        OrderType = OrderType.Buy;
                         ProcessCommand(new ChargeWalletAmountCommand(message.WalletId, message.CompanyId, message.AggregateId, message.Quantity));
                     break;
                 // idempotence - same message sent twice
@@ -91,7 +89,7 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
             {
                 case BuyOrderProcessManagerState.CompanyCharged:
                     State = BuyOrderProcessManagerState.OrderCompleted;
-                    ProcessCommand(new FinishOrderCommand(AggregateId));
+                    ProcessCommand(new FinishBuyOrderCommand(AggregateId));
                     break;
                 default:
                     throw new StocqresException("Invalid state for this message");
@@ -129,7 +127,7 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
             }
         }
 
-        public void When(OrderCancelledEvent message)
+        public void When(BuyOrderCancelledEvent message)
         {
             switch (State)
             {
@@ -140,47 +138,5 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
                     throw new StocqresException("Invalid state for this message");
             }
         }
-
-        //
-
-        public void When(SellOrderCreatedEvent message)
-        {
-            switch (State)
-            {
-                case BuyOrderProcessManagerState.NotStarted:
-                    WalletId = message.WalletId;
-                    CompanyId = message.CompanyId;
-                    StockQuantity = message.Quantity;
-                    State = BuyOrderProcessManagerState.OrderPlaced;
-                    OrderType = OrderType.Sell;
-                    ProcessCommand(new TakeOffStocksFromWalletCommand(message.WalletId, message.CompanyId, message.AggregateId, message.Quantity));
-                    break;
-                // idempotence - same message sent twice
-                case BuyOrderProcessManagerState.OrderPlaced:
-                    break;
-                default:
-                    throw new StocqresException("Invalid state for this message");
-            }
-        }
-        public void When(StocksTakedOffFromWalletEvent message)
-        {
-            switch (State)
-            {
-                case BuyOrderProcessManagerState.NotStarted:
-                    WalletId = message.WalletId;
-                    CompanyId = message.CompanyId;
-                    StockQuantity = message.Quantity;
-                    State = BuyOrderProcessManagerState.OrderPlaced;
-                    OrderType = OrderType.Sell;
-                    ProcessCommand(new TakeOffStocksFromWalletCommand(message.WalletId, message.CompanyId, message.AggregateId, message.Quantity));
-                    break;
-                // idempotence - same message sent twice
-                case BuyOrderProcessManagerState.OrderPlaced:
-                    break;
-                default:
-                    throw new StocqresException("Invalid state for this message");
-            }
-        }
-
     }
 }
