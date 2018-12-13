@@ -69,13 +69,14 @@ namespace Stocqres.UnitTests.Aggregates
         [Fact]
         public void Wallet_WithValidData_ShouldAddNewStock()
         {
+            var companyId = Guid.NewGuid();
             var orderId = Guid.NewGuid();
             var stockName = _fixture.Create<string>();
             var stockCode = _fixture.Create<string>();
             var unit = _fixture.Create<int>();
             var quantity = _fixture.Create<int>();
 
-            _wallet.AddStock(orderId, stockName, stockCode, unit, quantity);
+            _wallet.AddStock(orderId, companyId, stockName, stockCode, unit, quantity);
 
             Assert.NotNull(_wallet.StockList);
             Assert.Single(_wallet.StockList);
@@ -85,52 +86,56 @@ namespace Stocqres.UnitTests.Aggregates
         [Fact]
         public void Wallet_WithUnitLowerThanZero_ShouldNotAddStock()
         {
+            var companyId = Guid.NewGuid();
             var orderId = Guid.NewGuid();
             var stockName = _fixture.Create<string>();
             var stockCode = _fixture.Create<string>();
             var unit = 0;
             var quantity = _fixture.Create<int>();
 
-            Assert.Throws<StocqresException>(() => _wallet.AddStock(orderId, stockName, stockCode, unit, quantity));
+            Assert.Throws<StocqresException>(() => _wallet.AddStock(orderId, companyId, stockName, stockCode, unit, quantity));
             AssertThatEventIsNotCreated<StockToWalletAddedEvent>(_wallet);
         }
 
         [Fact]
         public void Wallet_WithQuantityLowerThanZero_ShouldNotAddStock()
         {
+            var companyId = Guid.NewGuid();
             var orderId = Guid.NewGuid();
             var stockName = _fixture.Create<string>();
             var stockCode = _fixture.Create<string>();
             var unit = _fixture.Create<int>();
             var quantity = 0;
 
-            Assert.Throws<StocqresException>(() => _wallet.AddStock(orderId, stockName, stockCode, unit, quantity));
+            Assert.Throws<StocqresException>(() => _wallet.AddStock(orderId, companyId, stockName, stockCode, unit, quantity));
             AssertThatEventIsNotCreated<StockToWalletAddedEvent>(_wallet);
         }
 
         [Fact]
         public void Wallet_WithEmptyStockName_ShouldNotAddStock()
         {
+            var companyId = Guid.NewGuid();
             var orderId = Guid.NewGuid();
             var stockName = "";
             var stockCode = _fixture.Create<string>();
             var unit = _fixture.Create<int>();
             var quantity = _fixture.Create<int>();
 
-            Assert.Throws<StocqresException>(() => _wallet.AddStock(orderId, stockName, stockCode, unit, quantity));
+            Assert.Throws<StocqresException>(() => _wallet.AddStock(orderId, companyId, stockName, stockCode, unit, quantity));
             AssertThatEventIsNotCreated<StockToWalletAddedEvent>(_wallet);
         }
 
         [Fact]
         public void Wallet_WithEmptyStockCode_ShouldNotAddStock()
         {
+            var companyId = Guid.NewGuid();
             var orderId = Guid.NewGuid();
             var stockName = _fixture.Create<string>();
             var stockCode = ""; ;
             var unit = _fixture.Create<int>();
             var quantity = _fixture.Create<int>();
 
-            Assert.Throws<StocqresException>(() => _wallet.AddStock(orderId, stockName, stockCode, unit, quantity));
+            Assert.Throws<StocqresException>(() => _wallet.AddStock(orderId, companyId, stockName, stockCode, unit, quantity));
             AssertThatEventIsNotCreated<StockToWalletAddedEvent>(_wallet);
         }
 

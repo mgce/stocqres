@@ -19,9 +19,19 @@ namespace Stocqres.Api.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpPost("")]
+        [HttpPost("buy")]
         [AllowAnonymous]
         public async Task<IActionResult> Post(CreateBuyOrderCommand command)
+        {
+            await _dispatcher.SendAsync(command);
+
+            return Ok();
+        }
+
+
+        [HttpPost("sell")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Post(CreateSellOrderCommand command)
         {
             await _dispatcher.SendAsync(command);
 

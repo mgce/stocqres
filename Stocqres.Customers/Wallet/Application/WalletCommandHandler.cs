@@ -22,7 +22,7 @@ namespace Stocqres.Customers.Wallet.Application
         ICommandHandler<AddStockToWalletCommand>,
         ICommandHandler<RollbackWalletChargeCommand>,
         ICommandHandler<TakeOffStocksFromWalletCommand>,
-        ICommandHandler<TopUpWalletAmountCommand>,
+        ICommandHandler<TopUpWalletAmountCommand>
     {
         private readonly IProjectionReader _projectionReader;
         private readonly IEventRepository _eventRepository;
@@ -90,7 +90,7 @@ namespace Stocqres.Customers.Wallet.Application
         {
             var wallet = await GetWallet(command.WalletId);
 
-            wallet.TakeOffStocks(command.CompanyId, command.Quantity);
+            wallet.TakeOffStocks(command.CompanyId, command.OrderId, command.Quantity);
 
             await _eventRepository.SaveAsync(wallet);
         }

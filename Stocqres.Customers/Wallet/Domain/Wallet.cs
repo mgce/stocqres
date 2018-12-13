@@ -60,7 +60,7 @@ namespace Stocqres.Customers.Wallet.Domain
             Publish(new WalletChargeRollbackedEvent(Id, orderId, amount));
         }
 
-        public void TakeOffStocks(Guid companyId, int quantity)
+        public void TakeOffStocks(Guid companyId, Guid orderId, int quantity)
         {
             var stock = StockList.FirstOrDefault(s => s.CompanyId == companyId);
             if(stock == null)
@@ -68,7 +68,7 @@ namespace Stocqres.Customers.Wallet.Domain
             if(stock.Quantity < quantity)
                 throw new StocqresException("You don't have enought stocks");
 
-            Publish(new StocksTakedOffFromWalletEvent(Id, companyId, quantity));
+            Publish(new StocksTakedOffFromWalletEvent(Id, companyId, orderId, quantity));
         }
 
         public void TopUpAmount(Guid orderId, decimal amountToCharge)

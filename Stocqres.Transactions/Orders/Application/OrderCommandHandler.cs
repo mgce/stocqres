@@ -18,7 +18,7 @@ namespace Stocqres.Transactions.Orders.Application
         ICommandHandler<CancelOrderCommand>,
         ICommandHandler<FinishBuyOrderCommand>,
         ICommandHandler<CreateSellOrderCommand>,
-        ICommandHandler<FinishSellOrderCommand>,
+        ICommandHandler<FinishSellOrderCommand>
     {
         private readonly IEventRepository _eventRepository;
         private readonly IOrderFactory _orderFactory;

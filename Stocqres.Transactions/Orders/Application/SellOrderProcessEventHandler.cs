@@ -83,7 +83,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         public async Task HandleAsync(SellOrderFinishedEvent message)
         {
-            var orderProcessManager = await _processManagerRepository.FindAsync(message.OrderId);
+            var orderProcessManager = await _processManagerRepository.FindAsync(message.AggregateId);
 
             orderProcessManager.When(message);
 
