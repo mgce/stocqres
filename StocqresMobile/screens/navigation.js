@@ -24,16 +24,18 @@ export const goToAuth = () => Navigation.setRoot({
 export const goToHome = () => Navigation.setRoot({
     root:{
         stack:{
-            id: 'Home',
+            id: 'Main',
             options:{
                 topBar:{
+                    visible: true,
                     title: 'Stock Exchange'
                 }
             },
             children:[
                 {
                     component:{
-                        Name:'Main'
+                        name:'Main'
+
                     }
                 }
             ]
