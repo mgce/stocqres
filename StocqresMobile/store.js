@@ -1,10 +1,10 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import loginReducer from './ducks/login';
+import authenticationReducer from './ducks/authentication';
 import axiosMiddleware from 'redux-axios-middleware';
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'https://192.168.0.1:44327/api',
+  baseURL: 'http://10.0.2.2:5000/api',
   //baseURL: 'https://localhost:443/api',
   responseType: 'json',
   headers:{
@@ -14,7 +14,7 @@ const client = axios.create({
   }
 })
 
-const reducers = combineReducers({login:loginReducer});
+const reducers = combineReducers({authentication:authenticationReducer});
 const store = createStore(reducers, applyMiddleware(axiosMiddleware(client)));
 
 export default store;

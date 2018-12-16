@@ -1,40 +1,64 @@
 import React, {Component} from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Header, Content, Form, Item, Input, Label, Button, Text } from 'native-base';
+import { Container, Header, Content, Form, Item, Input, Label, Button, Text, Spinner } from 'native-base';
 import {connect} from 'react-redux';
-import {login} from '../ducks/login'
+import {login} from '../ducks/authentication'
 import {goToHome} from './navigation'
+import { Navigation } from 'react-native-navigation';
 
-class LoginScreen extends Component{
+export class LoginScreen extends Component{
     constructor(props){
         super(props);
         this.state = {
-            login:'',
-            password:''
+            username:'Adam',
+            password:'Adamek123'
         }
+        this.pushRegisterScreen = this.pushRegisterScreen.bind(this);
     }
     loginTo = () => {
-        this.props.login(this.state.login, this.state.password).then(()=>{
+        var command = this.state;
+        this.props.login(command).then(()=>{
             goToHome();
+        })
+    }
+    pushRegisterScreen(){
+        Navigation.push(this.props.componentId, {
+            component:{
+                name:'Register',
+                options:{
+                    topBar:{
+                        visible: false,
+                    }
+                }
+            },
         })
     }
     render(){
         return(
+            
             <Container>
                 <Content contentContainerStyle={styles.container}>
+                    {
+                        this.props.loading && <Spinner />
+                    }
                     <Form style={styles.form}>
                         <Item floatingLabel>
                             <Label>Username</Label>
-                            <Input onChangeText={(value) => this.setState({login})}/>
+                            <Input onChangeText={(username) => this.setState({username})}/>
                         </Item>
                         <Item floatingLabel>
                             <Label>Password</Label>
-                            <Input onChangeText={(value) => this.setState({password})}/>
+                            <Input onChangeText={(password) => this.setState({password})}/>
                         </Item>
                         <Button primary style={styles.submit} onPress={() => this.loginTo()}>
                             <Text>Sign In</Text>
                         </Button>
                     </Form>
+                    <Text 
+                    style={styles.registerText}
+                    onPress={this.pushRegisterScreen}>
+                    Doesn't have account? Create it!
+                    </Text>
                 </Content>
             </Container>
         )
@@ -65,18 +89,24 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       padding: 10,
       paddingBottom: 30,
+    },
+    registerText:{
+        flexDirection: 'column',
+        fontSize: 12,
+        justifyContent: 'center',
+        paddingTop: 10
+        
     }
   });
 
-  const mapDispatchToProps = {
-      login
-  };
+const mapDispatchToProps = {
+    login
+};
 
 
 const mapStateToProps = (state) => {
     return{
-        username: state.login.initialState.username,
-        password: state.login.initialState.password
+        loading: state.authentication.loading
     }
 }
 

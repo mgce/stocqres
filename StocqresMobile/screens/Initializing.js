@@ -6,7 +6,7 @@ import { View, Text } from 'native-base';
 class Initialize extends React.PureComponent{
     async componentDidMount(){
         try{
-            if(this.props.jwt !== null && this.props.jwt !== undefined && this.props.jwt !== '')
+            if(this.props.accessToken !== null && this.props.accessToken !== undefined && this.props.accessToken !== '')
                 goToHome();
             else
                 goToAuth(); 
@@ -27,7 +27,7 @@ class Initialize extends React.PureComponent{
 
 const mapStateToProps = (state) => {
     return{
-        jwt: state.login.initialState.jwt
+        accessToken: state.authentication.accessToken
     }
 }
 

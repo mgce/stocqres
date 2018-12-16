@@ -1,5 +1,5 @@
-const loginReducer = require('./login');
+const autenticationReducer = require('./autentication');
 
 module.exports = {
-  loginReducer
+  autenticationReducer
   };

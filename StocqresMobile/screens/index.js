@@ -1,9 +1,10 @@
 import {Navigation} from 'react-native-navigation';
+import { Provider} from 'react-redux';
+import {default as store} from '../store'
 
 export function registerScreens(){
-  Navigation.registerComponent('Login', () => require('./LoginScreen').default);
-  Navigation.registerComponent('Main', () => require('./MainScreen').default);
-  Navigation.registerComponent('Initializing', () => require('./Initializing').default);
-  Navigation.registerComponent('App', () => require('../App').default);
-  Navigation.registerComponent('Auth', () => require('./Auth').default);
+  Navigation.registerComponentWithRedux('Login', () => require('./LoginScreen').default, Provider, store);
+  Navigation.registerComponentWithRedux('Main', () => require('./MainScreen').default, Provider, store);
+  Navigation.registerComponentWithRedux('Initializing', () => require('./Initializing').default, Provider, store);
+  Navigation.registerComponentWithRedux('Register', () => require('./RegisterScreen').default, Provider, store);
 }

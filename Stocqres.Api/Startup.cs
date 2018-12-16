@@ -108,7 +108,7 @@ namespace Stocqres.Api
 
 
             app.UseCors("AllowAll");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSwaggerUi3WithApiExplorer(settings =>
             {

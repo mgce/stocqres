@@ -12,7 +12,7 @@ export const goToAuth = () => Navigation.setRoot({
             children:[
                 {
                     component:{
-                        name: 'Auth'
+                        name: 'Login'
                     }
                 }
             ]
@@ -21,10 +21,22 @@ export const goToAuth = () => Navigation.setRoot({
     }
 })
 
-export const goToHome = () => Navigation.setStackRoot({
+export const goToHome = () => Navigation.setRoot({
     root:{
         stack:{
-            id: 'Main'
+            id: 'Home',
+            options:{
+                topBar:{
+                    title: 'Stock Exchange'
+                }
+            },
+            children:[
+                {
+                    component:{
+                        Name:'Main'
+                    }
+                }
+            ]
         }
     }
 })

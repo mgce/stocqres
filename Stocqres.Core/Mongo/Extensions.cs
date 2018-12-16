@@ -37,7 +37,7 @@ namespace Stocqres.Core.Mongo
             {
                 var mongoClient = context.Resolve<MongoClient>();
                 return mongoClient.StartSession();
-            }).SingleInstance();
+            }).InstancePerLifetimeScope();
         }
     }
 }

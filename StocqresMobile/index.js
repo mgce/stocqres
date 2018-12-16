@@ -15,7 +15,7 @@ Navigation.events().registerAppLaunchedListener(() => {
         children:[
           {
             component: {
-            name: 'App'
+            name: 'Initializing'
           }
         }
         ]
