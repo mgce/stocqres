@@ -1,34 +1,39 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import { goToAuth, goToHome } from './navigation'
-import { View, Text } from 'native-base';
+import React from "react";
+import { connect } from "react-redux";
+import { Container, Content, Text } from "native-base";
+import { goToAuth, goToHome } from "./navigation";
+import PropTypes from 'prop-types';
 
-class Initialize extends React.PureComponent{
-    async componentDidMount(){
-        try{
-            if(this.props.accessToken !== null && this.props.accessToken !== undefined && this.props.accessToken !== '')
-                goToHome();
-            else
-                goToAuth(); 
-        }
-        catch(err){
-            console.log('error: ' + err);
-            goToAuth();
-        }
+class Initialize extends React.PureComponent {
+  async componentDidMount() {
+    try {
+      if (
+        this.props.accessToken !== null &&
+        this.props.accessToken !== undefined &&
+        this.props.accessToken !== ""
+      ) {
+        goToHome();
+      } else goToAuth();
+    } catch (err) {
+      goToAuth();
     }
-    render(){
-        return(
-            <View>
-                <Text>Loading</Text>
-            </View>
-        )
-    }
+  }
+
+  render(){
+    return (<Container>
+      <Content>
+        <Text>Loading</Text>
+      </Content>
+    </Container>);
+  };
 }
 
-const mapStateToProps = (state) => {
-    return{
-        accessToken: state.authentication.accessToken
-    }
+Initialize.propTypes = {
+  accessToken: PropTypes.string
 }
+
+const mapStateToProps = state => ({
+  accessToken: state.authentication.accessToken
+});
 
 export default connect(mapStateToProps)(Initialize);
