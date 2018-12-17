@@ -1,4 +1,5 @@
 import { Navigation } from 'react-native-navigation'
+import {colors} from '../styles/common'
 
 export const goToAuth = () => Navigation.setRoot({
     root:{
@@ -28,14 +29,20 @@ export const goToHome = () => Navigation.setRoot({
             options:{
                 topBar:{
                     visible: true,
-                    title: 'Stock Exchange'
+                    title: {
+                        text: 'Stock Exchange',
+                        alignment: 'center',
+                        color: colors.lightPrimary
+                    },
+                    background: {
+                        color: colors.darkPrimary
+                    }
                 }
             },
             children:[
                 {
                     component:{
                         name:'Main'
-
                     }
                 }
             ]

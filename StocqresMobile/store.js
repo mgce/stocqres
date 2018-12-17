@@ -1,9 +1,11 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import authenticationReducer from "./ducks/authentication";
+import stocksReducer from "./ducks/stocks";
 import axiosMiddleware from "redux-axios-middleware";
 import axios from "axios";
-import {persistCombineReducers} from "redux-persist";
-import storage from 'redux-persist/es/storage';
+import { persistCombineReducers } from "redux-persist";
+import storage from "redux-persist/es/storage";
+import thunk from "redux-thunk";
 
 const client = axios.create({
   baseURL: "http://10.0.2.2:5000/api",
@@ -20,12 +22,17 @@ const persistConfig = {
 };
 
 const persistedReducer = persistCombineReducers(persistConfig, {
-  authentication: authenticationReducer
+  authentication: authenticationReducer,
+  stocks: stocksReducer
 });
 
-const store = createStore(
-  persistedReducer,
-  applyMiddleware(axiosMiddleware(client))
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const enhancer = composeEnhancer(
+  applyMiddleware(axiosMiddleware(client)),
+  applyMiddleware(thunk)
 );
+
+const store = createStore(persistedReducer, enhancer);
 
 export default store;
