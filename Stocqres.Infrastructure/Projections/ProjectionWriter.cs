@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using Serilog;
 using Stocqres.Core.Domain;
 using Stocqres.Infrastructure.UnitOfWork;
 
@@ -20,6 +21,8 @@ namespace Stocqres.Infrastructure.Projections
             var collection = GetCollection<T>();
 
             await collection.InsertOneAsync(projection);
+
+            Log.Information($"Projection {projection.GetType()} has been added", projection);
         }
 
         public async Task UpdateAsync<T>(Guid id, Action<T> action) where T: IProjection
@@ -31,6 +34,8 @@ namespace Stocqres.Infrastructure.Projections
 
             action(typeView);
             await collection.ReplaceOneAsync(v => v.Id == id, view);
+
+            Log.Information($"Projection {view.GetType()} has been updated", view);
         }
 
         private IMongoCollection<T> GetCollection<T>() => _database.GetCollection<T>(typeof(T).Name);

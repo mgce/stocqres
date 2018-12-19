@@ -9,7 +9,7 @@ export function registerScreens(store, Provider) {
   );
   Navigation.registerComponentWithRedux(
     "Main",
-    () => require("./MainScreen").default,
+    () => require("./Main/MainScreen").default,
     Provider,
     store
   );
@@ -22,6 +22,12 @@ export function registerScreens(store, Provider) {
   Navigation.registerComponentWithRedux(
     "Register",
     () => require("./RegisterScreen").default,
+    Provider,
+    store
+  );
+  Navigation.registerComponentWithRedux(
+    "StockDetails",
+    () => require("./StockDetailsScreen").default,
     Provider,
     store
   );

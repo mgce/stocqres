@@ -44,7 +44,7 @@ namespace Stocqres.Infrastructure.EventRepository
             return (T)_factory.CreateAsync<T>(events);
         }
 
-        public async Task SaveAsync(IAggregateRoot aggregate)
+        public async Task SaveAsync<T>(T aggregate) where T : IAggregateRoot
         {
             var events = aggregate.GetUncommitedEvents();
             if (!events.Any())
@@ -52,7 +52,7 @@ namespace Stocqres.Infrastructure.EventRepository
 
             var originalVersion = aggregate.Version - events.Count + 1;
 
-            await _eventStore.SaveAsync<IAggregateRoot>(events, aggregate.Id, originalVersion);
+            await _eventStore.SaveAsync<T>(events, aggregate.Id, originalVersion);
 
             await RaiseEvents(aggregate);
         }

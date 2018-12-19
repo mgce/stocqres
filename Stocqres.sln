@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{87C6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer", "SqlServer", "{D840FD19-B8FD-49AC-BE7D-876CBCBA3AB0}"
 	ProjectSection(SolutionItems) = preProject
-		AggregatesTables.sql = AggregatesTables.sql
+		Aggregates.sql = Aggregates.sql
 		scripts\SqlServer\entrypoint.sh = scripts\SqlServer\entrypoint.sh
 		scripts\SqlServer\IdentityScript.sql = scripts\SqlServer\IdentityScript.sql
 		InitDb.sql = InitDb.sql

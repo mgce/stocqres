@@ -23,7 +23,7 @@ namespace Stocqres.Infrastructure.UnitOfWork
             _mongoSession = mongoSession;
             _mongoOptions = mongoOptions;
             _connection = new SqlConnection(configuration.GetConnectionString("SqlServer"));
-            _connection.Open();
+            
         }
 
         public IDbConnection Connection => _connection;
@@ -32,6 +32,9 @@ namespace Stocqres.Infrastructure.UnitOfWork
 
         public void BeginTransaction()
         {
+            if(_connection.State == ConnectionState.Closed)
+                _connection.Open();
+
             if (_transactionCounter == 0)
             {
                 _transaction = Connection.BeginTransaction(IsolationLevel.Serializable);
@@ -57,6 +60,7 @@ namespace Stocqres.Infrastructure.UnitOfWork
                 }
                 finally
                 {
+                    _connection.Close();
                     Transaction.Dispose();
                     _mongoSession.Dispose();
                 }
@@ -70,7 +74,7 @@ namespace Stocqres.Infrastructure.UnitOfWork
             Transaction.Dispose();
             _mongoSession.AbortTransaction();
             _mongoSession.Dispose();
-
+            _connection.Close();
             _transactionCounter = 0;
         }
 

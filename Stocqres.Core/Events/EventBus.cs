@@ -31,8 +31,8 @@ namespace Stocqres.Core.Events
 
             foreach (var handler in (IEnumerable) eventHandlers)
             {
-                Log.Information($"Event {@event.GetType()} has been raised", @event);
                 handlers.Add((Task)((dynamic)handler).HandleAsync((dynamic)@event));
+                Log.Information($"Event {@event.GetType()} has been raised", @event);
             }
 
             await Task.WhenAll(handlers);

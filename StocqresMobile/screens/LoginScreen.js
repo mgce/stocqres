@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
 LoginScreen.propTypes = {
   login: PropTypes.func,
   componentId: PropTypes.string,
-  loading: PropTypes.bool,
+  loading: PropTypes.bool
 };
 
 const mapDispatchToProps = {

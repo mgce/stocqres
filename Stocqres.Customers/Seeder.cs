@@ -76,7 +76,7 @@ namespace Stocqres.Customers
                 using (var conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
-                    exist =  conn.QueryFirstOrDefault<bool>("SELECT count(1) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'Customers' AND  TABLE_NAME = 'CompanyEvents'");
+                    exist =  conn.QueryFirstOrDefault<bool>("SELECT count(1) FROM Customers.CompanyEvents");
                 }
                 scope.Complete();
             }
@@ -92,7 +92,7 @@ namespace Stocqres.Customers
                 using (var conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
-                    exist = conn.ExecuteScalar<bool>("SELECT count(1) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'Identity' AND  TABLE_NAME = 'User'");
+                    exist = conn.ExecuteScalar<bool>("SELECT count(1) FROM[Identity].[User]");
                 }
                 scope.Complete();
             }
