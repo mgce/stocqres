@@ -9,10 +9,12 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "jwt-decode": "^2.2.0",
     "native-base": "^2.8.1",
     "prop-types": "^15.6.2",
     "react": "16.6.1",
     "react-native": "0.57.7",
+    "react-native-modal": "^7.0.2",
     "react-native-navigation": "^2.2.0",
     "react-redux": "^5.1.1",
     "redux": "^4.0.1",

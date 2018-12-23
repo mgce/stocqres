@@ -35,7 +35,7 @@ namespace Stocqres.Api.Controllers
             => Ok(await _tokenService.SignInAsync(command.Username, command.Password));
 
         [AllowAnonymous]
-        [HttpPost("refresh-tokens/{refreshToken}/refresh")]
+        [HttpGet("refresh-tokens/{refreshToken}/refresh")]
         public async Task<IActionResult> RefreshToken(string refreshToken)
             => Ok(await _refreshTokenService.CreateAccessTokenAsync(refreshToken));
     }

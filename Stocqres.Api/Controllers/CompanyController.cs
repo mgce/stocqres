@@ -30,11 +30,10 @@ namespace Stocqres.Api.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
         [HttpGet("{code}")]
-        public async Task<ActionResult<CompanyProjection>> Get(string code)
+        public async Task<CompanyProjection> Get(string code)
         {
-            return Ok(await _projectionReader.GetAsync<CompanyProjection>(p => p.StockCode == code));
+            return await _projectionReader.GetAsync<CompanyProjection>(p => p.StockCode == code);
         }
     }
 }

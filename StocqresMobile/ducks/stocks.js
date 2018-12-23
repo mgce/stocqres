@@ -1,19 +1,32 @@
-import axios from "axios";
+import httpClient from "./httpClient";
+import storage from "redux-persist/es/storage";
+import { persistReducer } from 'redux-persist';
 
 export const types = {
-  GET_STOCKS_DETAILS: "stocqres/login/GET_STOCKS_DETAILS",
-  GET_STOCKS_DETAILS_SUCCESS: "stocqres/login/GET_STOCKS_DETAILS_SUCCESS",
-  GET_STOCKS_DETAILS_FAIL: "stocqres/login/GET_STOCKS_DETAILS_FAIL",
-  STOCK_LIST_RECEIVED: "stocqres/stocks/STOCK_LIST_RECEIVED"
+  GET_STOCKS_DETAILS: "stocqres/stocks/GET_STOCKS_DETAILS",
+  GET_STOCKS_DETAILS_SUCCESS: "stocqres/stocks/GET_STOCKS_DETAILS_SUCCESS",
+  GET_STOCKS_DETAILS_FAIL: "stocqres/stocks/GET_STOCKS_DETAILS_FAIL",
+  STOCK_LIST_RECEIVED: "stocqres/stocks/STOCK_LIST_RECEIVED",
+  BUY_STOCKS: "stocqres/stocks/BUY_STOCKS",
+  BUY_STOCKS_SUCCESS: "stocqres/stocks/BUY_STOCKS_SUCCESS",
+  BUY_STOCKS_FAIL: "stocqres/stocks/BUY_STOCKS_FAIL",
 };
 
 const initialState = {
   loading: false,
   stockList: [],
-  stockDetails: {}
+  stockDetails: {
+    stockQuantity: null
+  }
 };
 
-export default function stocksReducer(state = { initialState }, action) {
+const persistConfig = {
+  key: 'stocks',
+  storage: storage,
+  blackList: ['stockDetails']
+}
+
+function stocksReducer(state = { initialState }, action) {
   switch (action.type) {
     case types.GET_STOCKS_DETAILS:
       return { ...state, loading: true };
@@ -22,7 +35,7 @@ export default function stocksReducer(state = { initialState }, action) {
         ...state,
         loading: false,
         success: true,
-        stockDetails: action.payload.data
+        stockDetails: action.stockDetails
       };
     case types.GET_STOCKS_DETAILS_FAIL:
       return { ...state, loading: false, success: false };
@@ -38,16 +51,38 @@ export default function stocksReducer(state = { initialState }, action) {
   }
 }
 
+export default persistReducer(persistConfig, stocksReducer);
+
 export function getStockDetails(code){
-    return{
-        type: types.GET_STOCKS_DETAILS,
-        payload:{
-            request:{
-                url: '/company/' + code,
-                method: 'GET'
-            }
+  return (dispatch) => {
+    dispatch(request());
+    httpClient.get('/company/' + code).then(res =>{
+      dispatch(success(res.data))
+    }, error => {
+      dispatch(failure(error))
+    })
+  }
+
+  function request(){ return { type: types.GET_STOCKS_DETAILS}}
+  function success(stockDetails) { return { type: types.GET_STOCKS_DETAILS_SUCCESS, stockDetails } }
+  function failure(error) { return { type: types.GET_STOCKS_DETAILS_FAIL, error } }
+}
+
+export function buyStocks(data){
+  return{
+    type:types.BUY_STOCKS,
+    payload:{
+      request:{
+        url:'/orders/buy',
+        method: 'POST',
+        data:{
+          WalletId: "",
+          CompanyId: data.companyId,
+          Quantity: data.quantity
         }
+      }
     }
+  }
 }
 
 export function assignStockList(stockList) {

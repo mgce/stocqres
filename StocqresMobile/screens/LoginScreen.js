@@ -21,16 +21,14 @@ export class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "Adam",
-      password: "Adamek123"
+      username: "TestInvestor2",
+      password: "Test4121"
     };
     this.pushRegisterScreen = this.pushRegisterScreen.bind(this);
   }
   loginTo() {
     const command = this.state;
-    this.props.login(command).then(() => {
-      goToHome();
-    });
+    this.props.login(command);
   }
   pushRegisterScreen() {
     Navigation.push(this.props.componentId, {
@@ -57,7 +55,7 @@ export class LoginScreen extends Component {
             </Item>
             <Item floatingLabel>
               <Label>Password</Label>
-              <Input onChangeText={password => this.setState({ password })} />
+              <Input secureTextEntry={true} onChangeText={password => this.setState({ password })} />
             </Item>
             <Button
               primary

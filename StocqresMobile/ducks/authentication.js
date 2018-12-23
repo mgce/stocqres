@@ -1,4 +1,8 @@
-import axios from "axios";
+import httpClient from "./httpClient";
+import { AsyncStorage } from "react-native";
+import {goToHome} from '../screens/navigation'
+import constants from "../common/constants";
+import jwt_decode from "jwt-decode";
 
 export const types = {
   LOGIN: "stocqres/login/LOGIN",
@@ -6,7 +10,10 @@ export const types = {
   LOGIN_FAIL: "stocqres/login/LOGIN_FAIL",
   REGISTER: "stocqres/login/REGISTER",
   REGISTER_SUCCESS: "stocqres/login/REGISTER_SUCCESS",
-  REGISTER_FAIL: "stocqres/login/REGISTER_FAIL"
+  REGISTER_FAIL: "stocqres/login/REGISTER_FAIL",
+  GET_ACCESS_TOKEN: "stocqres/auth/GET_ACCESS_TOKEN",
+  GET_ACCESS_TOKEN_SUCCESS: "stocqres/auth/GET_ACCESS_TOKEN_SUCCESS",
+  GET_ACCESS_TOKEN_FAIL: "stocqres/auth/GET_ACCESS_TOKEN_FAIL"
 };
 
 const initialState = {
@@ -28,8 +35,8 @@ export default function authenticationReducer(
         ...state,
         loading: false,
         success: true,
-        accessToken: action.payload.data.accessToken,
-        refreshToken: action.payload.data.refreshToken
+        accessToken: action.data.accessToken,
+        refreshToken: action.data.refreshToken,
       };
     case types.LOGIN_FAIL:
       return { ...state, loading: false, success: false };
@@ -43,33 +50,95 @@ export default function authenticationReducer(
       };
     case types.REGISTER_FAIL:
       return { ...state, loading: false, success: false };
+    case types.GET_ACCESS_TOKEN:
+      return { ...state, loading: true };
+    case types.GET_ACCESS_TOKEN_SUCCESS:
+      return {
+        state: [...state, action.response],
+        loading: false,
+        success: true,
+        accessToken: action.accessToken
+      };
+    case types.GET_ACCESS_TOKEN_FAIL:
+      return { ...state, loading: false, success: false };
     default:
       return state;
   }
 }
 
 export function login(command) {
-  return {
-    type: types.LOGIN,
-    payload: {
-      request: {
-        url: "/tokens/create",
-        method: "POST",
-        data: command
+  return (dispatch) => {
+    dispatch(request());
+    httpClient.post("/tokens/create", command).then(
+      res => {
+        var decodedToken = jwt_decode(res.data.accessToken)
+        AsyncStorage.setItem(constants.ACCESS_TOKEN, res.data.accessToken);
+        AsyncStorage.setItem(constants.REFRESH_TOKEN, res.data.refreshToken);
+        dispatch(success(res.data));
+        goToHome();
+      },
+      error => {
+        dispatch(failure(error));
       }
-    }
+    );
   };
+  function request() {
+    return { type: types.LOGIN };
+  }
+  function success(data) {
+    return { type: types.LOGIN_SUCCESS, data };
+  }
+  function failure(error) {
+    return { type: types.LOGIN_FAIL, error };
+  }
 }
 
 export function register(command) {
-  return {
-    type: types.REGISTER,
-    payload: {
-      request: {
-        url: "/investors",
-        method: "POST",
-        data: command
+  return (dispatch) => {
+    dispatch(request());
+    httpClient.post("/investors", command).then(
+      res => {
+        dispatch(success(res.payload.data));
+      },
+      error => {
+        dispatch(failure(error));
       }
-    }
+    );
   };
+
+  function request() {
+    return { type: types.REGISTER };
+  }
+  function success(data) {
+    return { type: types.REGISTER_SUCCESS, data };
+  }
+  function failure(error) {
+    return { type: types.REGISTER_FAIL, error };
+  }
+}
+
+export function getAccessToken() {
+  return (dispatch, getState) => {
+    var refreshToken = getState().authentication.refreshToken;
+    dispatch(request());
+    httpClient.get(`"refresh-tokens/${refreshToken}/refresh`).then(
+      res => {
+        AsyncStorage.setItem("AccessToken", res.payload.data);
+        dispatch(success(res.payload.data));
+      },
+      error => {
+        dispatch(failure(error));
+      }
+    );
+  };
+
+  function request() {
+    return { type: types.GET_ACCESS_TOKEN };
+  }
+  function success(accessToken) {
+    return { type: types.GET_ACCESS_TOKEN_SUCCESS, accessToken };
+  }
+  function failure(error) {
+    return { type: types.GET_ACCESS_TOKEN_FAIL, error };
+  }
 }

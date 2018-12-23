@@ -13,7 +13,7 @@ const client = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json"
-  }
+  },
 });
 
 const persistConfig = {

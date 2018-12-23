@@ -1,34 +1,29 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Container, Content, Text } from "native-base";
+import { Container, Content, Text, Spinner } from "native-base";
 import { goToAuth, goToHome } from "./navigation";
 import PropTypes from "prop-types";
+import { AsyncStorage } from "react-native";
+import constants from "../common/constants";
 
 class Initialize extends React.PureComponent {
   async componentDidMount() {
-    try {
-      if (this.accesTokenExist()) {
-        goToHome();
-      } else goToAuth();
-    } catch (err) {
+    //sprawdzic czy token istnieje w asyncstorage
+    const accessToken = await AsyncStorage.getItem(constants.ACCESS_TOKEN);
+    const refreshToken = await AsyncStorage.getItem(constants.REFRESH_TOKEN);
+    if(accessToken && refreshToken)
+      goToHome();
+    else
       goToAuth();
-    }
-  }
-  accesTokenExist() {
-    return (
-      this.props.accessToken !== null &&
-      this.props.accessToken !== undefined &&
-      this.props.accessToken !== ""
-    );
   }
   render() {
     return (
       <Container>
         <Content>
-          <Text>Loading</Text>
+          <Spinner />
         </Content>
       </Container>
-    );
+    )
   }
 }
 

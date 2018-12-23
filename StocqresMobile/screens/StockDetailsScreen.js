@@ -1,10 +1,18 @@
 import React, { Component } from "react";
-import { StyleSheet, Modal } from "react-native";
-import { Container, Content, Button, Text, View } from "native-base";
+import { StyleSheet } from "react-native";
+import {
+  Container,
+  Content,
+  Button,
+  Text,
+  View,
+  Spinner
+} from "native-base";
 import { connect } from "react-redux";
 import { padding, colors, fonts } from "../styles/common";
 import _ from "lodash";
 import { getStockDetails } from "../ducks/stocks";
+import BuyStockModal from './BuyStockModal';
 
 const DetailsItem = props => (
   <View style={styles.labelContainer}>
@@ -33,24 +41,13 @@ class StockDetailsScreen extends Component {
   }
   render() {
     return (
+      this.props.loading ? 
+      <Spinner /> :
       <Container>
         <Content style={styles.content}>
-          <Modal
-            style={styles.modalContainer}
-            animationType={"slide"}
-            transparent={false}
-            visible={this.state.addModalVisible}
-            onRequestClose={() => {
-              console.log("Modal closed");
-            }}
-          >
-            <View>
-              <Text>Modal</Text>
-              <Button success onPress={()=>this.toggleAddModal(false)}>
-              <Text>Close Modal</Text>
-              </Button>
-            </View>
-          </Modal>
+        <BuyStockModal 
+        isVisible={this.state.addModalVisible}
+        toggleModal={() => this.toggleAddModal(false)}/>
           <DetailsItem
             header={"Company Name"}
             details={this.state.stock.Name}
@@ -73,7 +70,8 @@ class StockDetailsScreen extends Component {
           <Button
             success
             style={styles.button}
-            onPress={()=>this.toggleAddModal(true)}>
+            onPress={() => this.toggleAddModal(true)}
+          >
             <Text style={styles.buttonText}>Buy</Text>
           </Button>
           <Button danger style={styles.button}>
@@ -99,8 +97,6 @@ const styles = StyleSheet.create({
     color: colors.darkPrimary
   },
   inlineButtons: {
-    // flex: 1,
-    // flexGrow: 0,
     flexDirection: "row"
   },
   button: {
@@ -111,17 +107,13 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: fonts.md,
     alignSelf: "center"
-  },
-  modalContainer:{
-    flex:1,
-    marginHorizontal: padding.xl,
-    height: '50%'
   }
 });
 
 const mapDispatchToProps = { getStockDetails };
 
 const mapStateToProps = state => ({
+  loading: state.stocks.loading,
   stockList: state.stocks.stockList,
   stockDetails: state.stocks.stockDetails
 });

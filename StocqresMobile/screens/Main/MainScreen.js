@@ -13,7 +13,7 @@ export class MainScreen extends Component {
     };
   }
   componentDidMount() {
-    this.configureWebSockets();
+    //this.configureWebSockets();
   }
   configureWebSockets() {
     const ws = new WebSocket(

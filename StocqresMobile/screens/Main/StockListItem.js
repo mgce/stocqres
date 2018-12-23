@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import {
-  Button,
   Text
 } from "native-base";
 import {padding, colors, fonts} from '../../styles/common'
