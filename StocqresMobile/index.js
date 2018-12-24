@@ -3,6 +3,9 @@ import { registerScreens } from "./screens/index";
 import { Provider } from "react-redux";
 import { default as store } from "./store";
 import { persistStore, persistReducer } from "redux-persist";
+import setupIcons from "./common/icons";
+
+setupIcons();
 
 Navigation.events().registerAppLaunchedListener(() => {
   persistStore(store, null, () => {

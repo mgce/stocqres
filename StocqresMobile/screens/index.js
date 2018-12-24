@@ -31,4 +31,10 @@ export function registerScreens(store, Provider) {
     Provider,
     store
   );
+  Navigation.registerComponentWithRedux(
+    "MyStocks",
+    () => require("./MyStocksScreen").default,
+    Provider,
+    store
+  );
 }
