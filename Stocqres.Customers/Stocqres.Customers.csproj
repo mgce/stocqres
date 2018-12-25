@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Users\MateuszGajda\source\repos\Stocqres.Customers.Api\Stocqres.Customers.Api.csproj" />
     <ProjectReference Include="..\Stocqres.Core\Stocqres.Core.csproj" />
     <ProjectReference Include="..\Stocqres.Identity\Stocqres.Identity.csproj" />
     <ProjectReference Include="..\Stocqres.Infrastructure\Stocqres.Infrastructure.csproj" />

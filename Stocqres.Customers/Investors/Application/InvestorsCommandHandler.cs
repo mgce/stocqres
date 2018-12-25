@@ -4,10 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Events;
+using Stocqres.Customers.Api.Investors.Commands;
 using Stocqres.Customers.Investors.Domain;
-using Stocqres.Customers.Investors.Domain.Commands;
-using Stocqres.Customers.Investors.Domain.Events;
-using Stocqres.Customers.Investors.Presentation.Projections;
 using Stocqres.Infrastructure.EventRepository;
 using Stocqres.Infrastructure.Projections;
 

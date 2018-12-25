@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Dispatcher;
-using Stocqres.Customers.Companies.Domain.Commands;
-using Stocqres.Customers.Companies.Presentation.Projections;
+using Stocqres.Customers.Api.Companies.Commands;
+using Stocqres.Customers.Api.Companies.Presentation;
 using Stocqres.Infrastructure.Projections;
 
 namespace Stocqres.Api.Controllers

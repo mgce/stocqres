@@ -4,8 +4,9 @@ using System.Linq;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
+using Stocqres.Customers.Api.Wallet.Events;
 using Stocqres.Customers.Investors.Domain;
-using Stocqres.Customers.Wallet.Events;
+using Stocqres.SharedKernel.Enums;
 using Stocqres.SharedKernel.Events;
 using Stocqres.SharedKernel.Stocks;
 

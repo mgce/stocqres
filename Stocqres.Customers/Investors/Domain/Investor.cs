@@ -4,7 +4,7 @@ using System.Text;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
-using Stocqres.Customers.Investors.Domain.Events;
+using Stocqres.Customers.Api.Investors.Events;
 using Stocqres.SharedKernel.Stocks;
 
 namespace Stocqres.Customers.Investors.Domain

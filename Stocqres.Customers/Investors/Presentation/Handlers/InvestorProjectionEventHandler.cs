@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Core.Events;
-using Stocqres.Customers.Investors.Domain.Events;
-using Stocqres.Customers.Investors.Presentation.Projections;
-using Stocqres.Customers.Wallet.Events;
+using Stocqres.Customers.Api.Investors.Events;
+using Stocqres.Customers.Api.Investors.Presentation;
+using Stocqres.Customers.Api.Wallet.Events;
 using Stocqres.Infrastructure.Projections;
 
 namespace Stocqres.Customers.Investors.Presentation.Handlers

@@ -4,6 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
+using Stocqres.Customers.Api.Companies.Commands;
+using Stocqres.Customers.Api.Wallet.Events;
 using Stocqres.SharedKernel.Events;
 using Stocqres.Transactions.Infrastructure.ProcessManagers;
 using Stocqres.Transactions.Orders.Domain;

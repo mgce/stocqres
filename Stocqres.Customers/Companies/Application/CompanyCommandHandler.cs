@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Core.Commands;
+using Stocqres.Customers.Api.Companies.Commands;
 using Stocqres.Customers.Companies.Domain;
-using Stocqres.Customers.Companies.Domain.Commands;
 using Stocqres.Infrastructure.EventRepository;
-using Stocqres.SharedKernel.Commands;
 
 namespace Stocqres.Customers.Companies.Application
 {

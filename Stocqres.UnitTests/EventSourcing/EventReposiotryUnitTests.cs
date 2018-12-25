@@ -13,7 +13,6 @@ using Stocqres.Core.Events;
 using Stocqres.Core.EventSourcing;
 using Stocqres.Core.Exceptions;
 using Stocqres.Customers.Investors.Domain;
-using Stocqres.Customers.Investors.Domain.Events;
 using Stocqres.Infrastructure.DatabaseProvider;
 using Stocqres.Infrastructure.EventRepository;
 using Stocqres.Infrastructure.EventRepository.Scripts;

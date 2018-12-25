@@ -4,14 +4,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Exceptions;
+using Stocqres.Customers.Api.Wallet.Commands;
 using Stocqres.Customers.Companies.Domain;
 using Stocqres.Customers.Investors.Domain;
-using Stocqres.Customers.Investors.Presentation.Projections;
-using Stocqres.Customers.Wallet.Commands;
 using Stocqres.Infrastructure.EventRepository;
 using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
 using Stocqres.Infrastructure.Projections;
-using Stocqres.SharedKernel.Commands;
+using Stocqres.SharedKernel.Enums;
 using Stocqres.SharedKernel.Stocks;
 
 namespace Stocqres.Customers.Wallet.Application

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
-using Stocqres.Customers.Companies.Domain.Events;
+using Stocqres.Customers.Api.Companies.Commands;
+using Stocqres.Customers.Api.Companies.Events;
 using Stocqres.SharedKernel.Events;
 using Stocqres.SharedKernel.Stocks;
 

@@ -5,8 +5,8 @@ using System.Text;
 using AutoFixture;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Events;
+using Stocqres.Customers.Api.Investors.Events;
 using Stocqres.Customers.Investors.Domain;
-using Stocqres.Customers.Investors.Domain.Events;
 using Stocqres.Infrastructure.EventRepository;
 
 namespace Stocqres.UnitTests.EventSourcing

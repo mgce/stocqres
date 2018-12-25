@@ -1,43 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
 using NJsonSchema;
 using NSwag.AspNetCore;
 using Stocqres.Core;
 using Stocqres.Core.Authentication;
 using Stocqres.Core.Commands;
 using Stocqres.Core.Dispatcher;
-using Stocqres.Core.Events;
 using Stocqres.Core.Middlewares;
 using Stocqres.Core.Mongo;
 using Stocqres.Customers;
+using Stocqres.Customers.Api;
 using Stocqres.Identity;
-using Stocqres.Identity.Domain;
 using Stocqres.Identity.Infrastructure;
-using Stocqres.Identity.Repositories;
 using Stocqres.Infrastructure;
 using Stocqres.Infrastructure.Commands;
 using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
 using Stocqres.SharedKernel;
-using Stocqres.Transactions;
 using Stocqres.Transactions.Infrastructure.ProcessManagers;
-using Stocqres.Transactions.Orders.Domain;
 
 namespace Stocqres.Api
 {
@@ -133,6 +122,7 @@ namespace Stocqres.Api
             IdentityDependencyContainer.Load(builder);
             CustomerDependencyContainer.Load(builder);
             SharedKernelDependencyResolver.Load(builder);
+            CustomersApiContainer.Load(builder);
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypesSafely()).Where(a => a.Namespace != null && a.Namespace.Contains("Stocqres")).ToArray();
 

@@ -7,9 +7,8 @@ using System.Transactions;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Stocqres.Core.Dispatcher;
+using Stocqres.Customers.Api.Companies.Commands;
 using Stocqres.Customers.Companies.Domain;
-using Stocqres.Customers.Companies.Domain.Commands;
-using Stocqres.Customers.Investors.Domain.Commands;
 using Stocqres.Identity.Domain;
 using Stocqres.Identity.Domain.Commands;
 

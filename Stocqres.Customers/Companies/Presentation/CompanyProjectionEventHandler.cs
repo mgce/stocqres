@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Core.Events;
-using Stocqres.Customers.Companies.Domain.Events;
-using Stocqres.Customers.Companies.Presentation.Projections;
+using Stocqres.Customers.Api.Companies.Commands;
+using Stocqres.Customers.Api.Companies.Events;
+using Stocqres.Customers.Api.Companies.Presentation;
 using Stocqres.Infrastructure.Projections;
 using Stocqres.SharedKernel.Events;
 

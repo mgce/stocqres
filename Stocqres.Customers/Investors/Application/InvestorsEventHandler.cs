@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Stocqres.Core.Dispatcher;
 using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
+using Stocqres.Customers.Api.Investors.Commands;
+using Stocqres.Customers.Api.Wallet.Events;
 using Stocqres.Customers.Investors.Domain;
-using Stocqres.Customers.Investors.Domain.Commands;
-using Stocqres.Customers.Wallet.Events;
 using Stocqres.Infrastructure.EventRepository;
 using Stocqres.SharedKernel.Events;
 

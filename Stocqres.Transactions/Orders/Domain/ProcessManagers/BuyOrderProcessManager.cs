@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Stocqres.Core.Exceptions;
-using Stocqres.SharedKernel.Commands;
+using Stocqres.Customers.Api.Companies.Commands;
+using Stocqres.Customers.Api.Wallet.Commands;
+using Stocqres.Customers.Api.Wallet.Events;
 using Stocqres.SharedKernel.Events;
 using Stocqres.Transactions.Orders.Domain.Command;
 using Stocqres.Transactions.Orders.Domain.Enums;

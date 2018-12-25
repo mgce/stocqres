@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Stocqres.Core.Events;
-using Stocqres.Customers.Wallet.Events;
+using Stocqres.Customers.Api.Wallet.Events;
+using Stocqres.Customers.Api.Wallet.Presentation;
 using Stocqres.Infrastructure.Projections;
 using Stocqres.SharedKernel.Events;
 

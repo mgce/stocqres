@@ -4,8 +4,8 @@ using System.Text;
 using AutoFixture;
 using Stocqres.Core.Domain;
 using Stocqres.Core.Exceptions;
+using Stocqres.Customers.Api.Investors.Events;
 using Stocqres.Customers.Investors.Domain;
-using Stocqres.Customers.Investors.Domain.Events;
 using Xunit;
 
 namespace Stocqres.UnitTests.Aggregates
