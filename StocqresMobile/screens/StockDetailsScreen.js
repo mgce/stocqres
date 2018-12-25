@@ -41,7 +41,7 @@ class StockDetailsScreen extends Component {
   }
   render() {
     return (
-      this.props.loading ? 
+      this.props.loading || this.props.stockDetails === undefined ? 
       <Spinner /> :
       <Container>
         <Content style={styles.content}>

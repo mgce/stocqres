@@ -9,7 +9,7 @@ export const types = {
   STOCK_LIST_RECEIVED: "stocqres/stocks/STOCK_LIST_RECEIVED",
   BUY_STOCKS: "stocqres/stocks/BUY_STOCKS",
   BUY_STOCKS_SUCCESS: "stocqres/stocks/BUY_STOCKS_SUCCESS",
-  BUY_STOCKS_FAIL: "stocqres/stocks/BUY_STOCKS_FAIL",
+  BUY_STOCKS_FAIL: "stocqres/stocks/BUY_STOCKS_FAIL"
 };
 
 const initialState = {
@@ -17,7 +17,8 @@ const initialState = {
   stockList: [],
   stockDetails: {
     stockQuantity: null
-  }
+  },
+  myStocks: []
 };
 
 const persistConfig = {
@@ -46,7 +47,20 @@ function stocksReducer(state = { initialState }, action) {
         success: false,
         stockList: action.stockList
       };
-    default:
+    //
+    case types.GET_MY_STOCKS:
+      return { ...state, loading: true };
+    case types.GET_MY_STOCKS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+        myStocks: action.myStocks
+      };
+    case types.GET_MY_STOCKS_FAIL:
+      return { ...state, loading: false, success: false };
+    
+      default:
       return state;
   }
 }
@@ -67,6 +81,7 @@ export function getStockDetails(code){
   function success(stockDetails) { return { type: types.GET_STOCKS_DETAILS_SUCCESS, stockDetails } }
   function failure(error) { return { type: types.GET_STOCKS_DETAILS_FAIL, error } }
 }
+
 
 export function buyStocks(data){
   return{

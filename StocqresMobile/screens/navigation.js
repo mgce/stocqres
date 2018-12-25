@@ -25,41 +25,13 @@ export const goToAuth = () =>
     }
   });
 
-// export const goToHome = () =>
-//   Navigation.setRoot({
-//     root: {
-//       stack: {
-//         id: "Main",
-//         options: {
-//           topBar: {
-//             visible: true,
-//             title: {
-//               text: "Stock Exchange",
-//               alignment: "center",
-//               color: colors.lightPrimary
-//             },
-//             background: {
-//               color: colors.darkPrimary
-//             }
-//           }
-//         },
-//         children: [
-//           {
-//             component: {
-//               name: "Main"
-//             }
-//           }
-//         ]
-//       }
-//     }
-//   });
 export const goToHome = () => {
   Navigation.setRoot({
     root:{
       bottomTabs:{
         children: [
           {
-            component: {
+            stack: {
               name: "Main",
               options:{
                 topBar:{
@@ -77,7 +49,14 @@ export const goToHome = () => {
                   icon: getIcon('ios-swap'),
                   text: "Stock Exchange"
                 }
-              }
+              },
+              children:[
+                {
+                  component: {
+                    name: "Main"
+                  }
+                }
+              ]
             }
           },
           {
@@ -87,7 +66,7 @@ export const goToHome = () => {
                 topBar:{
                   visible: true,
                   title:{
-                    text: "Stock Exchange",
+                    text: "My Stocks",
                     alignment: "center",
                     color: colors.lightPrimary
                   },
@@ -107,6 +86,24 @@ export const goToHome = () => {
     }
   })
 }
+
+const mainScreen = () => (
+  {
+    options: {
+      topBar: {
+        visible: false
+      }
+    },
+    children: [
+      {
+        component: {
+          name: "Main"
+        }
+      }
+    ]
+  }
+)
+
 export const goToStockDetails = (componentId, companyName, stockCode) =>
   Navigation.push(componentId, {
     component: {

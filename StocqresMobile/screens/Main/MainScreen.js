@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { FlatList } from "react-native";
-import { Container, Content } from "native-base";
+import { Container, Content, Text } from "native-base";
 import { connect } from "react-redux";
 import { assignStockList } from "../../ducks/stocks";
 import { default as StockListItem } from "./StockListItem";
