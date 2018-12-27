@@ -37,15 +37,16 @@ namespace Stocqres.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Post(CreateWalletCommand command)
         {
+            command.InvestorId = InvestorId;
             await _dispatcher.SendAsync(command);
 
             return Ok();
         }
 
-        [HttpGet("/{id}/wallet")]
-        public async Task<IEnumerable<WalletProjection>> Get(Guid id)
+        [HttpGet("wallet")]
+        public async Task<IEnumerable<WalletProjection>> Get()
         {
-            return await _projectionReader.FindAsync<WalletProjection>(w => w.InvestorId == id);
+            return await _projectionReader.FindAsync<WalletProjection>(w => w.InvestorId == InvestorId);
         }
     }
 }

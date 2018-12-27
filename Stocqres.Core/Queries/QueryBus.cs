@@ -15,7 +15,14 @@ namespace Stocqres.Core.Queries
             _context = context;
         }
 
-        public async Task<TResult> Send<TQuery, TResult>(TQuery query) where TQuery : IQuery<TResult> 
-            => await _context.Resolve<IQueryHandler<TQuery, TResult>>().HandleAsync(query);
+        public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query) where TQuery : IQuery<TResult>
+        {
+            var handlerType = typeof(IQueryHandler<,>)
+                .MakeGenericType(query.GetType(), typeof(TResult));
+
+            dynamic handler = _context.Resolve(handlerType);
+
+            return await handler.HandleAsync((dynamic)query);
+        }
     }
 }

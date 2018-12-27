@@ -12,10 +12,10 @@ namespace Stocqres.Infrastructure.EventRepository.Scripts
             $"Select * From [Customers].{aggregateName}Events Where AggregateId='{aggregateId}'";
 
         public static string GetFromVersion(string aggregateName, Guid aggregateId, int fromVersion = 0) =>
-            $"Select * From [Customers].{aggregateName}Events Where AggregateId='{aggregateId}' && Version > {fromVersion}";
+            $"Select * From [Customers].{aggregateName}Events Where AggregateId='{aggregateId}' AND Version > {fromVersion}";
 
         public static string GetEventsAfterSnapshot(Snapshot snapshot) =>
-            $"Select * From [Customers].{snapshot.AggregateType}Events Where AggregateId='{snapshot.AggregateId}' && Version > {snapshot.SnapshottedVersion}";
+            $"Select * From [Customers].{snapshot.AggregateType}Events Where AggregateId='{snapshot.AggregateId}' AND Version > {snapshot.SnapshottedVersion}";
 
         public static string FindAggregateVersion(string aggregateName, Guid aggregateId) => 
             $"Select MAX(Version) FROM [Customers].{aggregateName}Events WHERE AggregateId='{aggregateId}'";
@@ -47,6 +47,6 @@ namespace Stocqres.Infrastructure.EventRepository.Scripts
             $"end";
 
         public static string GetAggregateSnapshot(Guid aggregateId) =>
-            $"SELECT TOP 1 * FROM [Aggregates].[Snapshots] WHERE AggregateId = {aggregateId} ORDER BY SnapshottedVersion DESC";
+            $"SELECT TOP 1 * FROM [Aggregates].[Snapshots] WHERE AggregateId = '{aggregateId}' ORDER BY SnapshottedVersion DESC";
     }
 }

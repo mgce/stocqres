@@ -39,7 +39,7 @@ namespace Stocqres.Identity.Application.Services
                 throw new StocqresException("UserCodes does not exist.");
 
             var investor =
-                await _queryBus.Send<GetInvestorByUserIdQuery, GetInvestorByUserIdResult>(
+                await _queryBus.QueryAsync<GetInvestorByUserIdQuery, GetInvestorByUserIdResult>(
                     new GetInvestorByUserIdQuery(user.Id));
 
             var claimsDictionary = new Dictionary<string, string>();

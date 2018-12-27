@@ -21,8 +21,8 @@ export class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "TestInvestor2",
-      password: "Test4121"
+      username: "Tester",
+      password: "test123"
     };
     this.pushRegisterScreen = this.pushRegisterScreen.bind(this);
   }

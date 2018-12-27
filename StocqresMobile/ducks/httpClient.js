@@ -27,8 +27,8 @@ httpClient.interceptors.request.use(
 httpClient.interceptors.response.use(undefined, async error => {
   const originalRequest = error.config;
   const status = error.response.status;
-
-  if (status !== 401) return Promise.reject(err);
+  const hasTokenExpired = error.response.headers["token-expired"];
+  if (status !== 401 || hasTokenExpired === "true") return Promise.reject(error);
     var accessToken = await getAccessToken();
 
     if (accessToken === "") return Promise.reject(error);

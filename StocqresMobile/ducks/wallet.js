@@ -6,6 +6,9 @@ export const types = {
     GET_WALLET_DETAILS: "stocqres/wallet/GET_WALLET_DETAILS",
     GET_WALLET_DETAILS_SUCCESS: "stocqres/wallet/GET_WALLET_DETAILS_SUCCESS",
     GET_WALLET_DETAILS_FAIL: "stocqres/wallet/GET_WALLET_DETAILS_FAIL",
+    CREATE_WALLET: "stocqres/wallet/CREATE_WALLET",
+    CREATE_WALLET_SUCCESS: "stocqres/wallet/CREATE_WALLET_SUCCESS",
+    CREATE_WALLET_FAIL: "stocqres/wallet/CREATE_WALLET_FAIL",
   };
 
 const initialState = {
@@ -26,6 +29,17 @@ const initialState = {
       case types.GET_WALLET_DETAILS_FAIL:
         return { ...state, loading: false, success: false };
       
+      case types.CREATE_WALLET:
+        return { ...state, loading: true };
+      case types.CREATE_WALLET_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          success: true
+        };
+      case types.CREATE_WALLET_FAIL:
+        return { ...state, loading: false, success: false };
+      
         default:
         return state;
     }
@@ -35,17 +49,34 @@ const initialState = {
   
 
   
-export function getWalletDetails(id){
+export function getWalletDetails(){
     return (dispatch) => {
       dispatch(request());
-      httpClient.get(`investors/${id}/wallet`).then(res =>{
+      httpClient.get(`/investors/wallet`).then(res =>{
         dispatch(success(res.data))
       }, error => {
         dispatch(failure(error))
       })
     }
   
-    function request(){ return { type: types.GET_MY_STOCKS}}
-    function success(stockDetails) { return { type: types.GET_MY_STOCKS_SUCCESS, stockDetails } }
-    function failure(error) { return { type: types.GET_MY_STOCKS_FAIL, error } }
+    function request(){ return { type: types.GET_WALLET_DETAILS}}
+    function success(stockDetails) { return { type: types.GET_WALLET_DETAILS_SUCCESS, stockDetails } }
+    function failure(error) { return { type: types.GET_WALLET_DETAILS_FAIL, error } }
+  }
+
+  export function createWallet(amount){
+    return (dispatch) => {
+      const data = {amount:amount}
+      dispatch(request());
+      httpClient.post(`/investors/wallet`, data).then(res =>{
+        dispatch(success(res.data))
+        getWalletDetails(investorId);
+      }, error => {
+        dispatch(failure(error))
+      })
+    }
+  
+    function request(){ return { type: types.CREATE_WALLET}}
+    function success() { return { type: types.CREATE_WALLET_SUCCESS } }
+    function failure(error) { return { type: types.CREATE_WALLET_FAIL, error } }
   }

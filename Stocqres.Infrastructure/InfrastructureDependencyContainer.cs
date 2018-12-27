@@ -13,10 +13,10 @@ namespace Stocqres.Infrastructure
         {
             builder.RegisterType<ProjectionWriter>().As<IProjectionWriter>();
             builder.RegisterType<ProjectionReader>().As<IProjectionReader>();
-            builder.RegisterType<UnitOfWork.UnitOfWork>().As<IUnitOfWork>().SingleInstance();
-            builder.RegisterType<DatabaseProvider.DatabaseProvider>().As<IDatabaseProvider>().SingleInstance();
-            builder.RegisterType<EventStore.EventStore>().As<IEventStore>().SingleInstance();
-            builder.RegisterType<SnapshotService>().As<ISnapshotService>().SingleInstance();
+            builder.RegisterType<UnitOfWork.UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+            builder.RegisterType<DatabaseProvider.DatabaseProvider>().As<IDatabaseProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<EventStore.EventStore>().As<IEventStore>().InstancePerLifetimeScope();
+            builder.RegisterType<SnapshotService>().As<ISnapshotService>().InstancePerLifetimeScope();
         }
     }
 }

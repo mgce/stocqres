@@ -35,6 +35,9 @@ namespace Stocqres.Core.Middlewares
                     case StocqresException e:
                         errorCode = e.Code;
                         message = e.Message;
+                        statusCode = e.Status.HasValue
+                            ? (HttpStatusCode)e.Status.Value
+                            : HttpStatusCode.BadRequest;
                         break;
                 }
 

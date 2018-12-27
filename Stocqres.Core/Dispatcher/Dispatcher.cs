@@ -22,6 +22,6 @@ namespace Stocqres.Core.Dispatcher
             => await _commandBus.SendAsync(command);
 
         public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query) where TQuery : IQuery<TResult> 
-            => await _queryBus.Send<TQuery, TResult>(query);
+            => await _queryBus.QueryAsync<TQuery, TResult>(query);
     }
 }

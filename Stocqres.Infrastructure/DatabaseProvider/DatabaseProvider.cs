@@ -66,7 +66,7 @@ namespace Stocqres.Infrastructure.DatabaseProvider
         {
             try
             {
-                return await _connection.QueryFirstOrDefaultAsync<T>(sql, parameters);
+                return await _connection.QueryFirstOrDefaultAsync<T>(sql, parameters, _transaction);
             }
             catch (Exception e)
             {

@@ -5,6 +5,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Core;
 using Stocqres.Core.Events;
+using Stocqres.Core.Queries;
 
 namespace Stocqres.Core.Commands
 {
@@ -15,6 +16,8 @@ namespace Stocqres.Core.Commands
             builder
                 .RegisterTypes(assemblies)
                 .AsClosedTypesOf(typeof(IEventHandler<>));
+
+            builder.RegisterTypes(assemblies).AsClosedTypesOf(typeof(IQueryHandler<,>));
 
             //builder
             //    .RegisterTypes(assemblies)

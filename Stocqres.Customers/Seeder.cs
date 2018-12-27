@@ -38,11 +38,13 @@ namespace Stocqres.Customers
             if (UserExist())
                 return;
 
-            var createUserCommand = new CreateUserCommand
+            var createUserCommand = new CreateInvestorCommand
             {
                 Email = "test@test.pl",
                 Password = "test123",
-                Username = "Tester"
+                Username = "Tester",
+                FirstName = "Adam",
+                LastName = "Test"
             };
 
             _dispatcher.SendAsync(createUserCommand);
@@ -85,18 +87,20 @@ namespace Stocqres.Customers
 
         private bool UserExist()
         {
-            bool exist = false;
+            bool userExist = false;
+            bool investorExist = false;
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
-                    exist = conn.ExecuteScalar<bool>("SELECT count(1) FROM[Identity].[User]");
+                    userExist = conn.ExecuteScalar<bool>("SELECT count(1) FROM [Identity].[User]");
+                    investorExist = conn.ExecuteScalar<bool>("SELECT count(1) FROM [Customers].[CompanyEvents]");
                 }
                 scope.Complete();
             }
 
-            return exist;
+            return userExist && investorExist;
         }
 
         public int GetRandom => _random.Next(100, 2000);

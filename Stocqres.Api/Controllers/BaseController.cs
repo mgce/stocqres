@@ -17,8 +17,9 @@ namespace Stocqres.Api.Controllers
     public class BaseController : ControllerBase
     {
         protected Guid UserId
-            => string.IsNullOrWhiteSpace(User?.Identity?.Name) ?
-                Guid.Empty :
-                Guid.Parse(User.Identity.Name);
+            => string.IsNullOrWhiteSpace(User?.Identity?.Name) ? Guid.Empty : Guid.Parse(User.Identity.Name);
+
+        protected Guid InvestorId =>
+            new Guid(User.Claims.FirstOrDefault(c => c.Type == "investorId")?.Value.ToUpperInvariant());
     }
 }

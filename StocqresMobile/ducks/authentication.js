@@ -35,8 +35,10 @@ export default function authenticationReducer(
         ...state,
         loading: false,
         success: true,
-        accessToken: action.data.accessToken,
-        refreshToken: action.data.refreshToken,
+        accessToken: action.data.tokens.accessToken,
+        refreshToken: action.data.tokens.refreshToken,
+        investorId: action.data.investorId,
+        walletId: action.data.walletId
       };
     case types.LOGIN_FAIL:
       return { ...state, loading: false, success: false };
@@ -72,9 +74,15 @@ export function login(command) {
     httpClient.post("/tokens/create", command).then(
       res => {
         var decodedToken = jwt_decode(res.data.accessToken)
+        const {investorId, walletId} = decodedToken;
         AsyncStorage.setItem(constants.ACCESS_TOKEN, res.data.accessToken);
         AsyncStorage.setItem(constants.REFRESH_TOKEN, res.data.refreshToken);
-        dispatch(success(res.data));
+        var sandbox = {
+          tokens: res.data,
+          investorId,
+          walletId
+        }
+        dispatch(success(sandbox));
         goToHome();
       },
       error => {

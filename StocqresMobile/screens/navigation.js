@@ -60,13 +60,13 @@ export const goToHome = () => {
             }
           },
           {
-            component:{
+            stack: {
               name: "MyStocks",
               options:{
                 topBar:{
                   visible: true,
                   title:{
-                    text: "My Stocks",
+                    text: "Wallet",
                     alignment: "center",
                     color: colors.lightPrimary
                   },
@@ -76,9 +76,16 @@ export const goToHome = () => {
                 },
                 bottomTab:{
                   icon: getIcon('ios-trending-up'),
-                  text: "My Stocks"
+                  text: "Wallet"
                 }
-              }
+              },
+              children:[
+                {
+                  component: {
+                    name: "MyStocks"
+                  }
+                }
+              ]
             }
           }
         ]
