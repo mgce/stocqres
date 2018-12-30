@@ -9,7 +9,10 @@ export const types = {
   STOCK_LIST_RECEIVED: "stocqres/stocks/STOCK_LIST_RECEIVED",
   BUY_STOCKS: "stocqres/stocks/BUY_STOCKS",
   BUY_STOCKS_SUCCESS: "stocqres/stocks/BUY_STOCKS_SUCCESS",
-  BUY_STOCKS_FAIL: "stocqres/stocks/BUY_STOCKS_FAIL"
+  BUY_STOCKS_FAIL: "stocqres/stocks/BUY_STOCKS_FAIL",
+  SELL_STOCKS: "stocqres/stocks/SELL_STOCKS",
+  SELL_STOCKS_SUCCESS: "stocqres/stocks/SELL_STOCKS_SUCCESS",
+  SELL_STOCKS_FAIL: "stocqres/stocks/SELL_STOCKS_FAIL"
 };
 
 const initialState = {
@@ -40,6 +43,29 @@ function stocksReducer(state = { initialState }, action) {
       };
     case types.GET_STOCKS_DETAILS_FAIL:
       return { ...state, loading: false, success: false };
+
+    case types.BUY_STOCKS:
+      return { ...state, loading: true };
+    case types.BUY_STOCKS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+      };
+    case types.BUY_STOCKS_FAIL:
+      return { ...state, loading: false, success: false };
+
+    case types.SELL_STOCKS:
+      return { ...state, loading: true };
+    case types.SELL_STOCKS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+      };
+    case types.SELL_STOCKS_FAIL:
+      return { ...state, loading: false, success: false };
+
     case types.STOCK_LIST_RECEIVED:
       return {
         ...state,
@@ -59,8 +85,7 @@ function stocksReducer(state = { initialState }, action) {
       };
     case types.GET_MY_STOCKS_FAIL:
       return { ...state, loading: false, success: false };
-    
-      default:
+    default:
       return state;
   }
 }
@@ -84,21 +109,35 @@ export function getStockDetails(code){
 
 
 export function buyStocks(data){
-  return{
-    type:types.BUY_STOCKS,
-    payload:{
-      request:{
-        url:'/orders/buy',
-        method: 'POST',
-        data:{
-          WalletId: "",
-          CompanyId: data.companyId,
-          Quantity: data.quantity
-        }
-      }
-    }
+  return (dispatch) => {
+    dispatch(request());
+    httpClient.post('/orders/buy' + data).then(res =>{
+      dispatch(success(res.data))
+    }, error => {
+      dispatch(failure(error))
+    })
   }
-}
+
+  function request(){ return { type: types.BUY_STOCKS}}
+  function success() { return { type: types.BUY_STOCKS_SUCCESS } }
+  function failure(error) { return { type: types.BUY_STOCKS_FAIL, error } }
+} 
+
+export function sellStocks(data){
+  return (dispatch) => {
+    dispatch(request());
+    httpClient.post('/orders/sell' + data).then(res =>{
+      dispatch(success(res.data))
+    }, error => {
+      dispatch(failure(error))
+    })
+  }
+
+  function request(){ return { type: types.SELL_STOCKS}}
+  function success() { return { type: types.SELL_STOCKS_SUCCESS } }
+  function failure(error) { return { type: types.SELL_STOCKS_FAIL, error } }
+} 
+
 
 export function assignStockList(stockList) {
   var parsedList = JSON.parse(stockList);

@@ -103,8 +103,8 @@ namespace Stocqres.Api
             {
                 settings.GeneratorSettings.DefaultPropertyNameHandling = PropertyNameHandling.CamelCase;
             });
-            app.UseAuthentication();
             app.UseErrorHandler();
+            app.UseAuthentication();
             app.UseMvc();
 
             var dispatcher = ApplicationContainer.Resolve<IDispatcher>();

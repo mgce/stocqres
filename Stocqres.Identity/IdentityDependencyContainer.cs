@@ -17,6 +17,7 @@ namespace Stocqres.Identity
         {
             builder.RegisterType<TokenService>().As<ITokenService>();
             builder.RegisterType<RefreshTokenService>().As<IRefreshTokenService>();
+            builder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
             builder.RegisterType<PasswordHasher<User>>().As<IPasswordHasher<User>>();
         }
     }

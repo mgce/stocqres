@@ -4,6 +4,7 @@ import { Container, Content, Text } from "native-base";
 import { connect } from "react-redux";
 import { assignStockList } from "../../ducks/stocks";
 import { default as StockListItem } from "./StockListItem";
+import { getInvestorDetails } from "../../ducks/investor";
 
 export class MainScreen extends Component {
   constructor(props) {
@@ -13,7 +14,8 @@ export class MainScreen extends Component {
     };
   }
   componentDidMount() {
-    //this.configureWebSockets();
+    this.props.getInvestorDetails();
+    this.configureWebSockets();
   }
   configureWebSockets() {
     const ws = new WebSocket(
@@ -54,7 +56,8 @@ export class MainScreen extends Component {
 }
 
 const mapDispatchToProps = {
-  assignStockList
+  assignStockList,
+  getInvestorDetails
 };
 
 const mapStateToProps = state => ({

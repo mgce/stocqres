@@ -14,17 +14,20 @@ namespace Stocqres.Identity.Application.Services
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IPasswordHasher<Domain.User> _passwordHasher;
         private readonly IJwtHandler _jwtHandler;
+        private readonly ITokenService _tokenService;
 
-        public RefreshTokenService(IUserRepository userRepository, 
-            IRefreshTokenRepository refreshTokenRepository, 
-            IPasswordHasher<User> passwordHasher, IJwtHandler jwtHandler)
+        public RefreshTokenService(IUserRepository userRepository,
+            IRefreshTokenRepository refreshTokenRepository,
+            IPasswordHasher<User> passwordHasher, IJwtHandler jwtHandler, ITokenService tokenService)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
             _passwordHasher = passwordHasher;
             _jwtHandler = jwtHandler;
+            _tokenService = tokenService;
         }
-        public async Task CreateAsync(Guid userId)
+
+        public async Task<RefreshToken> CreateAsync(Guid userId)
         {
             var user = await _userRepository.GetUserAsync(userId);
             if (user == null)
@@ -32,12 +35,17 @@ namespace Stocqres.Identity.Application.Services
                 throw new StocqresException("UserCodes does not exist.");
             }
 
-            await _refreshTokenRepository.CreateAsync(new RefreshToken(user, _passwordHasher));
+            var refreshToken = new RefreshToken(user, _passwordHasher);
+
+            await _refreshTokenRepository.CreateAsync(refreshToken);
+            await _refreshTokenRepository.SaveAsync();
+
+            return refreshToken;
         }
 
         public async Task<JsonWebToken> CreateAccessTokenAsync(string token)
         {
-            var refreshToken = await _refreshTokenRepository.FindAsync(x=>x.Token == token);
+            var refreshToken = await _refreshTokenRepository.FindAsync(x => x.Token == token);
             if (refreshToken == null)
             {
                 throw new StocqresException("Refresh token was not found");
@@ -48,25 +56,21 @@ namespace Stocqres.Identity.Application.Services
                 throw new StocqresException($"Refresh token: {refreshToken.Id} was revoked.");
             }
 
-            var user = await _userRepository.FindAsync(x => x.Id == refreshToken.UserId);
-            if (user == null)
-            {
-                throw new StocqresException("UserCodes does not exist.");
-            }
-
-            var jwt = _jwtHandler.CreateToken(user.Id.ToString());
+            var jwt = await _tokenService.CreateTokenForUser(refreshToken.UserId);
 
             jwt.RefreshToken = refreshToken.Token;
 
             return jwt;
         }
+
         public async Task RevokeAsync(string token, Guid userId)
         {
-            var refreshToken = await _refreshTokenRepository.FindAsync(x=>x.Token == token);
+            var refreshToken = await _refreshTokenRepository.FindAsync(x => x.Token == token);
             if (refreshToken == null || refreshToken.UserId != userId)
             {
                 throw new StocqresException("Refresh token was not found.");
             }
+
             refreshToken.Revoke();
             _refreshTokenRepository.Update(refreshToken);
         }

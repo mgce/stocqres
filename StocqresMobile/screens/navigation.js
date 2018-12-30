@@ -61,7 +61,7 @@ export const goToHome = () => {
           },
           {
             stack: {
-              name: "MyStocks",
+              name: "Wallet",
               options:{
                 topBar:{
                   visible: true,
@@ -82,7 +82,7 @@ export const goToHome = () => {
               children:[
                 {
                   component: {
-                    name: "MyStocks"
+                    name: "Wallet"
                   }
                 }
               ]

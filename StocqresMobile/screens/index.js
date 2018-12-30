@@ -32,8 +32,8 @@ export function registerScreens(store, Provider) {
     store
   );
   Navigation.registerComponentWithRedux(
-    "MyStocks",
-    () => require("./MyStocksScreen").default,
+    "Wallet",
+    () => require("./Wallet/WalletScreen").default,
     Provider,
     store
   );

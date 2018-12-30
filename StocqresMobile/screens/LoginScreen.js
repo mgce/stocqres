@@ -16,6 +16,7 @@ import { Navigation } from "react-native-navigation";
 import { login } from "../ducks/authentication";
 import { goToHome } from "./navigation";
 import PropTypes from "prop-types";
+import { AsyncStorage } from "react-native";
 
 export class LoginScreen extends Component {
   constructor(props) {
@@ -25,6 +26,9 @@ export class LoginScreen extends Component {
       password: "test123"
     };
     this.pushRegisterScreen = this.pushRegisterScreen.bind(this);
+  }
+  async componentDidMount(){
+    await AsyncStorage.clear();
   }
   loginTo() {
     const command = this.state;

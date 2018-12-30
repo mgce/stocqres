@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AsyncStorage } from "react-native";
 import constants from "../common/constants";
+import { goToAuth } from "../screens/navigation";
 
 const httpClient = axios.create({
   baseURL: "http://10.0.2.2:5000/api",
@@ -27,14 +28,12 @@ httpClient.interceptors.request.use(
 httpClient.interceptors.response.use(undefined, async error => {
   const originalRequest = error.config;
   const status = error.response.status;
-  const hasTokenExpired = error.response.headers["token-expired"];
-  if (status !== 401 || hasTokenExpired === "true") return Promise.reject(error);
-    var accessToken = await getAccessToken();
+  if (status !== 401) return Promise.reject(error);
+  var accessToken = await getAccessToken();
 
-    if (accessToken === "") return Promise.reject(error);
-    originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
-    return axios.request(originalRequest);
-  
+  if (accessToken === "") return Promise.reject(error);
+  originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
+  return axios.request(originalRequest);
 });
 
 async function getAccessToken() {
@@ -42,12 +41,16 @@ async function getAccessToken() {
   var accessToken = "";
 
   axios
-    .get(constants.BASE_ADDRESS + `"refresh-tokens/${refreshToken}/refresh`)
+    .get(
+      constants.BASE_ADDRESS + `/tokens/refresh-tokens/${refreshToken}/refresh`
+    )
     .then(res => {
-      accessToken = res.data;
-      AsyncStorage.setItem(constants.ACCESS_TOKEN, res.data);
+      AsyncStorage.setItem(constants.ACCESS_TOKEN, res.data.accessToken);
     })
-    .catch(error => console.log(error));
+    .catch(error =>{ 
+      AsyncStorage.clear();
+      goToAuth()
+      });
 
   return accessToken;
 }

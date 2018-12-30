@@ -8,9 +8,9 @@ import constants from "../common/constants";
 
 class Initialize extends React.PureComponent {
   async componentDidMount() {
-    goToAuth();
+    //goToAuth();
     //sprawdzic czy token istnieje w asyncstorage
-    // await this.checkCredentials();
+    await this.checkCredentials();
   }
   async checkCredentials(){
     const accessToken = await AsyncStorage.getItem(constants.ACCESS_TOKEN);

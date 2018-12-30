@@ -19,9 +19,9 @@ namespace Stocqres.Api.Controllers
         }
 
         [HttpPost("buy")]
-        [AllowAnonymous]
         public async Task<IActionResult> Post(CreateBuyOrderCommand command)
         {
+            command.WalletId = WalletId;
             await _dispatcher.SendAsync(command);
 
             return Ok();
@@ -29,9 +29,9 @@ namespace Stocqres.Api.Controllers
 
 
         [HttpPost("sell")]
-        [AllowAnonymous]
         public async Task<IActionResult> Post(CreateSellOrderCommand command)
         {
+            command.WalletId = WalletId;
             await _dispatcher.SendAsync(command);
 
             return Ok();

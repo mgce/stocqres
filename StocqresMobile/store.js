@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from "redux";
 import authenticationReducer from "./ducks/authentication";
 import stocksReducer from "./ducks/stocks";
 import walletReducer from "./ducks/wallet";
+import investorReducer from "./ducks/investor";
 import axiosMiddleware from "redux-axios-middleware";
 import axios from "axios";
 import { persistCombineReducers } from "redux-persist";
@@ -25,7 +26,8 @@ const persistConfig = {
 const persistedReducer = persistCombineReducers(persistConfig, {
   authentication: authenticationReducer,
   stocks: stocksReducer,
-  wallet: walletReducer
+  wallet: walletReducer,
+  investor:investorReducer
 });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

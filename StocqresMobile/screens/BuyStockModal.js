@@ -5,8 +5,8 @@ import { Item, Label, Input, Button, Text, View } from "native-base";
 import { padding, colors, fonts } from "../styles/common";
 import _ from "lodash";
 
-const height = Dimensions.get('window').height;
-const width = Dimensions.get('window').width;
+const height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
 
 export default (BuyStockModal = props => (
   <Modal
@@ -20,12 +20,14 @@ export default (BuyStockModal = props => (
           <Text>How many unit of stocks would you like to buy?</Text>
           <Item floatingLabel>
             <Label>Quantity</Label>
-            <Input />
+            <Input
+              onChangeText={quantity => props.onQuantityChange(quantity)}
+            />
           </Item>
           <Button
             success
             style={styles.button}
-            onPress={() => props.toggleModal(false)}
+            onPress={() => props.submitAction()}
           >
             <Text>Buy</Text>
           </Button>
@@ -56,10 +58,10 @@ const styles = StyleSheet.create({
     width: width * 0.75,
     height: height / 3
   },
-  form:{
+  form: {
     paddingHorizontal: padding.md,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   button: {
     marginTop: padding.md,

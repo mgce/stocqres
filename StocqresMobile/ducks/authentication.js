@@ -24,7 +24,7 @@ const initialState = {
 };
 
 export default function authenticationReducer(
-  state = { initialState },
+  state = initialState,
   action
 ) {
   switch (action.type) {

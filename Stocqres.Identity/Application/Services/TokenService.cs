@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Stocqres.Core.Authentication;
@@ -13,55 +14,33 @@ namespace Stocqres.Identity.Application.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IJwtHandler _jwtHandler;
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IQueryBus _queryBus;
 
-        public TokenService(IUserRepository userRepository, 
-            IPasswordHasher<User> passwordHasher, 
-            IJwtHandler jwtHandler, 
-            IRefreshTokenRepository refreshTokenRepository,
+        public TokenService(IJwtHandler jwtHandler,
             IQueryBus queryBus)
         {
-            _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
             _jwtHandler = jwtHandler;
-            _refreshTokenRepository = refreshTokenRepository;
             _queryBus = queryBus;
         }
 
-        public async Task<JsonWebToken> SignInAsync(string username, string password)
+        public async Task<JsonWebToken> CreateTokenForUser(Guid userId)
         {
-            var user = await _userRepository.FindAsync(x => x.Username == username);
-            if(user == null)
-                throw new StocqresException("UserCodes does not exist.");
-
             var investor =
-                await _queryBus.QueryAsync<GetInvestorByUserIdQuery, GetInvestorByUserIdResult>(
-                    new GetInvestorByUserIdQuery(user.Id));
+                _queryBus.QueryAsync<GetInvestorByUserIdQuery, GetInvestorByUserIdResult>(
+                    new GetInvestorByUserIdQuery(userId));
 
             var claimsDictionary = new Dictionary<string, string>();
 
-            if (investor != null)
+            var investorResult = await investor;
+
+            if (investorResult != null)
             {
-                claimsDictionary.Add("investorId", investor.InvestorId.ToString());
-                claimsDictionary.Add("walletId", investor.WalletId.ToString());
+                claimsDictionary.Add("investorId", investorResult.InvestorId.ToString());
+                claimsDictionary.Add("walletId", investorResult.WalletId.ToString());
             }
 
-            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, password);
-            if (result == PasswordVerificationResult.Failed)
-                throw new StocqresException("Username or password is incorrect.");
-
-            var jwt = _jwtHandler.CreateToken(user.Id.ToString(), claimsDictionary);
-
-            var refreshToken = new RefreshToken(user, _passwordHasher);
-            await _refreshTokenRepository.CreateAsync(refreshToken);
-            jwt.RefreshToken = refreshToken.Token;
-
-            return jwt;
-
+            return _jwtHandler.CreateToken(userId.ToString(), claimsDictionary);
         }
     }
 }

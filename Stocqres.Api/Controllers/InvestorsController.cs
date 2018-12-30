@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stocqres.Core.Dispatcher;
+using Stocqres.Customers.Api.Investors.Presentation;
 using Stocqres.Customers.Api.Wallet.Commands;
 using Stocqres.Customers.Api.Wallet.Presentation;
 using Stocqres.Customers.Wallet.Presentation;
@@ -33,8 +34,13 @@ namespace Stocqres.Api.Controllers
             return Ok();
         }
 
+        [HttpGet("")]
+        public async Task<InvestorProjection> GetInvestor()
+        {
+            return await _projectionReader.GetAsync<InvestorProjection>(w => w.Id == InvestorId);
+        }
+
         [HttpPost("wallet")]
-        [AllowAnonymous]
         public async Task<IActionResult> Post(CreateWalletCommand command)
         {
             command.InvestorId = InvestorId;
@@ -44,9 +50,9 @@ namespace Stocqres.Api.Controllers
         }
 
         [HttpGet("wallet")]
-        public async Task<IEnumerable<WalletProjection>> Get()
+        public async Task<WalletProjection> GetWallet()
         {
-            return await _projectionReader.FindAsync<WalletProjection>(w => w.InvestorId == InvestorId);
+            return await _projectionReader.GetAsync<WalletProjection>(w => w.InvestorId == InvestorId);
         }
     }
 }

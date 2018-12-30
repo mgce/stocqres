@@ -11,7 +11,7 @@ import {
 import { connect } from "react-redux";
 import { padding, colors, fonts } from "../styles/common";
 import _ from "lodash";
-import { getStockDetails } from "../ducks/stocks";
+import { getStockDetails, buyStocks } from "../ducks/stocks";
 import BuyStockModal from './BuyStockModal';
 
 const DetailsItem = props => (
@@ -26,8 +26,11 @@ class StockDetailsScreen extends Component {
     super(props);
     this.state = {
       stock: {},
+      quantity:0,
       addModalVisible: false
     };
+    this.buyAction = this.buyAction.bind(this);
+    this.setQuantity = this.setQuantity.bind(this);
   }
   async componentDidMount() {
     await this.props.getStockDetails(this.props.stockCode);
@@ -37,7 +40,15 @@ class StockDetailsScreen extends Component {
     await this.setState({ stock: stock });
   }
   toggleAddModal(visible) {
-    this.setState({ addModalVisible: visible });
+    setTimeout(()=>this.setState({ addModalVisible: visible }), 600);
+  }
+  buyAction(){
+    this.toggleAddModal(false);
+    this.props.buyStocks(this.state.quantity);
+    this.setState({ quantity: 0 })
+  }
+  setQuantity(quantity){
+    this.setState({quantity: quantity})
   }
   render() {
     return (
@@ -47,7 +58,9 @@ class StockDetailsScreen extends Component {
         <Content style={styles.content}>
         <BuyStockModal 
         isVisible={this.state.addModalVisible}
-        toggleModal={() => this.toggleAddModal(false)}/>
+        onQuantityChange={this.setQuantity}
+        submitAction={this.buyAction}
+        toggleModal={this.toggleAddModal}/>
           <DetailsItem
             header={"Company Name"}
             details={this.state.stock.Name}
@@ -74,9 +87,6 @@ class StockDetailsScreen extends Component {
           >
             <Text style={styles.buttonText}>Buy</Text>
           </Button>
-          <Button danger style={styles.button}>
-            <Text style={styles.buttonText}>Sell</Text>
-          </Button>
         </View>
       </Container>
     );
@@ -101,7 +111,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 0,
-    width: "50%",
+    width: "100%",
     justifyContent: "center"
   },
   buttonText: {
@@ -110,7 +120,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapDispatchToProps = { getStockDetails };
+const mapDispatchToProps = { getStockDetails, buyStocks };
 
 const mapStateToProps = state => ({
   loading: state.stocks.loading,

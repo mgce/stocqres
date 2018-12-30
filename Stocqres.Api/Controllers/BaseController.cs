@@ -21,5 +21,8 @@ namespace Stocqres.Api.Controllers
 
         protected Guid InvestorId =>
             new Guid(User.Claims.FirstOrDefault(c => c.Type == "investorId")?.Value.ToUpperInvariant());
+
+        protected Guid WalletId =>
+            new Guid(User.Claims.FirstOrDefault(c => c.Type == "walletId")?.Value.ToUpperInvariant());
     }
 }

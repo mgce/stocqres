@@ -12,10 +12,10 @@ export const types = {
   };
 
 const initialState = {
-    myStocks: []
+    wallet: {}
   };
 
-  function walletReducer(state = { initialState }, action) {
+  function walletReducer(state = initialState, action) {
     switch (action.type) {
       case types.GET_WALLET_DETAILS:
         return { ...state, loading: true };
@@ -24,7 +24,7 @@ const initialState = {
           ...state,
           loading: false,
           success: true,
-          myStocks: action.myStocks
+          wallet: action.wallet
         };
       case types.GET_WALLET_DETAILS_FAIL:
         return { ...state, loading: false, success: false };
@@ -50,7 +50,7 @@ const initialState = {
 
   
 export function getWalletDetails(){
-    return (dispatch) => {
+    return (dispatch, getState) => {
       dispatch(request());
       httpClient.get(`/investors/wallet`).then(res =>{
         dispatch(success(res.data))
@@ -60,7 +60,7 @@ export function getWalletDetails(){
     }
   
     function request(){ return { type: types.GET_WALLET_DETAILS}}
-    function success(stockDetails) { return { type: types.GET_WALLET_DETAILS_SUCCESS, stockDetails } }
+    function success(wallet) { return { type: types.GET_WALLET_DETAILS_SUCCESS, wallet } }
     function failure(error) { return { type: types.GET_WALLET_DETAILS_FAIL, error } }
   }
 
