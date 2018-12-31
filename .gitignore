@@ -265,3 +265,4 @@ src/Stocqres.Api/appsettings.json
 appsettings.json
 appsettings.production.json
 appsettings.development.json
+./Stocqres.Api/appsettings.json
