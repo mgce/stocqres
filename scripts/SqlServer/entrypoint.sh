@@ -1,8 +1,8 @@
 #!/bin/sh
-#start SQL Server, start the script to create the DB and initial data
+#start SQL Server, start the script to create the DB and initial datas
 echo 'starting database setup'
 database=Stocqres
-wait_time=20
+wait_time=30
 password=Your_password123
 host=127.0.0.1
 echo 'Please wait while SQL Server 2017 warms up'

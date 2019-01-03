@@ -1,16 +1,6 @@
 version: '3.4'
 
 services:
-  stocqres.api:
-    image: ${DOCKER_REGISTRY}stocqresapi
-    network_mode: bridge
-    build:
-      context: .
-      dockerfile: Stocqres.Api/Dockerfile
-    links:
-      - mongoDb
-      - sqlServer
-
   sqlServer:
     image: microsoft/mssql-server-linux:latest
     network_mode: bridge
@@ -34,6 +24,17 @@ services:
       - mongodata:/data/db
     ports:
       - '27017:27017'
+
+  stocqres.api:
+    image: ${DOCKER_REGISTRY}stocqresapi
+    network_mode: bridge
+    build:
+      context: .
+      dockerfile: Stocqres.Api/Dockerfile
+    links:
+      - mongoDb
+      - sqlServer
+
 
 volumes:
   mongodata:
