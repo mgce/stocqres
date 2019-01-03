@@ -8,18 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Users\MateuszGajda\source\repos\Stocqres.Customers.Api\Stocqres.Customers.Api.csproj" />
-    <ProjectReference Include="..\Stocqres.Infrastructure\Stocqres.Infrastructure.csproj" />
-    <ProjectReference Include="..\Stocqres.SharedKernel\Stocqres.SharedKernel.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.EntityFrameworkCore">
-      <HintPath>..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.entityframeworkcore\2.1.1\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Identity.Core">
-      <HintPath>..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.identity.core\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Identity.Core.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Stocqres.Customers.Api\Stocqres.Customers.Api.csproj" />
+    <ProjectReference Include="..\Stocqres.Infrastructure\Stocqres.Infrastructure.csproj" />
+    <ProjectReference Include="..\Stocqres.SharedKernel\Stocqres.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>

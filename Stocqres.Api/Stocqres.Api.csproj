@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Stocqres.Customers.Api\Stocqres.Customers.Api.csproj" />
     <ProjectReference Include="..\Stocqres.Customers\Stocqres.Customers.csproj" />
     <ProjectReference Include="..\Stocqres.Identity\Stocqres.Identity.csproj" />
     <ProjectReference Include="..\Stocqres.SharedKernel\Stocqres.SharedKernel.csproj" />
