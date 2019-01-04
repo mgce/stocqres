@@ -12,7 +12,8 @@ export const types = {
   };
 
 const initialState = {
-    wallet: {}
+    amount: 0,
+    stockList: []
   };
 
   function walletReducer(state = initialState, action) {
@@ -24,7 +25,8 @@ const initialState = {
           ...state,
           loading: false,
           success: true,
-          wallet: action.wallet
+          amount: action.wallet.amount,
+          stockList: action.wallet.stockList
         };
       case types.GET_WALLET_DETAILS_FAIL:
         return { ...state, loading: false, success: false };

@@ -50,7 +50,7 @@ namespace Stocqres.Customers.Wallet.Domain
             if (quantity <= 0)
                 throw new StocqresException("Quantity must be greater than zero");
 
-            Publish(new StockToWalletAddedEvent(Id, companyId, orderId, name, code, unit, quantity));
+            Publish(new StockToWalletAddedEvent(Id, orderId, companyId, name, code, unit, quantity));
         }
 
         public void RollbackCharge(Guid orderId, decimal amount)
@@ -87,6 +87,7 @@ namespace Stocqres.Customers.Wallet.Domain
 
         private void Apply(WalletCreatedEvent @event)
         {
+            Id = @event.AggregateId;
             InvestorId = @event.InvestorId;
             Currency = @event.Currency;
             Amount = @event.Amount;

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Stocqres.Core.Domain;
+using Stocqres.Core.Events;
 using Stocqres.Core.Exceptions;
 using Stocqres.Transactions.Orders.Domain.Enums;
 using Stocqres.Transactions.Orders.Domain.Events;
@@ -16,15 +18,19 @@ namespace Stocqres.Transactions.Orders.Domain.Order
         public OrderState State { get; set; }
         public OrderType Type { get; set; }
 
+        protected Order()
+        {}
+
+        protected Order(IEnumerable<IEvent> events) : base(events)
+        {
+        }
+
         public void CancelOrder(string cancelReason)
         {
             Publish(new BuyOrderCancelledEvent(Id, cancelReason));
         }
 
-        public void FinishOrder()
-        {
-            Publish(new BuyOrderFinishedEvent(Id));
-        }
+        public abstract void FinishOrder();
 
         private void Apply(BuyOrderCancelledEvent @event)
         {

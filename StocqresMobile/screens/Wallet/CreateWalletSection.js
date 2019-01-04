@@ -20,7 +20,7 @@ export default CreateWalletSection = props => (
         success
         style={styles.button}
         onPress={() => {
-          props.createWallet(this.state.amount);
+          props.createWallet();
         }}
       >
         <Text>Create</Text>

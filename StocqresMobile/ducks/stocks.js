@@ -30,7 +30,7 @@ const persistConfig = {
   blackList: ['stockDetails']
 }
 
-function stocksReducer(state = { initialState }, action) {
+function stocksReducer(state = initialState, action) {
   switch (action.type) {
     case types.GET_STOCKS_DETAILS:
       return { ...state, loading: true };
@@ -111,7 +111,7 @@ export function getStockDetails(code){
 export function buyStocks(data){
   return (dispatch) => {
     dispatch(request());
-    httpClient.post('/orders/buy' + data).then(res =>{
+    httpClient.post('/orders/buy', data).then(res =>{
       dispatch(success(res.data))
     }, error => {
       dispatch(failure(error))
@@ -126,7 +126,7 @@ export function buyStocks(data){
 export function sellStocks(data){
   return (dispatch) => {
     dispatch(request());
-    httpClient.post('/orders/sell' + data).then(res =>{
+    httpClient.post('/orders/sell', data).then(res =>{
       dispatch(success(res.data))
     }, error => {
       dispatch(failure(error))

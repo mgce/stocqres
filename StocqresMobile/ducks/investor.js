@@ -9,7 +9,8 @@ export const types = {
 const initialState = {
   loading: false,
   firstName:"",
-  lastName:""
+  lastName:"",
+  walletId: "00000000-0000-0000-0000-000000000000"
 };
 
 export default function stocksReducer(state = initialState , action) {
@@ -23,6 +24,7 @@ export default function stocksReducer(state = initialState , action) {
         success: true,
         firstName: action.details.firstName,
         lastName: action.details.lastName,
+        walletId: action.details.walletId
       };
     case types.GET_INVESTOR_DETAILS_FAIL:
       return { ...state, loading: false, success: false };
@@ -32,7 +34,7 @@ export default function stocksReducer(state = initialState , action) {
 }
 
 
-export function getInvestorDetails(code){
+export function getInvestorDetails(){
   return (dispatch) => {
     dispatch(request());
     httpClient.get('/investors').then(res =>{

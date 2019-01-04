@@ -26,6 +26,7 @@ using Stocqres.Infrastructure;
 using Stocqres.Infrastructure.Commands;
 using Stocqres.Infrastructure.ExternalServices.StockExchangeService;
 using Stocqres.SharedKernel;
+using Stocqres.Transactions;
 using Stocqres.Transactions.Infrastructure.ProcessManagers;
 
 namespace Stocqres.Api
@@ -123,6 +124,7 @@ namespace Stocqres.Api
             CustomerDependencyContainer.Load(builder);
             SharedKernelDependencyResolver.Load(builder);
             CustomersApiContainer.Load(builder);
+            TransactionsDependencyResolver.Load(builder);
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypesSafely()).Where(a => a.Namespace != null && a.Namespace.Contains("Stocqres")).ToArray();
 

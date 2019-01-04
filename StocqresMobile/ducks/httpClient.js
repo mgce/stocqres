@@ -4,7 +4,7 @@ import constants from "../common/constants";
 import { goToAuth } from "../screens/navigation";
 
 const httpClient = axios.create({
-  baseURL: "http://10.0.2.2:5000/api",
+  baseURL: "http://10.0.2.2:5001/api",
   responseType: "json",
   headers: {
     "Content-Type": "application/json",

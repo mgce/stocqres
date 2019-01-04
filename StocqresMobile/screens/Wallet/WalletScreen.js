@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { Container, Content, Text, Spinner } from "native-base";
 import { fonts, colors, padding } from "../../styles/common";
 import { createWallet, getWalletDetails } from "../../ducks/wallet";
+import { getInvestorDetails } from "../../ducks/investor";
 import CreateWalletSection from "./CreateWalletSection";
 import WalletDetailsSection from "./WalletDetailsSection";
 
@@ -14,17 +15,22 @@ class WalletScreen extends Component {
       creating: false,
       amount: 0
     };
+    this.onClickCreate = this.onClickCreate.bind(this);
   }
   componentDidMount() {
     this.props.getWalletDetails();
   }
+  onClickCreate(){
+    this.props.createWallet(this.state.amount);
+    this.props.getInvestorDetails();
+  }
   render() {
-    var walletExist = this.props.walletId !== {};
+    var walletExist = this.props.walletId !== "00000000-0000-0000-0000-000000000000";
     var investorDetails = {
       firstName: this.props.firstName,
       lastName: this.props.lastName,
-      amount: this.props.wallet.amount,
-      stockList: this.props.wallet.stockList,
+      amount: this.props.amount,
+      stockList: this.props.stockList,
     };
     return (
       <Container>
@@ -33,7 +39,7 @@ class WalletScreen extends Component {
             <WalletDetailsSection investor={investorDetails} />
           ) : (
             <CreateWalletSection
-              createWallet={this.props.createWallet}
+              createWallet={this.onClickCreate}
               onAmountChange={amount => this.setState({ amount })}
             />
           )}
@@ -52,13 +58,16 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = {
   createWallet,
-  getWalletDetails
+  getWalletDetails,
+  getInvestorDetails
 };
 
 const mapStateToProps = state => ({
-  wallet: state.wallet.wallet,
+  amount: state.wallet.amount,
+  stockList: state.wallet.stockList,
   firstName: state.investor.firstName,
-  lastName: state.investor.lastName
+  lastName: state.investor.lastName,
+  walletId: state.investor.walletId
 });
 
 export default connect(

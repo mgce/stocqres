@@ -14,6 +14,11 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
     [Table(nameof(BuyOrderProcessManager), Schema = "Transactions")]
     public class BuyOrderProcessManager : ProcessManager
     {
+        private BuyOrderProcessManager()
+        {
+            
+        }
+
         public BuyOrderProcessManager(Guid aggregateId)
         {
             AggregateId = aggregateId;
@@ -29,18 +34,19 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
         public decimal ChargedWalletAmount { get; set; }
         public string CancelReason { get; set; }
         public BuyOrderProcessManagerState State { get; set; }
-        
+
 
         public void When(BuyOrderCreatedEvent message)
         {
             switch (State)
             {
                 case BuyOrderProcessManagerState.NotStarted:
-                        WalletId = message.WalletId;
-                        CompanyId = message.CompanyId;
-                        StockQuantity = message.Quantity;
-                        State = BuyOrderProcessManagerState.OrderPlaced;
-                        ProcessCommand(new ChargeWalletAmountCommand(message.WalletId, message.CompanyId, message.AggregateId, message.Quantity));
+                    WalletId = message.WalletId;
+                    CompanyId = message.CompanyId;
+                    StockQuantity = message.Quantity;
+                    State = BuyOrderProcessManagerState.OrderPlaced;
+                    ProcessCommand(new ChargeWalletAmountCommand(message.WalletId, message.CompanyId,
+                        message.AggregateId, message.Quantity));
                     break;
                 // idempotence - same message sent twice
                 case BuyOrderProcessManagerState.OrderPlaced:
@@ -76,7 +82,8 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
                     StockCode = message.StockCode;
                     StockQuantity = message.StockQuantity;
                     StockUnit = message.StockUnit;
-                    ProcessCommand(new AddStockToWalletCommand(WalletId, AggregateId, CompanyId, message.StockName, message.StockCode, message.StockUnit, message.StockQuantity));
+                    ProcessCommand(new AddStockToWalletCommand(WalletId, AggregateId, CompanyId, message.StockName,
+                        message.StockCode, message.StockUnit, message.StockQuantity));
                     break;
                 case BuyOrderProcessManagerState.StockAddedToWallet:
                     break;

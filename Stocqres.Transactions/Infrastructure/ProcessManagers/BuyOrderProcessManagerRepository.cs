@@ -35,9 +35,9 @@ namespace Stocqres.Transactions.Infrastructure.ProcessManagers
 
         public async Task<BuyOrderProcessManager> FindAsync(Guid aggregateId)
         {
-            return await _connection.QueryFirstOrDefault(
-                $"SELECT * FROM Transaction.{nameof(BuyOrderProcessManager)} where AggregateId = @AggregateId",
-                new {AggregateId = aggregateId}, _transaction);
+            var sql = $"SELECT * FROM Transactions.{nameof(BuyOrderProcessManager)} where AggregateId = '{aggregateId}'";
+            var result =  await _connection.QueryFirstOrDefaultAsync<BuyOrderProcessManager>(sql, transaction: _transaction);
+            return result;
         }
 
         public async Task Save(BuyOrderProcessManager processManager)

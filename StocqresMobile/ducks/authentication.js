@@ -20,7 +20,8 @@ const initialState = {
   success: false,
   loading: false,
   accessToken: "",
-  refreshToken: ""
+  refreshToken: "",
+  walletId: null
 };
 
 export default function authenticationReducer(

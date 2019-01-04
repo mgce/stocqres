@@ -43,8 +43,12 @@ class StockDetailsScreen extends Component {
     setTimeout(()=>this.setState({ addModalVisible: visible }), 600);
   }
   buyAction(){
+    const stock = {
+      CompanyId: this.props.stockDetails.id,
+      Quantity: this.state.quantity
+    };
     this.toggleAddModal(false);
-    this.props.buyStocks(this.state.quantity);
+    this.props.buyStocks(stock);
     this.setState({ quantity: 0 })
   }
   setQuantity(quantity){

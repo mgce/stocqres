@@ -47,7 +47,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         public async Task HandleAsync(FinishBuyOrderCommand command)
         {
-            var order = await _eventRepository.GetByIdAsync<Order>(command.OrderId);
+            var order = await _eventRepository.GetByIdAsync<BuyOrder>(command.OrderId);
             if (order == null)
                 throw new StocqresException("Order does not exist");
 
@@ -64,7 +64,7 @@ namespace Stocqres.Transactions.Orders.Application
 
         public async Task HandleAsync(FinishSellOrderCommand command)
         {
-            var order = await _eventRepository.GetByIdAsync<Order>(command.OrderId);
+            var order = await _eventRepository.GetByIdAsync<SellOrder>(command.OrderId);
             if (order == null)
                 throw new StocqresException("Order does not exist");
 

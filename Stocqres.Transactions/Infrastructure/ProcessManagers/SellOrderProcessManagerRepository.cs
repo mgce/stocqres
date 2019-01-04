@@ -22,6 +22,7 @@ namespace Stocqres.Transactions.Infrastructure.ProcessManagers
 
     public class SellOrderProcessManagerRepository : ISellOrderProcessManagerRepository
     {
+
         private readonly IDispatcher _dispatcher;
         private readonly IUnitOfWork _unitOfWork;
         protected IDbTransaction _transaction => _unitOfWork.Transaction;
@@ -35,9 +36,9 @@ namespace Stocqres.Transactions.Infrastructure.ProcessManagers
 
         public async Task<SellOrderProcessManager> FindAsync(Guid aggregateId)
         {
-            return await _connection.QueryFirstOrDefault(
-                $"SELECT * FROM Transaction.{nameof(SellOrderProcessManager)} where AggregateId = @AggregateId",
-                new {AggregateId = aggregateId}, _transaction);
+            var sql =
+                $"SELECT * FROM Transactions.{nameof(SellOrderProcessManager)} where AggregateId = '{aggregateId}'";
+            return await _connection.QueryFirstOrDefaultAsync<SellOrderProcessManager>(sql, null, _transaction);
         }
 
         public async Task Save(SellOrderProcessManager processManager)

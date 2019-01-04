@@ -14,6 +14,17 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
     [Table(nameof(SellOrderProcessManager), Schema = "Transactions")]
     public class SellOrderProcessManager : ProcessManager
     {
+        public SellOrderProcessManager(Guid walletId, Guid companyId, string stockCode, int stockQuantity,
+            string cancelReason, SellOrderProcessManagerState state)
+        {
+            WalletId = walletId;
+            CompanyId = companyId;
+            StockCode = stockCode;
+            StockQuantity = stockQuantity;
+            CancelReason = cancelReason;
+            State = state;
+        }
+
         public SellOrderProcessManager(Guid aggregateId)
         {
             AggregateId = aggregateId;
@@ -55,7 +66,8 @@ namespace Stocqres.Transactions.Orders.Domain.ProcessManagers
                     CompanyId = message.CompanyId;
                     StockQuantity = message.Quantity;
                     State = SellOrderProcessManagerState.StocksTakedOffFromWallet;
-                    ProcessCommand(new AddStocksToCompanyCommand(CompanyId, message.AggregateId, message.Quantity, StockCode));
+                    ProcessCommand(new AddStocksToCompanyCommand(CompanyId, message.AggregateId, message.Quantity,
+                        StockCode));
                     break;
                 // idempotence - same message sent twice
                 case SellOrderProcessManagerState.StocksTakedOffFromWallet:
